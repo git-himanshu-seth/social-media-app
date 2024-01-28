@@ -10,9 +10,11 @@ const signup = (req, res) => {
       console.log("User created successfully:", result);
       // Send a success response to the client
       Friendship.create({ user_id: result._id, friends: [] });
-      res
-        .status(201)
-        .json({ message: "User created successfully", user: result });
+      res.status(200).json({
+        message: "User created successfully",
+        data: result,
+        status: 200,
+      });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -51,7 +53,11 @@ const signin = (req, res) => {
       // You may want to generate and send a token for authentication here
 
       // Send a success response to the client
-      res.status(200).json({ message: "User signed in successfully", user });
+      res.status(200).json({
+        message: "User signed in successfully",
+        data: user,
+        status: 200,
+      });
     })
     .catch((err) => {
       console.error("Error signing in user:", err);
@@ -65,32 +71,62 @@ const signin = (req, res) => {
 
 const getFriendList = (req, res) => {
   Friendship.findOne({ user_id: req.params.id })
+    .populate("friends", "name email") // Assuming 'friends' is the reference field in Friendship model
     .then((list) => {
       if (list) {
         res.status(200).json({
-          message: "get friends list successfuly",
+          message: "get friends list successfully",
           success: true,
-          friends: list.friends,
+          data: list.friends,
           length: list.friends.length,
+          status: 200,
+        });
+      } else {
+        res.status(404).json({
+          message: "Friendship not found",
+          success: false,
+          status: 404,
         });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        console.error("Validation Error:", err.message);
-        // Send a validation error response to the client
-        res
-          .status(400)
-          .json({ message: "Validation Error", error: err.message });
-      } else {
-        console.error("Error creating user:", err);
-        // Send an internal server error response to the client
-        res
-          .status(500)
-          .json({ message: "Internal Server Error", error: err.message });
-      }
+      res.status(500).json({
+        message: "Internal server error",
+        success: false,
+        status: 500,
+      });
     });
 };
+
+// const getFriendList = (req, res) => {
+//   Friendship.findOne({ user_id: req.params.id })
+//     .then((list) => {
+//       if (list) {
+//         res.status(200).json({
+//           message: "get friends list successfuly",
+//           success: true,
+//           data: list.friends,
+//           length: list.friends.length,
+//           status: 200,
+//         });
+//       }
+//     })
+//     .catch((err) => {
+//       if (err.name === "ValidationError") {
+//         console.error("Validation Error:", err.message);
+//         // Send a validation error response to the client
+//         res
+//           .status(400)
+//           .json({ message: "Validation Error", error: err.message });
+//       } else {
+//         console.error("Error creating user:", err);
+//         // Send an internal server error response to the client
+//         res
+//           .status(500)
+//           .json({ message: "Internal Server Error", error: err.message });
+//       }
+//     });
+// };
 
 // Controller to send a friend request
 const sendFriendRequest = (req, res) => {
@@ -118,7 +154,8 @@ const sendFriendRequest = (req, res) => {
             // Document saved successfully
             res.status(201).json({
               message: "Friend request sent successfully",
-              friendRequest: savedRequest,
+              data: savedRequest,
+              status: 200,
             });
           })
           .catch((error) => {
@@ -170,7 +207,7 @@ const getFriendRequests = async (req, res) => {
       .populate("sender", "username") // Populate sender details
       .populate("receiver", "username"); // Populate receiver details
 
-    res.status(200).json({ friendRequests });
+    res.status(200).json({ data: friendRequests, status: 200 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -238,7 +275,8 @@ const handleFriendRequest = async (req, res) => {
 
     res.status(200).json({
       message: `Friend request ${status}ed successfully`,
-      updatedRequest,
+      status: 200,
+      data: updatedRequest,
     });
   } catch (error) {
     console.error(error);

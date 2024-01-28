@@ -38,7 +38,7 @@ const createMessage = async (req, res) => {
     group.messages.push(newMessage);
     await group.save();
 
-    res.status(201).json(newMessage);
+    res.status(201).json({ newMessage, status: 200 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -84,9 +84,11 @@ const deleteMessage = async (req, res) => {
     group.messages.splice(messageIndex, 1);
     await group.save();
 
-    res
-      .status(200)
-      .send({ message: "Message deleted", message: group.messages });
+    res.status(200).send({
+      message: "Message deleted",
+      message: group.messages,
+      status: 200,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -113,7 +115,7 @@ const getMessages = async (req, res) => {
     // }
 
     // Return the messages
-    res.status(200).json({ messages: group.messages });
+    res.status(200).json({ messages: group.messages, status: 200 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

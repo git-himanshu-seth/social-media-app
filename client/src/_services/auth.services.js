@@ -15,7 +15,8 @@ function getPosts(data) {
     null,
     true
   );
-  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
-    response.json()
-  );
+  return fetch(
+    `${config.apiUrl}/friend_request/65b631826d68ee5e66817cd7`,
+    requestOptions
+  ).then((response) => response.json());
 }

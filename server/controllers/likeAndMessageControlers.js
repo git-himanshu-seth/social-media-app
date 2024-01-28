@@ -14,7 +14,7 @@ const likePostById = async (req, res) => {
     post.likes += 1;
     const updatedPost = await post.save();
 
-    res.json(updatedPost);
+    res.status(200).json({ updatedPost, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -37,7 +37,7 @@ const addCommentToPost = async (req, res) => {
 
     const updatedPost = await post.save();
 
-    res.json(updatedPost);
+    res.status(200).json({ updatedPost, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -66,7 +66,7 @@ const deleteCommentFromPost = async (req, res) => {
     post.comments.splice(commentIndex, 1);
     const updatedPost = await post.save();
 
-    res.json(updatedPost);
+    res.status(200).json({ updatedPost, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

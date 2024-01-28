@@ -4,7 +4,7 @@ const { Post } = require("../models/postsSchema");
 const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find();
-    res.json(posts);
+    res.status(200).json({ posts, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -35,7 +35,7 @@ const createPost = async (req, res) => {
     const newPost = new Post({ content });
     const savedPost = await newPost.save();
 
-    res.status(201).json(savedPost);
+    res.status(200).json({ savedPost, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -57,7 +57,7 @@ const updatePostById = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    res.json(post);
+    res.status(200).json({ post, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -74,7 +74,7 @@ const deletePostById = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    res.json({ message: "Post deleted successfully" });
+    res.status(200).json({ status: 200, message: "Post deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -18,6 +18,7 @@ const groupSchema = new mongoose.Schema({
       ref: "User", // Reference to the User model
     },
   ],
+  joinRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   messages: [
     {
       sender: {

@@ -1,7 +1,11 @@
-import AppRoutes from "../pages";
+// import AppRoutes from "../pages";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import firebaseAuthManager from "../utilis/services/firebase";
 import { useEffect, useState } from "react";
+import Home from "../pages/Home";
+import Groups from "../pages/Group";
+import PostSection from "../pages/Post";
+import Chat from "../pages/Chat";
 
 const DefaultRoutes = () => {
   const [user, setUser] = useState();
@@ -12,22 +16,19 @@ const DefaultRoutes = () => {
     firebaseAuthManager.initAuthStateListener().then((res) => {
       if (res) {
         setUser(res);
-        navigate("/posts");
+        navigate("/home");
       }
     });
   }, []);
   return (
     <div>
       <Routes>
-        {AppRoutes.length > 0 &&
-          AppRoutes.map(({ id, path, Component, isAuthenticated }) => {
-            // if (isAuthenticated && !user) {
-            //   navigate("/");
-            //   // return null;
-            // } else {
-            return <Route path={path} element={<Component />} key={id} />;
-            // }
-          })}
+        <Route path={"/home"} element={<Home />} />
+        <Route path={"/posts"} element={<PostSection />} />
+        <Route path={"/groups"} element={<Groups />} />
+        <Route path={"/chats"} element={<Chat />} />
+        {/* <Route path={"/"} element={<Home />} />
+        <Route path={"/"} element={<Home />} /> */}
       </Routes>
     </div>
   );

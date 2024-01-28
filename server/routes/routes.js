@@ -13,6 +13,9 @@ const {
   getGroupById,
   updateGroup,
   deleteGroup,
+  sendJoinRequestByAdmin,
+  acceptJoinRequest,
+  rejectJoinRequest,
 } = require("../controllers/groupControler");
 
 const {
@@ -39,6 +42,9 @@ appRoute.route("/handle-friend-request").put(handleFriendRequest);
 
 //GROUP ROUTES
 appRoute.route("/chat_group").post(createGroup).get(getAllGroups);
+appRoute.route("/send_group_join").post(sendJoinRequestByAdmin);
+appRoute.route("/accept_join_group").post(acceptJoinRequest);
+appRoute.route("/reject_join_group").post(rejectJoinRequest);
 
 //GROUP ROUTES
 appRoute

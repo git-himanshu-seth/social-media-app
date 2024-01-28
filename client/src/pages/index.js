@@ -4,6 +4,7 @@ const LoginAndRegister = lazy(() => import("./LoginRegister"));
 const Chat = lazy(() => import("./Chat"));
 const CreateGroupChat = lazy(() => import("./CreateGroup"));
 const Post = lazy(() => import("./Post"));
+const Groups = lazy(() => import("./Group"));
 
 const AppRoutes = [
   {
@@ -32,6 +33,13 @@ const AppRoutes = [
     label: "Create Group Chat",
     path: "/create-group-chat",
     Component: CreateGroupChat,
+    isAuthenticated: true,
+  },
+  {
+    id: 0,
+    label: "Group",
+    path: "/groups",
+    Component: Groups,
     isAuthenticated: true,
   },
   {

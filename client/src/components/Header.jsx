@@ -65,16 +65,32 @@ const Header = () => {
         </Box>
         <Box ml={2} width={"90%"}>
           <Box sx={{ float: "right" }}>
-            <Button color="inherit" startIcon={<HomeIcon />}>
+            <Button
+              color="inherit"
+              startIcon={<HomeIcon />}
+              onClick={() => navigate("/home")}
+            >
               Home
             </Button>
-            <Button color="inherit" startIcon={<GroupIcon />}>
+            <Button
+              color="inherit"
+              startIcon={<GroupIcon />}
+              onClick={() => navigate("/groups")}
+            >
               Groups
             </Button>
-            <Button color="inherit" startIcon={<PostAddIcon />}>
+            <Button
+              color="inherit"
+              startIcon={<PostAddIcon />}
+              onClick={() => navigate("/posts")}
+            >
               Posts
             </Button>
-            <Button color="inherit" startIcon={<ChatIcon />}>
+            <Button
+              color="inherit"
+              startIcon={<ChatIcon />}
+              onClick={() => navigate("/chats")}
+            >
               Chats
             </Button>
             {user && (
