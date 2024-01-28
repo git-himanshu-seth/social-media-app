@@ -1,5 +1,3 @@
-// App.js
-
 import React from "react";
 import { Container, CssBaseline, Typography } from "@mui/material";
 import Post from "../components/Post";
