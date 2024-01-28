@@ -16,7 +16,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ChatIcon from "@mui/icons-material/Chat";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Logo from "../utilis/images/LOGO.png";
+import Logo from "../_assets/images/logo.png";
 import firebaseAuthManager from "../utilis/services/firebase";
 import { useNavigate } from "react-router-dom";
 const Header = () => {

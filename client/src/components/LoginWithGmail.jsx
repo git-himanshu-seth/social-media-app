@@ -6,7 +6,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import firebaseAuthManager from "../utilis/services/firebase";
-import googleLogo from "../utilis/images/googleLogo.svg";
+import googleLogo from "../_assets/images/googleLogo.svg";
 const GoogleLoginComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});

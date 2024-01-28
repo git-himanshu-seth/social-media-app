@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, CssBaseline, Typography } from "@mui/material";
 import Post from "../components/Post";
+import { authActions } from "../_actions";
+import { useDispatch } from "react-redux";
 
-const PostSection = () => {
+const PostSection = (props) => {
+  const dispatch = useDispatch();
   // Example post data
   const postData = {
     user: {
@@ -12,6 +15,10 @@ const PostSection = () => {
     timestamp: 1643245200000, // Example timestamp (milliseconds since epoch)
     content: "This is an example post using Material-UI in React!",
   };
+
+  useEffect(() => {
+    dispatch(authActions.getPosts());
+  }, []);
 
   return (
     <>
