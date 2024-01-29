@@ -9,7 +9,6 @@ import {
   signInWithPopup,
   signOut,
 } from "@firebase/auth";
-// import firebaseConfig from "./firebaseConfig";
 import { UseDispatch } from "react-redux";
 // class FirebaseAuthManager {
 //   constructor() {
@@ -84,7 +83,6 @@ import { UseDispatch } from "react-redux";
 // export default firebaseAuthManager;
 
 export const authServices = {
-  getPosts,
   createUser,
   signInWithGoogle,
   logOut,
@@ -127,22 +125,6 @@ function signInWithGoogle(data) {
         reject(error.message);
       });
   });
-}
-
-function getPosts(data) {
-  const extraHeaders = {
-    "Content-Type": "application/json",
-  };
-  const requestOptions = commonFunctions.getRequestOptions(
-    "GET",
-    extraHeaders,
-    null,
-    true
-  );
-  return fetch(
-    `${config.apiUrl}/friend_request/65b631826d68ee5e66817cd7`,
-    requestOptions
-  ).then((response) => response.json());
 }
 
 function getUsers(data) {

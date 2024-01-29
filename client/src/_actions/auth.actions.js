@@ -3,55 +3,11 @@ import { authServices } from "../_services";
 import { alert, commonFunctions } from "../_utilities";
 
 export const authActions = {
-  getPosts,
   createUser,
   logout,
   getUsers,
   login,
 };
-
-function getPosts() {
-  return (dispatch) => {
-    console.log();
-    dispatch(
-      dispatchFunction({
-        type: authConstants.GET_POSTS_REQUEST,
-        data: null,
-      })
-    );
-    authServices.getPosts().then(
-      (response) => {
-        if (response.status === 200) {
-          console.log("response", response);
-
-          dispatch(
-            dispatchFunction({
-              type: authConstants.GET_POSTS_SUCCESS,
-              data: response.data,
-            })
-          );
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: authConstants.GET_POSTS_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: authConstants.GET_POSTS_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
-      }
-    );
-  };
-}
 
 function createUser(data) {
   return (dispatch) => {

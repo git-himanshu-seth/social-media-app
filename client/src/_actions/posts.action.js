@@ -1,38 +1,34 @@
-import { authConstants } from "../_constants";
-import { authServices } from "../_services";
-import { alert, commonFunctions } from "../_utilities";
+import { postConstants } from "../_constants";
+import { postServices } from "../_services";
+import { alert } from "../_utilities";
 
 export const authActions = {
   getPosts,
-  createUser,
-  logout,
-  getUsers,
+  createPost,
+  updatePost,
 };
 
-function getPosts() {
+function getPosts(data) {
   return (dispatch) => {
-    console.log();
     dispatch(
       dispatchFunction({
-        type: authConstants.GET_POSTS_REQUEST,
+        type: postConstants.GET_POSTS_REQUEST,
         data: null,
       })
     );
-    authServices.getPosts().then(
+    postServices.getPosts(data).then(
       (response) => {
         if (response.status === 200) {
-          console.log("response", response);
-
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_POSTS_SUCCESS,
+              type: postConstants.GET_POSTS_SUCCESS,
               data: response.data,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_POSTS_FAILURE,
+              type: postConstants.GET_POSTS_FAILURE,
               data: response,
             })
           );
@@ -42,7 +38,7 @@ function getPosts() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.GET_POSTS_FAILURE,
+            type: postConstants.GET_POSTS_FAILURE,
             data: error.message,
           })
         );
@@ -52,35 +48,27 @@ function getPosts() {
   };
 }
 
-function createUser(data) {
+function createPost(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.CREATE_USER_REQUEST,
+        type: postConstants.CREATE_POST_REQUEST,
         data: null,
       })
     );
-    authServices.createUser(data).then(
+    postServices.createPost(data).then(
       (response) => {
-        console.log("response", response, data);
-
         if (response.email && response?.uid) {
           dispatch(
             dispatchFunction({
-              type: authConstants.CREATE_USER_SUCCESS,
+              type: postConstants.CREATE_POST_SUCCESS,
               data: response,
             })
           );
-          console.log("response", response.uid);
-          authServices.createUserDB({
-            name: data?.firstName + " " + data?.lastName,
-            email: data?.email,
-            googleId: `${response?.uid}`,
-          });
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.CREATE_USER_FAILURE,
+              type: postConstants.CREATE_POST_FAILURE,
               data: response,
             })
           );
@@ -90,7 +78,7 @@ function createUser(data) {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.CREATE_USER_FAILURE,
+            type: postConstants.CREATE_POST_FAILURE,
             data: error.message,
           })
         );
@@ -100,28 +88,28 @@ function createUser(data) {
   };
 }
 
-function getUsers() {
+function updatePost(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.GET_USERS_REQUEST,
+        type: postConstants.UPDATE_POST_REQUEST,
         data: null,
       })
     );
-    authServices.getUsers().then(
+    postServices.updatePost(data).then(
       (response) => {
         console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_USERS_SUCCESS,
+              type: postConstants.UPDATE_POST_SUCCESS,
               data: response,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_USERS_FAILURE,
+              type: postConstants.UPDATE_POST_FAILURE,
               data: response,
             })
           );
@@ -131,48 +119,7 @@ function getUsers() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.GET_USERS_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
-      }
-    );
-  };
-}
-
-function logout() {
-  return (dispatch) => {
-    dispatch(
-      dispatchFunction({
-        type: authConstants.LOGOUT_REQUEST,
-        data: null,
-      })
-    );
-    authServices.logOut().then(
-      (response) => {
-        console.log("response", response);
-        if (response) {
-          dispatch(
-            dispatchFunction({
-              type: authConstants.LOGOUT_SUCCESS,
-              data: response,
-            })
-          );
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: authConstants.LOGOUT_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: authConstants.LOGOUT_FAILURE,
+            type: postConstants.UPDATE_POST_FAILURE,
             data: error.message,
           })
         );

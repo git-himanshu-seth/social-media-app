@@ -1,38 +1,36 @@
-import { authConstants } from "../_constants";
-import { authServices } from "../_services";
-import { alert, commonFunctions } from "../_utilities";
+import { groupConstants } from "../_constants";
+import { groupServices } from "../_services";
+import { alert } from "../_utilities";
 
 export const authActions = {
-  getPosts,
-  createUser,
-  logout,
-  getUsers,
+  getGroups,
+  createGroup,
+  addGroupMembers,
+  acceptGroupRequest,
+  rejectGroupRequest,
 };
 
-function getPosts() {
+function getGroups(data) {
   return (dispatch) => {
-    console.log();
     dispatch(
       dispatchFunction({
-        type: authConstants.GET_POSTS_REQUEST,
+        type: groupConstants.GET_GROUPS_REQUEST,
         data: null,
       })
     );
-    authServices.getPosts().then(
+    groupServices.getGroups(data).then(
       (response) => {
         if (response.status === 200) {
-          console.log("response", response);
-
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_POSTS_SUCCESS,
+              type: groupConstants.GET_GROUPS_SUCCESS,
               data: response.data,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_POSTS_FAILURE,
+              type: groupConstants.GET_GROUPS_FAILURE,
               data: response,
             })
           );
@@ -42,7 +40,7 @@ function getPosts() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.GET_POSTS_FAILURE,
+            type: groupConstants.GET_GROUPS_FAILURE,
             data: error.message,
           })
         );
@@ -52,76 +50,27 @@ function getPosts() {
   };
 }
 
-function createUser(data) {
+function createGroup(data){
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.CREATE_USER_REQUEST,
+        type: groupConstants.CREATE_GROUP_REQUEST,
         data: null,
       })
     );
-    authServices.createUser(data).then(
+    groupServices.createGroup(data).then(
       (response) => {
-        console.log("response", response, data);
-
-        if (response.email && response?.uid) {
-          dispatch(
-            dispatchFunction({
-              type: authConstants.CREATE_USER_SUCCESS,
-              data: response,
-            })
-          );
-          console.log("response", response.uid);
-          authServices.createUserDB({
-            name: data?.firstName + " " + data?.lastName,
-            email: data?.email,
-            googleId: `${response?.uid}`,
-          });
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: authConstants.CREATE_USER_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: authConstants.CREATE_USER_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
-      }
-    );
-  };
-}
-
-function getUsers() {
-  return (dispatch) => {
-    dispatch(
-      dispatchFunction({
-        type: authConstants.GET_USERS_REQUEST,
-        data: null,
-      })
-    );
-    authServices.getUsers().then(
-      (response) => {
-        console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_USERS_SUCCESS,
-              data: response,
+              type: groupConstants.CREATE_GROUP_SUCCESS,
+              data: response.data,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_USERS_FAILURE,
+              type: groupConstants.CREATE_GROUP_FAILURE,
               data: response,
             })
           );
@@ -131,7 +80,7 @@ function getUsers() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.GET_USERS_FAILURE,
+            type: groupConstants.CREATE_GROUP_FAILURE,
             data: error.message,
           })
         );
@@ -141,28 +90,27 @@ function getUsers() {
   };
 }
 
-function logout() {
+function addGroupMembers(data){
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.LOGOUT_REQUEST,
+        type: groupConstants.ADD_GROUP_MEMBER_REQUEST,
         data: null,
       })
     );
-    authServices.logOut().then(
+    groupServices.addGroupMembers(data).then(
       (response) => {
-        console.log("response", response);
-        if (response) {
+        if (response.status === 200) {
           dispatch(
             dispatchFunction({
-              type: authConstants.LOGOUT_SUCCESS,
-              data: response,
+              type: groupConstants.ADD_GROUP_MEMBER_SUCCESS,
+              data: response.data,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.LOGOUT_FAILURE,
+              type: groupConstants.ADD_GROUP_MEMBER_FAILURE,
               data: response,
             })
           );
@@ -172,7 +120,87 @@ function logout() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.LOGOUT_FAILURE,
+            type: groupConstants.ADD_GROUP_MEMBER_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+      }
+    );
+  };
+}
+
+function acceptGroupRequest(data){
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: groupConstants.ACCEPT_GROUP_REQUEST,
+        data: null,
+      })
+    );
+    groupServices.acceptGroupRequest(data).then(
+      (response) => {
+        if (response.status === 200) {
+          dispatch(
+            dispatchFunction({
+              type: groupConstants.ACCEPT_GROUP_SUCCESS,
+              data: response.data,
+            })
+          );
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: groupConstants.ACCEPT_GROUP_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: groupConstants.ACCEPT_GROUP_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+      }
+    );
+  };
+}
+
+function rejectGroupRequest(data){
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: groupConstants.REJECT_GROUP_REQUEST_REQUEST,
+        data: null,
+      })
+    );
+    groupServices.rejectGroupRequest(data).then(
+      (response) => {
+        if (response.status === 200) {
+          dispatch(
+            dispatchFunction({
+              type: groupConstants.REJECT_GROUP_REQUEST_SUCCESS,
+              data: response.data,
+            })
+          );
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: groupConstants.REJECT_GROUP_REQUEST_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: groupConstants.REJECT_GROUP_REQUEST_FAILURE,
             data: error.message,
           })
         );

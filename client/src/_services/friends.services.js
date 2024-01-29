@@ -29,30 +29,15 @@ function getReqList(data) {
   const extraHeaders = {
     "Content-Type": "application/json",
   };
-
-  // Assuming commonFunctions.getRequestOptions is correctly defined
   const requestOptions = commonFunctions.getRequestOptions(
-    "get",
+    "GET",
     extraHeaders,
+    null,
     true
   );
-
-  return fetch(`${config.apiUrl}/get-friend-requests/`, requestOptions)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Handle the successful response data
-      return data;
-    })
-    .catch((error) => {
-      // Handle errors
-      console.error("Error creating user:", error);
-      throw error; // Rethrow the error to be handled at the higher level
-    });
+  return fetch(`${config.apiUrl}/get-friend-requests`, requestOptions).then(
+    (response) => response.json()
+  );
 }
 
 function sendFrienReq(data) {
@@ -60,90 +45,43 @@ function sendFrienReq(data) {
     "Content-Type": "application/json",
   };
 
-  // Assuming commonFunctions.getRequestOptions is correctly defined
   const requestOptions = commonFunctions.getRequestOptions(
     "POST",
     extraHeaders,
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-
-  return fetch(`${config.apiUrl}/send-friend-request`, requestOptions)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Handle the successful response data
-      return data;
-    })
-    .catch((error) => {
-      // Handle errors
-      console.error("Error creating user:", error);
-      throw error; // Rethrow the error to be handled at the higher level
-    });
+  return fetch(`${config.apiUrl}/send-friend-request`, requestOptions).then(
+    (response) => response.json()
+  );
 }
 
 function acceptReq(data) {
   const extraHeaders = {
     "Content-Type": "application/json",
   };
-
-  // Assuming commonFunctions.getRequestOptions is correctly defined
   const requestOptions = commonFunctions.getRequestOptions(
     "POST",
     extraHeaders,
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-
-  return fetch(`${config.apiUrl}/handle-friend-request`, requestOptions)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Handle the successful response data
-      return data;
-    })
-    .catch((error) => {
-      // Handle errors
-      console.error("Error creating user:", error);
-      throw error; // Rethrow the error to be handled at the higher level
-    });
+  return fetch(`${config.apiUrl}/handle-friend-request`, requestOptions).then(
+    (response) => response.json()
+  );
 }
 
 function rejectReq(data) {
   const extraHeaders = {
     "Content-Type": "application/json",
   };
-
-  // Assuming commonFunctions.getRequestOptions is correctly defined
   const requestOptions = commonFunctions.getRequestOptions(
     "POST",
     extraHeaders,
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-
-  return fetch(`${config.apiUrl}/signup`, requestOptions)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Handle the successful response data
-      return data;
-    })
-    .catch((error) => {
-      // Handle errors
-      console.error("Error creating user:", error);
-      throw error; // Rethrow the error to be handled at the higher level
-    });
+  return fetch(`${config.apiUrl}/reject-friend-request`, requestOptions).then(
+    (response) => response.json()
+  );
 }

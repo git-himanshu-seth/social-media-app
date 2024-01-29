@@ -1,80 +1,96 @@
-import { authConstants, status } from "../_constants";
+import { groupConstants, status } from "../_constants";
 
 export function auth(state = {}, action) {
   switch (action.type) {
-    case authConstants.USER_LOGIN_REQUEST:
+    case groupConstants.GET_GROUPS_REQUEST:
       return {
         ...state,
-        user_login_status: status.IN_PROGRESS,
-        user: action.data,
+        get_group_status: status.IN_PROGRESS,
+        groupList: action.data,
       };
-    case authConstants.USER_LOGIN_SUCCESS:
+    case groupConstants.GET_GROUPS_SUCCESS:
       return {
         ...state,
-        user_login_status: status.SUCCESS,
-        user: action.data,
+        get_group_status: status.SUCCESS,
+        groupList: action.data,
       };
-    case authConstants.USER_LOGIN_FAILURE:
+    case groupConstants.GET_GROUPS_FAILURE:
       return {
         ...state,
-        user_login_status: status.FAILURE,
-        user: null,
+        get_group_status: status.FAILURE,
+        groupList: null,
       };
-    case authConstants.GET_POSTS_REQUEST:
+    case groupConstants.CREATE_GROUP_REQUEST:
       return {
         ...state,
-        get_post_status: status.IN_PROGRESS,
-        posts: action.data,
+        create_group_status: status.IN_PROGRESS,
+        createGroup: action.data,
       };
-    case authConstants.GET_POSTS_SUCCESS:
+    case groupConstants.CREATE_GROUP_SUCCESS:
       return {
         ...state,
-        get_post_status: status.SUCCESS,
-        posts: action.data,
+        create_group_status: status.SUCCESS,
+        createGroup: action.data,
       };
-    case authConstants.GET_POSTS_FAILURE:
+    case groupConstants.CREATE_GROUP_FAILURE:
       return {
         ...state,
-        get_post_status: status.FAILURE,
-        posts: null,
+        create_group_status: status.FAILURE,
+        createGroup: null,
       };
-
-    case authConstants.CREATE_USER_REQUEST:
+    case groupConstants.ADD_GROUP_MEMBER_REQUEST:
       return {
         ...state,
-        register_status: status.IN_PROGRESS,
-        user: action.data,
+        add_member_status: status.IN_PROGRESS,
+        addMember: action.data,
       };
-    case authConstants.CREATE_USER_SUCCESS:
+    case groupConstants.ADD_GROUP_MEMBER_SUCCESS:
       return {
         ...state,
-        register_status: status.SUCCESS,
-        user: action.data,
+        add_member_status: status.SUCCESS,
+        addMember: action.data,
       };
-    case authConstants.CREATE_USER_FAILURE:
+    case groupConstants.ADD_GROUP_MEMBER_FAILURE:
       return {
         ...state,
-        register_status: status.FAILURE,
-        user: null,
+        add_member_status: status.FAILURE,
+        addMember: null,
       };
-
-    case authConstants.LOGOUT_REQUEST:
+    case groupConstants.ACCEPT_GROUP_REQUEST:
       return {
         ...state,
-        logout_status: status.IN_PROGRESS,
-        user: action.data,
+        accept_Group_status: status.IN_PROGRESS,
+        acceptGroup: action.data,
       };
-    case authConstants.LOGOUT_SUCCESS:
+    case groupConstants.ACCEPT_GROUP_SUCCESS:
       return {
         ...state,
-        logout_status: status.SUCCESS,
-        user: action.data,
+        accept_Group_status: status.SUCCESS,
+        acceptGroup: action.data,
       };
-    case authConstants.LOGOUT_FAILURE:
+    case groupConstants.ACCEPT_GROUP_FAILURE:
       return {
         ...state,
-        register_status: status.FAILURE,
-        user: null,
+        accept_Group_status: status.FAILURE,
+        acceptGroup: null,
+      };
+    case groupConstants.REJECT_GROUP_REQUEST:
+      return {
+        ...state,
+        reject_group_status: status.IN_PROGRESS,
+        rejectRes: action.data,
+      };
+    case groupConstants.REJECT_GROUP_SUCCESS:
+      return {
+        ...state,
+        reject_group_status: status.SUCCESS,
+        rejectRes: action.data,
+      };
+    case groupConstants.REJECT_GROUP_FAILURE:
+      return {
+        ...state,
+        reject_group_status: status.FAILURE,
+        rejectRes: action.data,
       };
     default:
       return state;
