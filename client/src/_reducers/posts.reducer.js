@@ -1,80 +1,62 @@
-import { authConstants, status } from "../_constants";
+import { postConstants, status } from "../_constants";
 
-export function auth(state = {}, action) {
+export function post(state = {}, action) {
   switch (action.type) {
-    case authConstants.USER_LOGIN_REQUEST:
-      return {
-        ...state,
-        user_login_status: status.IN_PROGRESS,
-        user: action.data,
-      };
-    case authConstants.USER_LOGIN_SUCCESS:
-      return {
-        ...state,
-        user_login_status: status.SUCCESS,
-        user: action.data,
-      };
-    case authConstants.USER_LOGIN_FAILURE:
-      return {
-        ...state,
-        user_login_status: status.FAILURE,
-        user: null,
-      };
-    case authConstants.GET_POSTS_REQUEST:
+    case postConstants.GET_POSTS_REQUEST:
       return {
         ...state,
         get_post_status: status.IN_PROGRESS,
         posts: action.data,
       };
-    case authConstants.GET_POSTS_SUCCESS:
+    case postConstants.GET_POSTS_SUCCESS:
       return {
         ...state,
         get_post_status: status.SUCCESS,
         posts: action.data,
       };
-    case authConstants.GET_POSTS_FAILURE:
+    case postConstants.GET_POSTS_FAILURE:
       return {
         ...state,
         get_post_status: status.FAILURE,
         posts: null,
       };
 
-    case authConstants.CREATE_USER_REQUEST:
+    case postConstants.CREATE_POST_REQUEST:
       return {
         ...state,
-        register_status: status.IN_PROGRESS,
-        user: action.data,
+        create_post_status: status.IN_PROGRESS,
+        create_post_res: null,
       };
-    case authConstants.CREATE_USER_SUCCESS:
+    case postConstants.CREATE_POST_SUCCESS:
       return {
         ...state,
-        register_status: status.SUCCESS,
-        user: action.data,
+        create_post_status: status.SUCCESS,
+        create_post_res: action.data,
       };
-    case authConstants.CREATE_USER_FAILURE:
+    case postConstants.CREATE_POST_FAILURE:
       return {
         ...state,
-        register_status: status.FAILURE,
-        user: null,
+        create_post_status: status.FAILURE,
+        create_post_res: null,
       };
 
-    case authConstants.LOGOUT_REQUEST:
+    case postConstants.UPDATE_POST_REQUEST:
       return {
         ...state,
-        logout_status: status.IN_PROGRESS,
-        user: action.data,
+        update_post_status: status.IN_PROGRESS,
+        update_post_res: null,
       };
-    case authConstants.LOGOUT_SUCCESS:
+    case postConstants.UPDATE_POST_SUCCESS:
       return {
         ...state,
-        logout_status: status.SUCCESS,
-        user: action.data,
+        update_post_status: status.SUCCESS,
+        update_post_res: action.data,
       };
-    case authConstants.LOGOUT_FAILURE:
+    case postConstants.UPDATE_POST_FAILURE:
       return {
         ...state,
-        register_status: status.FAILURE,
-        user: null,
+        update_post_status: status.FAILURE,
+        update_post_res: null,
       };
     default:
       return state;

@@ -1,6 +1,6 @@
 import { groupConstants, status } from "../_constants";
 
-export function auth(state = {}, action) {
+export function group(state = {}, action) {
   switch (action.type) {
     case groupConstants.GET_GROUPS_REQUEST:
       return {
