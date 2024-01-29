@@ -36,7 +36,7 @@ const PostSection = (props) => {
   };
 
   useEffect(() => {
-    dispatch(authActions.getPosts());
+    // dispatch(authActions.getPosts());
   }, []);
 
   const postData = [
@@ -90,7 +90,7 @@ const PostSection = (props) => {
         Create Post
       </Button>
       <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h4" align="center" gutterBottom color="primary">
           Post Section
         </Typography>
 
@@ -100,7 +100,7 @@ const PostSection = (props) => {
             postData.map((post) => <Post {...post} />)}
         </Box>
         <Dialog open={isDialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Create a New Post</DialogTitle>
+          <DialogTitle color="primary">Create a New Post</DialogTitle>
           <DialogContent>
             <TextField
               label="Post Title"

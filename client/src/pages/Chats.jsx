@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import Chat from "./Chat";
 
-const Groups = () => {
+const Chats = () => {
   const [groups, setGroups] = useState([
     { id: 1, name: "Group 1", members: 10 },
     { id: 2, name: "Group 2", members: 8 },
@@ -54,7 +54,7 @@ const Groups = () => {
             color="primary"
             onClick={() => setCreateGroupDialogOpen(true)}
           >
-            Create New Group
+            ADD NEW FRIEND
           </Button>
         </Box>
         <Box display="flex" flexDirection={"row"} >
@@ -129,4 +129,4 @@ const Groups = () => {
   );
 };
 
-export default Groups;
+export default Chats;

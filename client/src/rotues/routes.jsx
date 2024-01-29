@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Home from "../pages/Home";
 import Groups from "../pages/Group";
 import PostSection from "../pages/Post";
-import Chat from "../pages/Chat";
+import Chats from "../pages/Chats";
 import LoginAndRegister from "../pages/LoginRegister";
 import Socket from "../pages/socketio";
 import UserList from "../pages/Users";
@@ -31,7 +31,7 @@ const DefaultRoutes = () => {
         <Route path={"/"} element={<Home />} />
         <Route path={"/posts"} element={<PostSection />} />
         <Route path={"/groups"} element={<Groups />} />
-        <Route path={"/chats"} element={<Chat />} />
+        <Route path={"/chats"} element={<Chats />} />
         <Route path={"/login-register"} element={<LoginAndRegister />} />
         <Route path={"/socket"} element={<Socket />} />
         <Route path={"/users"} element={<UserList />} />

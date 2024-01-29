@@ -38,17 +38,22 @@ const Chat = () => {
     <Box
       elevation={0}
       style={{
-        padding: "20px",
-        minHeight: "625px",
+        marginTop: "20px",
+        marginLeft: "20px",
+        marginRight: "20px",
         display: "flex",
         flexDirection: "column",
+        border: "2px solid rgb(25 118 210)",
+        borderRadius: "20px",
+        // padding: "10px",
       }}
     >
       <div
         style={{
-          height: "508px",
+          height: "624px",
           overflow: "scroll",
           marginBottom: "10px",
+          overflowX: "hidden",
         }}
       >
         {messages.map((message, index) => (
@@ -86,9 +91,10 @@ const Chat = () => {
       <div
         style={{
           display: "flex",
-          alignSelf: "start",
+          alignSelf: "center",
           marginTop: "10px",
-          minWidth: "100%",
+          marginBottom: "10px",
+          minWidth: "90%",
           maxWidth: "50%",
         }}
       >

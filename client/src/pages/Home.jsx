@@ -15,7 +15,7 @@ function Home() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <div style={{ textAlign: "center", marginBottom: "32px" }}>
-              <Typography variant="h2" color="primary">
+              <Typography variant="h4" color="primary">
                 Social Media App
               </Typography>
               <Typography variant="h5" color="textSecondary">
