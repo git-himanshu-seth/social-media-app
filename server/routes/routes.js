@@ -64,7 +64,7 @@ appRoute
   .get(getMessages)
   .delete(deleteMessage);
 // GET FRIEND LIST ROUTE
-appRoute.route("/friend_request/:id").get(getFriendList);
+appRoute.route("/friends/:id").get(getFriendList);
 
 
 
