@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import Post from "../components/Post";
-import { authActions } from "../_actions";
+import { postActions } from "../_actions";
 
 const PostSection = (props) => {
   const dispatch = useDispatch();
@@ -28,15 +28,12 @@ const PostSection = (props) => {
   };
 
   const handleCreatePost = () => {
-    // Add your logic to dispatch an action to create a new post
-    // Example: dispatch(authActions.createPost({ content: newPostContent }));
-
-    // Close the dialog after creating the post
-    handleDialogClose();
+    dispatch(postActions.createPost());
+    // handleDialogClose();
   };
 
   useEffect(() => {
-    // dispatch(authActions.getPosts());
+    dispatch(postActions.getPosts());
   }, []);
 
   const postData = [

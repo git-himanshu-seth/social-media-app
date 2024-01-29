@@ -1,4 +1,3 @@
-// UserList.js
 import React, { useState, useEffect } from "react";
 import {
   List,
@@ -10,29 +9,35 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { friendActions } from "../_actions";
+import { authActions, friendActions } from "../_actions";
 import { UseDispatch, useDispatch, useSelector } from "react-redux";
 
 const UserList = () => {
-  const [user, setUser] = useState(
+  const dispatch = useDispatch();
+  const [userData, setUser] = useState(
     useSelector((state) => {
       return state?.auth?.user;
     })
   );
-  const [friends, setFriend] = useState(
+  const [friendList, setFriend] = useState(
     useSelector((state) => {
       return state?.auth?.friend;
     })
   );
-  console.log(user);
-  const dispatch = useDispatch();
+  const [userList, setUserList] = useState(
+    useSelector((state) => {
+      return state?.auth?.userList;
+    })
+  );
   const [response, setResponse] = useState(null);
   const [friendRequests, setFriendRequests] = useState([]);
   const [acceptedRequests, setAcceptedRequests] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
+
   useEffect(() => {
-    if (user?._id) {
-      dispatch(friendActions.getFriendsList({ id: user._id }));
+    if (userData?._id) {
+      dispatch(friendActions.getFriendsList({ id: userData._id }));
+      dispatch(authActions.getUsers());
     }
   }, []);
 
@@ -57,11 +62,11 @@ const UserList = () => {
     );
   };
 
-  const users = [
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Doe" },
-    // Add more users as needed
-  ];
+  // const users = [
+  //   { id: 1, name: "John Doe" },
+  //   { id: 2, name: "Jane Doe" },
+  //   // Add more users as needed
+  // ];
 
   return (
     <Container>
@@ -146,14 +151,14 @@ const UserList = () => {
               Friends List
             </Typography>
             <List>
-              {users.map((user) => (
-                <React.Fragment key={user.id}>
+              {friendList.map((friend) => (
+                <React.Fragment key={friend.id}>
                   <ListItem>
                     <ListItemText
-                      primary={user.name}
+                      primary={friend.name}
                       secondary="sent friend request"
                     />
-                    <ListItemText primary={user.name} />
+                    <ListItemText primary={friend.name} />
                     <Button
                       variant="contained"
                       color="primary"
@@ -175,25 +180,27 @@ const UserList = () => {
               User List
             </Typography>
             <List>
-              {users.map((user) => (
-                <React.Fragment key={user.id}>
-                  <ListItem>
-                    <ListItemText
-                      primary={user.name}
-                      secondary="sent friend request"
-                    />
-                    <ListItemText primary={user.name} />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSendRequest}
-                    >
-                      Send Request
-                    </Button>
-                  </ListItem>
-                  <Divider />
-                </React.Fragment>
-              ))}
+              {userList &&
+                userList.length > 0 &&
+                userList.map((user) => (
+                  <React.Fragment key={user.id}>
+                    <ListItem>
+                      <ListItemText
+                        primary={user.name}
+                        secondary="sent friend request"
+                      />
+                      <ListItemText primary={user.name} />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSendRequest}
+                      >
+                        Send Request
+                      </Button>
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))}
             </List>
           </Box>
         )}

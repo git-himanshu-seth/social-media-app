@@ -19,8 +19,6 @@ function createUser(data) {
     );
     authServices.createUser(data).then(
       (response) => {
-        console.log("response", response, data);
-
         if (response.email && response?.uid) {
           authServices
             .createUserDB({
@@ -29,7 +27,6 @@ function createUser(data) {
               googleId: `${response?.uid}`,
             })
             .then((res) => {
-              console.log(res.data);
               if (res) {
                 dispatch(
                   dispatchFunction({
@@ -39,8 +36,6 @@ function createUser(data) {
                 );
               }
             });
-
-          console.log("response", response.uid);
         } else {
           dispatch(
             dispatchFunction({

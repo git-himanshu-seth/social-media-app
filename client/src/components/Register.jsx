@@ -1,5 +1,5 @@
 // RegisterPage.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   TextField,
@@ -10,11 +10,13 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import GoogleLoginComponent from "./LoginWithGmail";
-import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../_actions";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -28,6 +30,10 @@ const RegisterPage = () => {
     lastName: "",
     email: "",
     password: "",
+  });
+
+  const registerData = useSelector((state) => {
+    return state?.auth?.user;
   });
 
   const handleChange = (e) => {
@@ -81,6 +87,12 @@ const RegisterPage = () => {
       console.log("Form validation failed");
     }
   };
+
+  useEffect(() => {
+    if (registerData && registerData?._id) {
+      navigate("/home");
+    }
+  }, [registerData]);
 
   return (
     <>
