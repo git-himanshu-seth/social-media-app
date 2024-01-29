@@ -162,30 +162,13 @@ const getAllGroups = async (req, res) => {
       ],
     }).populate("admin members messages.sender", "username");
 
-    res.status(200).json({ groups, status: 200 });
+    res.status(200).json({ data:groups, status: 200 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Controller to get a specific group by ID
-const getGroupById = async (req, res) => {
-  try {
-    const groupId = req.params.id;
-    const group = await Group.findById(groupId).populate(
-      "admin members messages.sender",
-      "username"
-    );
 
-    if (!group) {
-      return res.status(404).json({ message: "Group not found" });
-    }
-
-    res.status(200).json({ group, status: 200 });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 // Controller to update a group by ID
 const updateGroup = async (req, res) => {
@@ -214,51 +197,11 @@ const updateGroup = async (req, res) => {
   }
 };
 
-// Controller to delete a group by ID
-const deleteGroup = async (req, res) => {
-  try {
-    const groupId = req.params.id;
-    const userIdFromQueryString = req.query.userId;
-
-    if (!userIdFromQueryString) {
-      return res
-        .status(400)
-        .json({ message: "User ID is required in the query string" });
-    }
-
-    // Check if the user making the request is the admin of the group
-    const group = await Group.findById(groupId);
-    if (!group) {
-      return res.status(404).json({ message: "Group not found" });
-    }
-
-    if (group.admin.toString() !== userIdFromQueryString) {
-      return res.status(403).json({
-        message: "Permission denied. Only the admin can delete the group.",
-      });
-    }
-
-    // User is the admin, proceed with group deletion
-    const deletedGroup = await Group.findByIdAndDelete(groupId);
-
-    if (!deletedGroup) {
-      return res.status(404).json({ message: "Group not found" });
-    }
-
-    res
-      .status(200)
-      .json({ message: "Group deleted successfully", status: 200 });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 module.exports = {
   createGroup,
   getAllGroups,
-  getGroupById,
   updateGroup,
-  deleteGroup,
   sendJoinRequestByAdmin,
   acceptJoinRequest,
   rejectJoinRequest,

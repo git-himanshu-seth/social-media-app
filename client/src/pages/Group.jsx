@@ -22,11 +22,14 @@ import { groupActions, authActions } from "../_actions";
 
 const Groups = () => {
   const dispatch = useDispatch();
+  let groupList=useSelector((state) => {
+    return state?.group?.groupList ;
+  })
   const [groups, setGroups] = useState(
-    useSelector((state) => {
-      return state?.auth?.userList;
-    })
+    groupList
   );
+  useEffect(()=>{if(groupList){setGroups(groupList)}},[groupList])
+  
   const [userData, setUser] = useState(
     useSelector((state) => {
       return state?.auth?.user;
@@ -53,6 +56,7 @@ const Groups = () => {
     const newGroup = {
       id: groups.length + 1,
       name: newGroupName,
+      admin:userData?._id,
       members: 0, // You can set an initial member count
     };
     setGroups([...groups, newGroup]);
@@ -94,7 +98,7 @@ const Groups = () => {
                   height: "600px",
                 }}
               >
-                {groups.map((group) => (
+                {groups && groups?.length >0 &&groups?.map((group) => (
                   <React.Fragment key={group.id}>
                     <ListItem
                       alignItems="flex-start"

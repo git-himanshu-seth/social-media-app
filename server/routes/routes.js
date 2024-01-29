@@ -9,13 +9,12 @@ const {
   getFriendRequests,
   sendFriendRequest,
   getUsersList,
+  getUserByGoogleId,
 } = require("../controllers/userControler");
 const {
   createGroup,
   getAllGroups,
-  getGroupById,
   updateGroup,
-  deleteGroup,
   sendJoinRequestByAdmin,
   acceptJoinRequest,
   rejectJoinRequest,
@@ -32,6 +31,7 @@ const appRoute = express.Router();
 // signup routes
 appRoute.route("/signup").post(signup);
 appRoute.route("/users").get(getUsersList);
+appRoute.route("/users/:googleId").get(getUserByGoogleId);
 
 // signin routes
 appRoute.route("/signin").post(signin);
@@ -53,8 +53,8 @@ appRoute.route("/reject_join_group").post(rejectJoinRequest);
 //GROUP ROUTES
 appRoute
   .route("/chat_group/:id")
-  .get(getGroupById)
-  .delete(deleteGroup)
+  // .get(getGroupById)
+  // .delete(deleteGroup)
   .put(updateGroup);
 
 //  MESSAGE IN GROUP ROUTE

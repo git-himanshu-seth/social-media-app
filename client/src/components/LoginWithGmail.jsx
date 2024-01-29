@@ -34,6 +34,7 @@ const GoogleLoginComponent = () => {
     signInWithPopup(firebaseAuthManager.auth, provider)
       .then((result) => {
         const { displayName, email } = result.user;
+        console.log(result)
         setUserData({ displayName, email });
         setIsLoggedIn(true);
       })

@@ -71,7 +71,13 @@ function login(data) {
       (response) => {
         console.log("response", response, data);
 
-        if (response) {
+        if (response.status === 200) {
+          dispatch(
+            dispatchFunction({
+              type: authConstants.LOGIN_SUCCESS,
+              data: response.data,
+            })
+          );
           console.log("response", response);
         } else {
           dispatch(

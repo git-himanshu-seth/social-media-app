@@ -97,7 +97,22 @@ const getFriendList = (req, res) => {
       });
     });
 };
+const getUserByGoogleId = async (req, res) => {
+  const { googleId } = req.params;
 
+  try {
+    const user = await userModel.findOne({ googleId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({status:200, message:'User login successfully',data:user});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 // const getFriendList = (req, res) => {
 //   Friendship.findOne({ user_id: req.params.id })
 //     .then((list) => {
@@ -306,4 +321,5 @@ module.exports = {
   getFriendRequests,
   sendFriendRequest,
   getUsersList,
+  getUserByGoogleId
 };

@@ -2,6 +2,7 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
 import firebaseAuthManager from "../utilis/services/firebase";
 import { useEffect, useState } from "react";
+import { Navigate } from 'react-router-dom';
 import Home from "../pages/Home";
 import Groups from "../pages/Group";
 import PostSection from "../pages/Post";
@@ -10,10 +11,12 @@ import LoginAndRegister from "../pages/LoginRegister";
 import Socket from "../pages/socketio";
 import UserList from "../pages/Users";
 import NewPostPage from "../pages/CreatePost";
+import { useSelector } from "react-redux";
 
 const DefaultRoutes = () => {
+  const userData =useSelector((state)=>state?.auth?.user)
   const [user, setUser] = useState();
-
+useEffect(()=>{setUser(userData)},[userData])
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -29,13 +32,13 @@ const DefaultRoutes = () => {
     <div>
       <Routes>
         <Route path={"/"} element={<Home />} />
-        <Route path={"/posts"} element={<PostSection />} />
-        <Route path={"/groups"} element={<Groups />} />
-        <Route path={"/chats"} element={<Chats />} />
-        <Route path={"/login-register"} element={<LoginAndRegister />} />
-        <Route path={"/socket"} element={<Socket />} />
-        <Route path={"/users"} element={<UserList />} />
-        <Route path={"/create-post"} element={<NewPostPage />} />
+        <Route path={"/posts"} element={user?._id ?<PostSection />:<Navigate to="/login-register" />} />
+        <Route path={"/groups"} element={user?._id ?<Groups />:<Navigate to="/login-register" />} />
+        <Route path={"/chats"} element={user?._id ?<Chats />:<Navigate to="/login-register" />} />
+        <Route path={"/login-register"} element={user?._id?<Navigate to="/" />: <LoginAndRegister />} />
+        <Route path={"/socket"} element={user?._id ?<Socket />:<Navigate to="/login-register" />} />
+        <Route path={"/users"} element={user?._id ?<UserList />:<Navigate to="/login-register" />} />
+        <Route path={"/create-post"} element={user?._id ?<NewPostPage />:<Navigate to="/login-register" />} />
       </Routes>
     </div>
   );

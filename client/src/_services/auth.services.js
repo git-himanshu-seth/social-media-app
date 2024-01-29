@@ -182,19 +182,30 @@ async function logIn(data) {
     );
 
     // Signed in
-    const user = userCredential.user;
+    let user = { status: 200, data: JSON.parse(JSON.stringify(userCredential.user)) };
 
-    // You can return some value here if needed
+    // Add API call with GET method
+    const apiUrl = `http://localhost:3000/api/v1/mandala/users/${user?.data?.uid}`;
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+    });
+    if (response.status===200) {
+      const responseData = await response.json();
+      user.data={...user.data,...responseData.data};
+    } else {
+      user.apiError = { errorCode: response.status, errorMessage: response.statusText };
+    }
+
     return user;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     return { errorCode, errorMessage };
 
-    // You can handle errors here or return an error message
-    // return errorMessage;
+    
   }
 }
+
 
 function logOut(data) {
   return new Promise((resolve, reject) => {

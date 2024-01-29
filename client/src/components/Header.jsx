@@ -14,37 +14,33 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
+import LoginIcon from '@mui/icons-material/Login';
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ChatIcon from "@mui/icons-material/Chat";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "../_assets/images/logo.png";
-import firebaseAuthManager from "../utilis/services/firebase";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../_actions";
 import { useMediaQuery } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const userData =useSelector(state=>  state?.auth?.user)
   const navigate = useNavigate();
   const [user, setUser] = useState();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isMediumScreen = useMediaQuery("(min-width:1024px)");
 
   useEffect(() => {
-    handleUser();
-  }, []);
+    setUser(userData)
+  }, [userData]);
 
-  const handleUser = () => {
-    firebaseAuthManager.initAuthStateListener().then((res) => {
-      setUser(res);
-    });
-  };
+
 
   const toggleDrawer = (open) => {
     setDrawerOpen(open);
@@ -93,12 +89,11 @@ const Header = () => {
         <ListItemText primary="Chats" />
       </ListItem>
       <Divider orientation="horizontal" sx={{ color: "black" }} />
-      {user && (
+      {user?._id ?(
         <>
           <ListItem
             onClick={async () => {
               dispatch(authActions.logout());
-              handleUser();
               toggleDrawer(false);
               navigate("/");
             }}
@@ -108,7 +103,19 @@ const Header = () => {
           </ListItem>
           <Divider orientation="horizontal" sx={{ color: "black" }} />
         </>
-      )}
+        
+      ):<>
+      <ListItem
+        onClick={async () => {
+          toggleDrawer(false);
+          navigate("/login-register")
+        }}
+      >
+        <LoginIcon sx={{ marginRight: "5px" }} />
+        <ListItemText primary="Login" />
+      </ListItem>
+      <Divider orientation="horizontal" sx={{ color: "black" }} />
+    </>}
       <ListItem onClick={() => navigate("/users")}>
         <LogoutIcon sx={{ marginRight: "5px" }} />
         <ListItemText primary="Users" />
@@ -161,19 +168,26 @@ const Header = () => {
                   >
                     Chats
                   </Button>
-                  {user && (
+                  {user?._id ? (
                     <Button
                       color="inherit"
                       startIcon={<LogoutIcon />}
                       onClick={async () => {
                         dispatch(authActions.logout());
-                        handleUser();
                         navigate("/");
                       }}
                     >
                       Logout
                     </Button>
-                  )}
+                  ):(<Button
+                    color="inherit"
+                    startIcon={<LoginIcon />}
+                    onClick={async () => {
+                      navigate("/login-register")
+                    }}
+                  >
+                    Login
+                  </Button>)}
                   <Button color="inherit" onClick={() => navigate("/users")}>
                     Users
                   </Button>
