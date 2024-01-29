@@ -60,7 +60,7 @@ app.use(cors());
 // });
 app.use(
   "/api/v1/mandala",
-  passport.authenticate("bearer", { session: false }),
+  // passport.authenticate("bearer", { session: false }),
   appRoute
 );
 app.listen(3000, () => {
