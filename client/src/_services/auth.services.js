@@ -8,7 +8,6 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
-  onAuthStateChanged,
 } from "@firebase/auth";
 // import firebaseConfig from "./firebaseConfig";
 import { UseDispatch } from "react-redux";
@@ -91,6 +90,7 @@ export const authServices = {
   logOut,
   getUsers,
   createUserDB,
+  logIn,
 };
 
 function createUser(data) {
@@ -188,6 +188,30 @@ function createUserDB(data) {
       console.error("Error creating user:", error);
       throw error; // Rethrow the error to be handled at the higher level
     });
+}
+
+async function logIn(data) {
+  try {
+    const auth = getAuth();
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+
+    // Signed in
+    const user = userCredential.user;
+
+    // You can return some value here if needed
+    return user;
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    return { errorCode, errorMessage };
+
+    // You can handle errors here or return an error message
+    // return errorMessage;
+  }
 }
 
 function logOut(data) {

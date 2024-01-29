@@ -7,6 +7,7 @@ export const authActions = {
   createUser,
   logout,
   getUsers,
+  login,
 };
 
 function getPosts() {
@@ -98,6 +99,43 @@ function createUser(data) {
         dispatch(
           dispatchFunction({
             type: authConstants.CREATE_USER_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+      }
+    );
+  };
+}
+
+function login(data) {
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: authConstants.LOGIN_REQUEST,
+        data: null,
+      })
+    );
+    authServices.logIn(data).then(
+      (response) => {
+        console.log("response", response, data);
+
+        if (response) {
+          console.log("response", response);
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: authConstants.LOGIN_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: authConstants.LOGIN_FAILURE,
             data: error.message,
           })
         );

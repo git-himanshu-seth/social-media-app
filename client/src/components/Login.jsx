@@ -10,8 +10,11 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { loginWithEmailAndPassword } from "../utilis/services/firebase";
 import firebaseAuthManager from "../utilis/services/firebase";
+import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import { authActions } from "../_actions/auth.actions";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,6 +34,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(authActions.login(formData));
     // firebaseAuthManager.loginWithEmailAndPassword(
     //   formData.email,
     //   formData.password

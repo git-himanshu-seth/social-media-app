@@ -6,9 +6,9 @@ const cors = require("cors"); // Import the cors middleware
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
-io.set("origins", "http://localhost:3002/");
+// io.set("origins", "http://localhost:3002/");
 // Use cors middleware
-// app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "*" }));
 // app.use(cors(corsOptions));
 
 io.on("connection", (socket) => {

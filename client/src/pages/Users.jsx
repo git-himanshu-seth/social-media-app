@@ -31,7 +31,7 @@ const UserList = () => {
     if (user?._id) {
       dispatch(friendActions.getFriendsList({ id: user._id }));
     }
-  }, [JSON.stringify(user)]);
+  }, []);
 
   const handleSendRequest = async () => {};
 

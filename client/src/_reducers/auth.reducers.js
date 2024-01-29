@@ -73,7 +73,26 @@ export function auth(state = {}, action) {
     case authConstants.LOGOUT_FAILURE:
       return {
         ...state,
-        register_status: status.FAILURE,
+        logout_status: status.FAILURE,
+        user: null,
+      };
+
+    case authConstants.LOGIN_REQUEST:
+      return {
+        ...state,
+        login_status: status.IN_PROGRESS,
+        user: action.data,
+      };
+    case authConstants.LOGIN_SUCCESS:
+      return {
+        ...state,
+        login_status: status.SUCCESS,
+        user: action.data,
+      };
+    case authConstants.LOGIN_FAILURE:
+      return {
+        ...state,
+        login_status: status.FAILURE,
         user: null,
       };
     default:

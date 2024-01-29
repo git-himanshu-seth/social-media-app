@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-// const passport = require("passport");
+const passport = require("passport");
 // const GoogleTokenStrategy = require("passport-google-token").Strategy;
 const cookieParser = require("cookie-parser");
 const appRoute = require("./routes/routes");
@@ -58,7 +58,11 @@ app.use(cors());
 // const authenticateGoogleToken = passport.authenticate("google-token", {
 //   session: false,
 // });
-app.use("/api/v1/mandala", appRoute);
+app.use(
+  "/api/v1/mandala",
+  passport.authenticate("bearer", { session: false }),
+  appRoute
+);
 app.listen(3000, () => {
   console.log("Connect ", process.env.PORT);
 });
