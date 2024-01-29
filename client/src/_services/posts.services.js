@@ -1,7 +1,7 @@
 import config from "../config";
 import { commonFunctions } from "../_utilities";
 
-export const authServices = {
+export const postServices = {
   getPosts,
   createPost,
   updatePost,
@@ -17,10 +17,9 @@ function getPosts(data) {
     null,
     true
   );
-  return fetch(
-    `${config.apiUrl}/`,
-    requestOptions
-  ).then((response) => response.json());
+  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
+    response.json()
+  );
 }
 
 function createPost(data) {
@@ -33,10 +32,9 @@ function createPost(data) {
     null,
     true
   );
-  return fetch(
-    `${config.apiUrl}/`,
-    requestOptions
-  ).then((response) => response.json());
+  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
+    response.json()
+  );
 }
 
 function updatePost(data) {
@@ -49,9 +47,7 @@ function updatePost(data) {
     null,
     true
   );
-  return fetch(
-    `${config.apiUrl}/`,
-    requestOptions
-  ).then((response) => response.json());
+  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
+    response.json()
+  );
 }
-

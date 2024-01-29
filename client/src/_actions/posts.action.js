@@ -2,7 +2,7 @@ import { postConstants } from "../_constants";
 import { postServices } from "../_services";
 import { alert } from "../_utilities";
 
-export const authActions = {
+export const postActions = {
   getPosts,
   createPost,
   updatePost,

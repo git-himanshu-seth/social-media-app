@@ -2,7 +2,7 @@ import { groupConstants } from "../_constants";
 import { groupServices } from "../_services";
 import { alert } from "../_utilities";
 
-export const authActions = {
+export const groupActions = {
   getGroups,
   createGroup,
   addGroupMembers,
@@ -50,7 +50,7 @@ function getGroups(data) {
   };
 }
 
-function createGroup(data){
+function createGroup(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
@@ -90,7 +90,7 @@ function createGroup(data){
   };
 }
 
-function addGroupMembers(data){
+function addGroupMembers(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
@@ -130,7 +130,7 @@ function addGroupMembers(data){
   };
 }
 
-function acceptGroupRequest(data){
+function acceptGroupRequest(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
@@ -170,7 +170,7 @@ function acceptGroupRequest(data){
   };
 }
 
-function rejectGroupRequest(data){
+function rejectGroupRequest(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
