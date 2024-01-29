@@ -17,7 +17,7 @@ import Loader from "../components/customLoader";
 const Post = ({ user, timestamp, content }) => {
   return (
     <>
-      <Card>
+      <Card sx={{ marginBottom: "20px" }}>
         <CardContent>
           {/* Post Header */}
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -49,7 +49,7 @@ const Post = ({ user, timestamp, content }) => {
           </IconButton>
         </CardActions>
       </Card>
-      <Loader />
+      {/* <Loader /> */}
     </>
   );
 };

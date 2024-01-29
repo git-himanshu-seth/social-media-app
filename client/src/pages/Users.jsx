@@ -6,6 +6,8 @@ import {
   ListItemText,
   Divider,
   Typography,
+  Container,
+  Box,
   Button,
 } from "@mui/material";
 import { friendActions } from "../_actions";
@@ -27,6 +29,7 @@ const UserList = () => {
   const [response, setResponse] = useState(null);
   const [friendRequests, setFriendRequests] = useState([]);
   const [acceptedRequests, setAcceptedRequests] = useState([]);
+  const [activeTab, setActiveTab] = useState(1);
   useEffect(() => {
     if (user?._id) {
       dispatch(friendActions.getFriendsList({ id: user._id }));
@@ -61,107 +64,141 @@ const UserList = () => {
   ];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-        marginTop: "30px",
-      }}
-    >
-      {/* {friendRequests && friendRequests.length > 0 && ( */}
-      <div>
-        {/* Friend Requests */}
-        <Typography variant="h4" gutterBottom>
-          Friend Requests
-        </Typography>
-        <List>
-          {/* {friendRequests.map((request) => ( */}
-          <React.Fragment key={1}>
-            <ListItem>
-              <ListItemText
-                primary={"himanshu"}
-                secondary="sent you a friend request"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => handleAcceptRequest()}
-                sx={{ marginRight: "20px" }}
-              >
-                Accept
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                size="small"
-                onClick={() => handleAcceptRequest()}
-              >
-                Reject
-              </Button>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-          {/* ))} */}
-        </List>
-      </div>
-      {/* )} */}
-      <div>
-        {/* Friends List */}
-        <Typography variant="h4" gutterBottom>
-          Friends List
-        </Typography>
-        <List>
-          {users.map((user) => (
-            <React.Fragment key={user.id}>
-              <ListItem>
-                <ListItemText
-                  primary={user.name}
-                  secondary="sent friend request"
-                />
-                <ListItemText primary={user.name} />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSendRequest}
-                >
-                  View
-                </Button>
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
-      </div>
-      <div>
-        {/* User List */}
-        <Typography variant="h4" gutterBottom>
-          User List
-        </Typography>
-        <List>
-          {users.map((user) => (
-            <React.Fragment key={user.id}>
-              <ListItem>
-                <ListItemText
-                  primary={user.name}
-                  secondary="sent friend request"
-                />
-                <ListItemText primary={user.name} />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSendRequest}
-                >
-                  Send Request
-                </Button>
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
-      </div>
-    </div>
+    <Container>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          marginTop: "30px",
+        }}
+      >
+        <Box display={"flex"} flexDirection={"row"}>
+          <Button
+            size="large"
+            variant={activeTab === 1 ? "contained" : "outlined"}
+            onClick={() => setActiveTab(1)}
+            sx={{ marginRight: "15px" }}
+          >
+            Friend Requests
+          </Button>
+          <Button
+            size="large"
+            variant={activeTab === 2 ? "contained" : "outlined"}
+            onClick={() => setActiveTab(2)}
+            sx={{ marginRight: "15px" }}
+          >
+            Friends List
+          </Button>
+          <Button
+            size="large"
+            variant={activeTab === 3 ? "contained" : "outlined"}
+            onClick={() => setActiveTab(3)}
+            sx={{ marginRight: "15px" }}
+          >
+            Make New Friends
+          </Button>
+        </Box>
+        {/* {friendRequests && friendRequests.length > 0 && ( */}
+        {activeTab === 1 && (
+          <Box>
+            {/* Friend Requests */}
+            <Typography variant="h4" gutterBottom>
+              Friend Requests
+            </Typography>
+            <List>
+              {/* {friendRequests.map((request) => ( */}
+              <React.Fragment key={1}>
+                <ListItem>
+                  <ListItemText
+                    primary={"himanshu"}
+                    secondary="sent you a friend request"
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => handleAcceptRequest()}
+                    sx={{ marginRight: "20px" }}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={() => handleAcceptRequest()}
+                  >
+                    Reject
+                  </Button>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+              {/* ))} */}
+            </List>
+          </Box>
+        )}
+        {/* )} */}
+        {activeTab === 2 && (
+          <Box>
+            {/* Friends List */}
+            <Typography variant="h4" gutterBottom>
+              Friends List
+            </Typography>
+            <List>
+              {users.map((user) => (
+                <React.Fragment key={user.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={user.name}
+                      secondary="sent friend request"
+                    />
+                    <ListItemText primary={user.name} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSendRequest}
+                    >
+                      View
+                    </Button>
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+            </List>
+          </Box>
+        )}
+        {activeTab === 3 && (
+          <Box>
+            {/* User List */}
+            <Typography variant="h4" gutterBottom>
+              User List
+            </Typography>
+            <List>
+              {users.map((user) => (
+                <React.Fragment key={user.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={user.name}
+                      secondary="sent friend request"
+                    />
+                    <ListItemText primary={user.name} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSendRequest}
+                    >
+                      Send Request
+                    </Button>
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+            </List>
+          </Box>
+        )}
+      </Box>
+    </Container>
   );
 };
 

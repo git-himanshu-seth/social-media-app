@@ -44,10 +44,6 @@ const Chat = () => {
         flexDirection: "column",
       }}
     >
-      <Typography variant="h5" gutterBottom>
-        Chat
-      </Typography>
-
       <div
         style={{
           height: "508px",
