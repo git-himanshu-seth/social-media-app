@@ -1,6 +1,5 @@
 const express = require("express");
 const passport = require("passport");
-require("../middlewares/AuthMiddleware");
 const {
   signup,
   signin,
@@ -66,23 +65,10 @@ appRoute
 // GET FRIEND LIST ROUTE
 appRoute.route("/friend_request/:id").get(getFriendList);
 
-appRoute.route("/signin").post((req, res) => {
-  res.status(200).json({ name: "himanshu seth" });
-});
 
-appRoute.route("/chats").post((req, res) => {
-  res.status(200).json({ name: "himanshu seth" });
-});
-appRoute
-  .route("/auth/google")
-  .get(passport.authenticate("google", { scope: ["email", "profile"] }));
 
-appRoute.route("/auth/google/callback").get(
-  passport.authenticate("google", {
-    successRedirect: "/auth/google/success",
-    failureRedirect: "/auth/google/failure",
-  })
-);
+
+
 appRoute.route("/chat").post((req, res) => {
   res.status(200).json({ name: "himanshu seth" });
 });
