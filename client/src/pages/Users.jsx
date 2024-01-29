@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { authActions, friendActions } from "../_actions";
-import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserList = () => {
   const dispatch = useDispatch();

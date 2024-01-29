@@ -29,7 +29,7 @@ function createPost(data) {
   const requestOptions = commonFunctions.getRequestOptions(
     "GET",
     extraHeaders,
-    null,
+    JSON.stringify(data),
     true
   );
   return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>

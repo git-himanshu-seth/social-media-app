@@ -17,7 +17,8 @@ import { postActions } from "../_actions";
 const PostSection = (props) => {
   const dispatch = useDispatch();
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [newPostContent, setNewPostContent] = useState("");
+  const [newPosttitle, setNewPostTitle] = useState("");
+  const [newPostDescription, setNewPostDescription] = useState("");
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -28,7 +29,14 @@ const PostSection = (props) => {
   };
 
   const handleCreatePost = () => {
-    dispatch(postActions.createPost());
+    if (newPosttitle && newPostDescription) {
+      const postData = {
+        newPosttitle,
+        newPostDescription,
+      };
+      const response = dispatch(postActions.createPost(postData));
+      console.log(response);
+    }
     // handleDialogClose();
   };
 
@@ -103,8 +111,8 @@ const PostSection = (props) => {
               label="Post Title"
               fullWidth
               variant="outlined"
-              value={newPostContent}
-              onChange={(e) => setNewPostContent(e.target.value)}
+              value={newPosttitle}
+              onChange={(e) => setNewPostTitle(e.target.value)}
               sx={{ marginTop: "15px" }}
             />
             <TextField
@@ -114,8 +122,8 @@ const PostSection = (props) => {
               rows={4}
               fullWidth
               variant="outlined"
-              value={newPostContent}
-              onChange={(e) => setNewPostContent(e.target.value)}
+              value={newPostDescription}
+              onChange={(e) => setNewPostDescription(e.target.value)}
             />
             <Button
               variant="contained"
@@ -131,7 +139,7 @@ const PostSection = (props) => {
               onClick={handleCreatePost}
               style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
-              Cancle
+              Cancel
             </Button>
           </DialogContent>
         </Dialog>
