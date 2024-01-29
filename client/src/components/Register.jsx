@@ -10,8 +10,11 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import GoogleLoginComponent from "./LoginWithGmail";
+import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import { authActions } from "../_actions";
 
 const RegisterPage = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -73,7 +76,7 @@ const RegisterPage = () => {
     const formValid = validateForm();
 
     if (formValid) {
-      console.log("Form submitted successfully!");
+      dispatch(authActions.createUser(formData));
     } else {
       console.log("Form validation failed");
     }

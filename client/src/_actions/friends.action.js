@@ -1,38 +1,39 @@
-import { authConstants } from "../_constants";
-import { authServices } from "../_services";
+import { friendServices } from "../_services";
+import { friendConstant } from "../_constants";
 import { alert, commonFunctions } from "../_utilities";
 
-export const authActions = {
-  getPosts,
-  createUser,
-  logout,
-  getUsers,
+export const friendActions = {
+  getFriendsList,
+  getReqList,
+  sendFrienReq,
+  acceptReq,
+  rejectReq,
 };
 
-function getPosts() {
+function getFriendsList(data) {
   return (dispatch) => {
     console.log();
     dispatch(
       dispatchFunction({
-        type: authConstants.GET_POSTS_REQUEST,
+        type: friendConstant.GET_FRIENDS_REQUEST,
         data: null,
       })
     );
-    authServices.getPosts().then(
+    friendServices.getFriendsList(data).then(
       (response) => {
         if (response.status === 200) {
           console.log("response", response);
 
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_POSTS_SUCCESS,
+              type: friendConstant.GET_FRIENDS_SUCCESS,
               data: response.data,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_POSTS_FAILURE,
+              type: friendConstant.GET_FRIENDS_FAILURE,
               data: response,
             })
           );
@@ -42,7 +43,7 @@ function getPosts() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.GET_POSTS_FAILURE,
+            type: friendConstant.GET_FRIENDS_FAILURE,
             data: error.message,
           })
         );
@@ -52,42 +53,29 @@ function getPosts() {
   };
 }
 
-function createUser(data) {
+function getReqList(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.CREATE_USER_REQUEST,
+        type: friendConstant.GET_FRIENDS_REQ_LIST_REQUEST,
         data: null,
       })
     );
-    authServices.createUser(data).then(
+    friendServices.getReqList(data).then(
       (response) => {
         console.log("response", response, data);
 
         if (response.email && response?.uid) {
-          authServices
-            .createUserDB({
-              name: data?.firstName + " " + data?.lastName,
-              email: data?.email,
-              googleId: `${response?.uid}`,
+          dispatch(
+            dispatchFunction({
+              type: friendConstant.GET_FRIENDS_REQ_LIST_SUCCESS,
+              data: response.data,
             })
-            .then((res) => {
-              console.log(res.data);
-              if (res) {
-                dispatch(
-                  dispatchFunction({
-                    type: authConstants.CREATE_USER_SUCCESS,
-                    data: { ...response, ...res.data },
-                  })
-                );
-              }
-            });
-
-          console.log("response", response.uid);
+          );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.CREATE_USER_FAILURE,
+              type: friendConstant.GET_FRIENDS_REQ_LIST_FAILURE,
               data: response,
             })
           );
@@ -97,7 +85,7 @@ function createUser(data) {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.CREATE_USER_FAILURE,
+            type: friendConstant.GET_FRIENDS_REQ_LIST_FAILURE,
             data: error.message,
           })
         );
@@ -107,28 +95,28 @@ function createUser(data) {
   };
 }
 
-function getUsers() {
+function sendFrienReq(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.GET_USERS_REQUEST,
+        type: friendConstant.SEND_FRIEND_REQ_REQUEST,
         data: null,
       })
     );
-    authServices.getUsers().then(
+    friendServices.sendFrienReq(data).then(
       (response) => {
         console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_USERS_SUCCESS,
+              type: friendConstant.REJECT_FRIRND_REQ_SUCCESS,
               data: response,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.GET_USERS_FAILURE,
+              type: friendConstant.SEND_FRIEND_REQ_FAILURE,
               data: response,
             })
           );
@@ -138,7 +126,7 @@ function getUsers() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.GET_USERS_FAILURE,
+            type: friendConstant.SEND_FRIEND_REQ_FAILURE,
             data: error.message,
           })
         );
@@ -148,28 +136,28 @@ function getUsers() {
   };
 }
 
-function logout() {
+function acceptReq(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-        type: authConstants.LOGOUT_REQUEST,
+        type: friendConstant.ACCEPT_FRIRND_REQ_REQUEST,
         data: null,
       })
     );
-    authServices.logOut().then(
+    friendServices.acceptReq(data).then(
       (response) => {
         console.log("response", response);
         if (response) {
           dispatch(
             dispatchFunction({
-              type: authConstants.LOGOUT_SUCCESS,
+              type: friendConstant.ACCEPT_FRIRND_REQ_SUCCESS,
               data: response,
             })
           );
         } else {
           dispatch(
             dispatchFunction({
-              type: authConstants.LOGOUT_FAILURE,
+              type: friendConstant.ACCEPT_FRIRND_REQ_FAILURE,
               data: response,
             })
           );
@@ -179,7 +167,48 @@ function logout() {
       (error) => {
         dispatch(
           dispatchFunction({
-            type: authConstants.LOGOUT_FAILURE,
+            type: friendConstant.ACCEPT_FRIRND_REQ_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+      }
+    );
+  };
+}
+
+function rejectReq(data) {
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: friendConstant.REJECT_FRIRND_REQ_REQUEST,
+        data: null,
+      })
+    );
+    friendServices.rejectReq(data).then(
+      (response) => {
+        console.log("response", response);
+        if (response) {
+          dispatch(
+            dispatchFunction({
+              type: friendConstant.REJECT_FRIRND_REQ_SUCCESS,
+              data: response,
+            })
+          );
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
             data: error.message,
           })
         );

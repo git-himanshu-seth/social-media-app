@@ -5,7 +5,7 @@ const FriendRequest = require("../models/friendRequestSchema");
 const signup = (req, res) => {
   const { name, email } = req.body;
   userModel
-    .create({ name, email })
+    .create(req.body)
     .then((result) => {
       console.log("User created successfully:", result);
       // Send a success response to the client
@@ -204,8 +204,8 @@ const getFriendRequests = async (req, res) => {
     const friendRequests = await FriendRequest.find({
       $or: [{ sender: userId }, { receiver: userId }],
     })
-      .populate("sender", "username") // Populate sender details
-      .populate("receiver", "username"); // Populate receiver details
+      .populate("sender", ["name", "email"]) // Populate sender details
+      .populate("receiver", ["name", "email"]); // Populate receiver details
 
     res.status(200).json({ data: friendRequests, status: 200 });
   } catch (error) {
@@ -284,6 +284,20 @@ const handleFriendRequest = async (req, res) => {
   }
 };
 
+const getUsersList = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    res.status(200).json({
+      users,
+      status: 200,
+      message: "Get users succesfully",
+      length: users.length,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   signup,
   signin,
@@ -291,4 +305,5 @@ module.exports = {
   handleFriendRequest,
   getFriendRequests,
   sendFriendRequest,
+  getUsersList,
 };

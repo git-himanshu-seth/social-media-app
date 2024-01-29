@@ -65,25 +65,18 @@ function createUser(data) {
         console.log("response", response, data);
 
         if (response.email && response?.uid) {
-          authServices
-            .createUserDB({
-              name: data?.firstName + " " + data?.lastName,
-              email: data?.email,
-              googleId: `${response?.uid}`,
+          dispatch(
+            dispatchFunction({
+              type: authConstants.CREATE_USER_SUCCESS,
+              data: response,
             })
-            .then((res) => {
-              console.log(res.data);
-              if (res) {
-                dispatch(
-                  dispatchFunction({
-                    type: authConstants.CREATE_USER_SUCCESS,
-                    data: { ...response, ...res.data },
-                  })
-                );
-              }
-            });
-
+          );
           console.log("response", response.uid);
+          authServices.createUserDB({
+            name: data?.firstName + " " + data?.lastName,
+            email: data?.email,
+            googleId: `${response?.uid}`,
+          });
         } else {
           dispatch(
             dispatchFunction({

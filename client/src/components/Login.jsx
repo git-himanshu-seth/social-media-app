@@ -31,10 +31,10 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    firebaseAuthManager.loginWithEmailAndPassword(
-      formData.email,
-      formData.password
-    );
+    // firebaseAuthManager.loginWithEmailAndPassword(
+    //   formData.email,
+    //   formData.password
+    // );
   };
 
   return (

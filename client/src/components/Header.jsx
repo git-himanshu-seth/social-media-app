@@ -19,7 +19,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Logo from "../_assets/images/logo.png";
 import firebaseAuthManager from "../utilis/services/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../_actions";
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [user, setUser] = useState();
   useEffect(() => {
@@ -68,7 +71,7 @@ const Header = () => {
             <Button
               color="inherit"
               startIcon={<HomeIcon />}
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
             >
               Home
             </Button>
@@ -93,19 +96,28 @@ const Header = () => {
             >
               Chats
             </Button>
-            {user && (
-              <Button
-                color="inherit"
-                startIcon={<LogoutIcon />}
-                onClick={async () => {
-                  await firebaseAuthManager.logout();
-                  handleUser();
-                  navigate("/");
-                }}
-              >
-                Logout
-              </Button>
-            )}
+            {/* {user && ( */}
+            <Button
+              color="inherit"
+              startIcon={<LogoutIcon />}
+              onClick={async () => {
+                dispatch(authActions.logout());
+                handleUser();
+                navigate("/");
+              }}
+            >
+              Logout
+            </Button>
+            <Button
+              color="inherit"
+              // startIcon={<LogoutIcon />}
+              onClick={async () => {
+                navigate("/users");
+              }}
+            >
+              users
+            </Button>
+            {/* )} */}
           </Box>
         </Box>
       </Toolbar>

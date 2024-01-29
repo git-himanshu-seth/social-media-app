@@ -6,6 +6,10 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Name is required"],
   },
+  googleId: {
+    type: String,
+    required: [true, "GoogleId is required"],
+  },
   email: {
     type: String,
     required: [true, "Email is required"],

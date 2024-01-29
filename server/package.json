@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production PORT=3000 nodemon server.js nodemon chatserver.js",
-    "dev": "nodemon chatserver.js"
+    "start": "NODE_ENV=production PORT=8080 nodemon server.js nodemon chatserver.js",
+    "dev": "nodemon socketio.js"
   },
   "author": "Himanshu Seth",
   "license": "ISC",
@@ -17,11 +17,13 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "http": "^0.0.1-security",
+    "http-proxy-middleware": "^2.0.6",
     "joi": "^17.12.0",
     "jwt": "^0.2.0",
     "mongoose": "^8.1.1",
     "passport": "^0.7.0",
     "passport-firebase-auth": "^0.0.0-beta.1",
+    "passport-google-oauth2": "^0.2.0",
     "passport-google-token": "^0.1.2",
     "socket.io": "^4.7.4"
   }

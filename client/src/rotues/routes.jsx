@@ -6,29 +6,36 @@ import Home from "../pages/Home";
 import Groups from "../pages/Group";
 import PostSection from "../pages/Post";
 import Chat from "../pages/Chat";
+import LoginAndRegister from "../pages/LoginRegister";
+import Socket from "../pages/socketio";
+import UserList from "../pages/Users";
+import NewPostPage from "../pages/CreatePost";
 
 const DefaultRoutes = () => {
   const [user, setUser] = useState();
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    firebaseAuthManager.initAuthStateListener().then((res) => {
-      if (res) {
-        setUser(res);
-        navigate("/home");
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   firebaseAuthManager.initAuthStateListener().then((res) => {
+  //     if (res) {
+  //       console.log(res);
+  //       setUser(JSON.parse(JSON.stringify(res)));
+  //       navigate("/");
+  //     }
+  //   });
+  // }, []);
   return (
     <div>
       <Routes>
-        <Route path={"/home"} element={<Home />} />
+        <Route path={"/"} element={<Home />} />
         <Route path={"/posts"} element={<PostSection />} />
         <Route path={"/groups"} element={<Groups />} />
         <Route path={"/chats"} element={<Chat />} />
-        {/* <Route path={"/"} element={<Home />} />
-        <Route path={"/"} element={<Home />} /> */}
+        <Route path={"/login-register"} element={<LoginAndRegister />} />
+        <Route path={"/socket"} element={<Socket />} />
+        <Route path={"/users"} element={<UserList />} />
+        <Route path={"/create-post"} element={<NewPostPage />} />
       </Routes>
     </div>
   );

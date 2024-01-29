@@ -35,7 +35,6 @@ const GoogleLoginComponent = () => {
       .then((result) => {
         const { displayName, email } = result.user;
         setUserData({ displayName, email });
-
         setIsLoggedIn(true);
       })
       .catch((error) => {});

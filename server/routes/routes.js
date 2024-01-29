@@ -1,4 +1,6 @@
 const express = require("express");
+const passport = require("passport");
+require("../middlewares/AuthMiddleware");
 const {
   signup,
   signin,
@@ -6,6 +8,7 @@ const {
   handleFriendRequest,
   getFriendRequests,
   sendFriendRequest,
+  getUsersList,
 } = require("../controllers/userControler");
 const {
   createGroup,
@@ -28,6 +31,7 @@ const appRoute = express.Router();
 
 // signup routes
 appRoute.route("/signup").post(signup);
+appRoute.route("/users").get(getUsersList);
 
 // signin routes
 appRoute.route("/signin").post(signin);
@@ -69,7 +73,16 @@ appRoute.route("/signin").post((req, res) => {
 appRoute.route("/chats").post((req, res) => {
   res.status(200).json({ name: "himanshu seth" });
 });
+appRoute
+  .route("/auth/google")
+  .get(passport.authenticate("google", { scope: ["email", "profile"] }));
 
+appRoute.route("/auth/google/callback").get(
+  passport.authenticate("google", {
+    successRedirect: "/auth/google/success",
+    failureRedirect: "/auth/google/failure",
+  })
+);
 appRoute.route("/chat").post((req, res) => {
   res.status(200).json({ name: "himanshu seth" });
 });
