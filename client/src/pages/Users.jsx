@@ -21,13 +21,12 @@ const UserList = () => {
   );
   const [friendList, setFriend] = useState(
     useSelector((state) => {
-      console.log("userList: ", state?.friend);
-      return state?.friend?.data;
+      console.log("fffff", state?.friend?.friends);
+      return state?.friend?.friends;
     })
   );
   const [friendRequestList, setFriendRequestList] = useState(
     useSelector((state) => {
-      console.log("friendRequestList: ", state?.friend?.friendsReq);
       return state?.friend?.friendsReq?.data;
     })
   );
@@ -50,7 +49,14 @@ const UserList = () => {
   }, []);
 
   const handleSendRequest = async (id) => {
-    dispatch(friendActions.getFriendsList({ id: id }));
+    const sendData = {
+      senderId: userData?._id,
+      receiverId: id,
+    };
+    const sendRequestResponse = dispatch(friendActions.sendFrienReq(sendData));
+    if (sendRequestResponse?.status === 200) {
+      dispatch(friendActions.getReqList({ id: userData._id }));
+    }
   };
 
   const handleReceiveRequest = () => {
@@ -149,7 +155,6 @@ const UserList = () => {
         )}
         {activeTab === 2 && (
           <Box>
-            {/* Friends List */}
             <Typography variant="h4" gutterBottom>
               Friends List
             </Typography>
@@ -163,14 +168,7 @@ const UserList = () => {
                         primary={friend.name}
                         secondary="sent friend request"
                       />
-                      <ListItemText primary={friend.name} />
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSendRequest}
-                      >
-                        View
-                      </Button>
+                      <ListItemText primary={friend.email} />
                     </ListItem>
                     <Divider />
                   </React.Fragment>
@@ -194,7 +192,7 @@ const UserList = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleSendRequest(user.id)}
+                        onClick={() => handleSendRequest(user._id)}
                       >
                         Send Request
                       </Button>

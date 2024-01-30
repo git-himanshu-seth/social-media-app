@@ -51,7 +51,7 @@ function sendFrienReq(data) {
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-  return fetch(`${config.apiUrl}/send-friend-request`, requestOptions).then(
+  return fetch(`${config.apiUrl}send-friend-request`, requestOptions).then(
     (response) => response.json()
   );
 }
