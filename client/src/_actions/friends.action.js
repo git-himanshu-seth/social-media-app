@@ -12,7 +12,6 @@ export const friendActions = {
 
 function getFriendsList(data) {
   return (dispatch) => {
-    console.log();
     dispatch(
       dispatchFunction({
         type: friendConstant.GET_FRIENDS_REQUEST,
@@ -22,8 +21,6 @@ function getFriendsList(data) {
     friendServices.getFriendsList(data).then(
       (response) => {
         if (response.status === 200) {
-          console.log("response", response);
-
           dispatch(
             dispatchFunction({
               type: friendConstant.GET_FRIENDS_SUCCESS,
@@ -103,7 +100,6 @@ function sendFrienReq(data) {
     );
     friendServices.sendFrienReq(data).then(
       (response) => {
-        console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -144,7 +140,6 @@ function acceptReq(data) {
     );
     friendServices.acceptReq(data).then(
       (response) => {
-        console.log("response", response);
         if (response) {
           dispatch(
             dispatchFunction({
@@ -185,7 +180,6 @@ function rejectReq(data) {
     );
     friendServices.rejectReq(data).then(
       (response) => {
-        console.log("response", response);
         if (response) {
           dispatch(
             dispatchFunction({

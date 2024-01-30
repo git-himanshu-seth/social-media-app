@@ -14,38 +14,26 @@ import { useDispatch, useSelector } from "react-redux";
 
 const UserList = () => {
   const dispatch = useDispatch();
-  const [userData, setUser] = useState(
-    useSelector((state) => {
-      return state?.auth?.user;
-    })
-  );
-  const [friendList, setFriend] = useState(
-    useSelector((state) => {
-      console.log("fffff", state?.friend?.friends);
-      return state?.friend?.friends;
-    })
-  );
-  const [friendRequestList, setFriendRequestList] = useState(
-    useSelector((state) => {
-      return state?.friend?.friendsReq?.data;
-    })
-  );
-  const [userListData, setUserListData] = useState(
-    useSelector((state) => {
-      return state?.auth?.userList?.users;
-    })
-  );
-  const [response, setResponse] = useState(null);
-  const [friendRequests, setFriendRequests] = useState([]);
-  const [acceptedRequests, setAcceptedRequests] = useState([]);
+  const userData = useSelector((state) => {
+    return state?.auth?.user;
+  });
+  const friendList = useSelector((state) => {
+    return state?.friend?.friends;
+  });
+
+  const friendRequestList = useSelector((state) => {
+    return state?.friend?.friendsReq;
+  });
+
+  const userListData = useSelector((state) => {
+    return state?.auth?.userList?.users;
+  });
   const [activeTab, setActiveTab] = useState(1);
 
   useEffect(() => {
-    if (userData?._id) {
-      dispatch(friendActions.getFriendsList({ id: userData._id }));
-      dispatch(authActions.getUsers());
-      dispatch(friendActions.getReqList({ id: userData._id }));
-    }
+    dispatch(friendActions.getFriendsList({ id: userData._id }));
+    dispatch(authActions.getUsers());
+    dispatch(friendActions.getReqList({ id: userData._id }));
   }, []);
 
   const handleSendRequest = async (id) => {
@@ -59,23 +47,18 @@ const UserList = () => {
     }
   };
 
-  const handleReceiveRequest = () => {
-    // Simulate receiving a friend request
-    const newRequest = { id: friendRequests.length + 1, sender: "New Friend" };
-    setFriendRequests([...friendRequests, newRequest]);
-  };
-
-  const handleAcceptRequest = (requestId) => {
-    // Move the request from friendRequests to acceptedRequests
-    const acceptedRequest = friendRequests.find(
-      (request) => request.id === requestId
+  const handleAcceptRequest = (action) => {
+    const sendData = {
+      action: action,
+      requestId: userData?._id,
+    };
+    const actionFriendRequResponse = dispatch(
+      friendActions.acceptReq(sendData)
     );
-    setAcceptedRequests([...acceptedRequests, acceptedRequest]);
-
-    // Remove the accepted request from friendRequests
-    setFriendRequests(
-      friendRequests.filter((request) => request.id !== requestId)
-    );
+    if (actionFriendRequResponse?.status === 200) {
+      dispatch(friendActions.getReqList({ id: userData._id }));
+      dispatch(friendActions.getFriendsList({ id: userData._id }));
+    }
   };
 
   return (
@@ -126,14 +109,14 @@ const UserList = () => {
                   <React.Fragment key={1}>
                     <ListItem>
                       <ListItemText
-                        primary={"himanshu"}
-                        secondary="sent you a friend request"
+                        primary={request?.sender?.name}
+                        secondary={request?.sender?.email}
                       />
                       <Button
                         variant="contained"
                         color="primary"
                         size="small"
-                        onClick={() => handleAcceptRequest()}
+                        onClick={() => handleAcceptRequest("accept")}
                         sx={{ marginRight: "20px" }}
                       >
                         Accept
@@ -142,7 +125,7 @@ const UserList = () => {
                         variant="contained"
                         color="error"
                         size="small"
-                        onClick={() => handleAcceptRequest()}
+                        onClick={() => handleAcceptRequest("reject")}
                       >
                         Reject
                       </Button>
