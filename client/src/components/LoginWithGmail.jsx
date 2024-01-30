@@ -7,9 +7,12 @@ import {
 } from "firebase/auth";
 import firebaseAuthManager from "../utilis/services/firebase";
 import googleLogo from "../_assets/images/googleLogo.svg";
+import { useDispatch } from "react-redux";
+import { authActions } from "../_actions";
 const GoogleLoginComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
+  const dispatch= useDispatch();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
@@ -34,8 +37,9 @@ const GoogleLoginComponent = () => {
     signInWithPopup(firebaseAuthManager.auth, provider)
       .then((result) => {
         const { displayName, email } = result.user;
-        console.log(result)
+        console.log("uid",result)
         setUserData({ displayName, email });
+        dispatch(authActions.registerWithGoogle(result.user))
         setIsLoggedIn(true);
       })
       .catch((error) => {});

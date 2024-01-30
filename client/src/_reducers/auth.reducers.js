@@ -78,6 +78,25 @@ export function auth(state = {}, action) {
         userList: null,
       };
 
+      case authConstants.REGISTER_WITH_GOOGLE_REQUEST:
+      return {
+        ...state,
+        register_with_google_status: status.IN_PROGRESS,
+        user: null,
+      };
+    case authConstants.REGISTER_WITH_GOOGLE_SUCCESS:
+      return {
+        ...state,
+        register_with_google_status: status.SUCCESS,
+        user: action.data,
+      };
+    case authConstants.REGISTER_WITH_GOOGLE_FAILURE:
+      return {
+        ...state,
+        register_with_google_status: status.FAILURE,
+        user: null,
+      };
+
     default:
       return state;
   }

@@ -7,6 +7,7 @@ export const authActions = {
   logout,
   getUsers,
   login,
+  registerWithGoogle
 };
 
 function createUser(data) {
@@ -93,6 +94,49 @@ function login(data) {
         dispatch(
           dispatchFunction({
             type: authConstants.LOGIN_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+      }
+    );
+  };
+}
+
+function registerWithGoogle(data) {
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: authConstants.REGISTER_WITH_GOOGLE_REQUEST,
+        data: null,
+      })
+    );
+    authServices.registerWithGoogle(data).then(
+      (response) => {
+        console.log("response",  response);
+
+        if (response.status === 200) {
+          dispatch(
+            dispatchFunction({
+              type: authConstants.REGISTER_WITH_GOOGLE_SUCCESS,
+              data: response.data,
+            })
+          );
+          console.log("response", response);
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: authConstants.REGISTER_WITH_GOOGLE_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: authConstants.REGISTER_WITH_GOOGLE_FAILURE,
             data: error.message,
           })
         );

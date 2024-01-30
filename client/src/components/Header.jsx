@@ -116,9 +116,9 @@ const Header = () => {
       </ListItem>
       <Divider orientation="horizontal" sx={{ color: "black" }} />
     </>}
-      <ListItem onClick={() => navigate("/users")}>
+      <ListItem onClick={() => {navigate("/users")  ; toggleDrawer(false);}}>
         <LogoutIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Users" />
+        <ListItemText primary="Friends" />
       </ListItem>
       <Divider orientation="horizontal" sx={{ color: "black" }} />
     </List>
@@ -189,7 +189,7 @@ const Header = () => {
                     Login
                   </Button>)}
                   <Button color="inherit" onClick={() => navigate("/users")}>
-                    Users
+                    Friends
                   </Button>
                 </>
               ) : (

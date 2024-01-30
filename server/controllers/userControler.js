@@ -2,57 +2,57 @@ const userModel = require("../models/userModel");
 const Friendship = require("../models/friendSchema");
 const FriendRequest = require("../models/friendRequestSchema");
 
-const signup = (req, res) => {
-  const { name, email } = req.body;
+const signup = async (req, res) => {
+  const { uid , displayName, email } = req.body;
+  console.log(req.body);
+ let userExist = await  userModel.findOne({ email: email})  ;
+ if (userExist) {
+return res.status(200).json({
+  message: "User already exists",
+  data: {_id:userExist._id, googleId:userExist.googleId, ...req.body},
+  status: 200,
+});
+ }else{
   userModel
-    .create(req.body)
+    .create({name:displayName, googleId: uid, email})
     .then((result) => {
-      console.log("User created successfully:", result);
-      // Send a success response to the client
       Friendship.create({ user_id: result._id, friends: [] });
       res.status(200).json({
         message: "User created successfully",
-        data: result,
+        data: {...result, ...req.body},
         status: 200,
       });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
         console.error("Validation Error:", err.message);
-        // Send a validation error response to the client
         res
           .status(400)
           .json({ message: "Validation Error", error: err.message });
       } else {
         console.error("Error creating user:", err);
-        // Send an internal server error response to the client
         res
           .status(500)
           .json({ message: "Internal Server Error", error: err.message });
       }
     });
+  }
 };
 
 const signin = (req, res) => {
   const { email } = req.body;
 
-  // Validate the presence of email and password
   if (!email) {
     return res.status(400).json({ message: "Email and password are required" });
   }
 
-  // Assuming userModel has a login method
   userModel
     .findOne({ email: email })
     .then((user) => {
       if (!user) {
-        // User not found
         return res.status(404).json({ message: "User not found" });
       }
 
-      // You may want to generate and send a token for authentication here
-
-      // Send a success response to the client
       res.status(200).json({
         message: "User signed in successfully",
         data: user,
@@ -62,7 +62,6 @@ const signin = (req, res) => {
     .catch((err) => {
       console.error("Error signing in user:", err);
 
-      // Send an internal server error response to the client
       res
         .status(500)
         .json({ message: "Internal Server Error", error: err.message });
@@ -71,7 +70,7 @@ const signin = (req, res) => {
 
 const getFriendList = (req, res) => {
   Friendship.findOne({ user_id: req.params.id })
-    .populate("friends", "name email") // Assuming 'friends' is the reference field in Friendship model
+    .populate("friends", "name email") 
     .then((list) => {
       if (list) {
         res.status(200).json({
@@ -113,51 +112,16 @@ const getUserByGoogleId = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-// const getFriendList = (req, res) => {
-//   Friendship.findOne({ user_id: req.params.id })
-//     .then((list) => {
-//       if (list) {
-//         res.status(200).json({
-//           message: "get friends list successfuly",
-//           success: true,
-//           data: list.friends,
-//           length: list.friends.length,
-//           status: 200,
-//         });
-//       }
-//     })
-//     .catch((err) => {
-//       if (err.name === "ValidationError") {
-//         console.error("Validation Error:", err.message);
-//         // Send a validation error response to the client
-//         res
-//           .status(400)
-//           .json({ message: "Validation Error", error: err.message });
-//       } else {
-//         console.error("Error creating user:", err);
-//         // Send an internal server error response to the client
-//         res
-//           .status(500)
-//           .json({ message: "Internal Server Error", error: err.message });
-//       }
-//     });
-// };
 
-// Controller to send a friend request
 const sendFriendRequest = (req, res) => {
   const { senderId, receiverId } = req.body;
 
-  // Check if the sender and receiver exist
-  // You may want to add more validation here, depending on your application logic
-
-  // Check if the friend request already exists
+  
   FriendRequest.findOne({ sender: senderId, receiver: receiverId })
     .then((existingRequest) => {
       if (existingRequest) {
-        // Friend request already exists
         res.status(400).json({ message: "Friend request already sent" });
       } else {
-        // Friend request does not exist, proceed to save
         const friendRequest = new FriendRequest({
           sender: senderId,
           receiver: receiverId,
@@ -166,7 +130,6 @@ const sendFriendRequest = (req, res) => {
         friendRequest
           .save()
           .then((savedRequest) => {
-            // Document saved successfully
             res.status(201).json({
               message: "Friend request sent successfully",
               data: savedRequest,
@@ -174,10 +137,8 @@ const sendFriendRequest = (req, res) => {
             });
           })
           .catch((error) => {
-            // Handle the error
             console.error(error);
 
-            // Check if it's a validation error (e.g., required fields missing)
             if (error.name === "ValidationError") {
               const errorDetails = {};
 
@@ -205,22 +166,20 @@ const sendFriendRequest = (req, res) => {
       }
     })
     .catch((error) => {
-      // Handle database query error
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     });
 };
 
-// Controller to get all friend requests for a user
 const getFriendRequests = async (req, res) => {
   try {
     const { userId } = req.params;
 
     const friendRequests = await FriendRequest.find({
-      $or: [{ sender: userId }, { receiver: userId }],
+      $or: [ { receiver: userId }],
     })
-      .populate("sender", ["name", "email"]) // Populate sender details
-      .populate("receiver", ["name", "email"]); // Populate receiver details
+      .populate("sender", ["name", "email"]) 
+      .populate("receiver", ["name", "email"]); 
 
     res.status(200).json({ data: friendRequests, status: 200 });
   } catch (error) {
@@ -229,7 +188,6 @@ const getFriendRequests = async (req, res) => {
   }
 };
 
-// Controller to accept or reject a friend request
 const handleFriendRequest = async (req, res) => {
   const { requestId, action } = req.body;
   if (!action || !requestId) {
@@ -259,29 +217,24 @@ const handleFriendRequest = async (req, res) => {
       return res.status(404).json({ message: "Friend request not found" });
     }
 
-    // Update friends list based on the action
     if (action === "accept") {
-      // Add the user to the requester's friends list
       await Friendship.findOneAndUpdate(
         { user_id: updatedRequest.sender },
         { $addToSet: { friends: updatedRequest.receiver } },
         { upsert: true }
       );
 
-      // Add the requester to the user's friends list
       await Friendship.findOneAndUpdate(
         { user_id: updatedRequest.receiver },
         { $addToSet: { friends: updatedRequest.sender } },
         { upsert: true }
       );
     } else if (action === "reject") {
-      // Remove the friend from the requester's friends list
       await Friendship.findOneAndUpdate(
         { user_id: updatedRequest.user_id },
         { $pull: { friends: updatedRequest.requester_id } }
       );
 
-      // Remove the requester from the user's friends list
       await Friendship.findOneAndUpdate(
         { user_id: updatedRequest.requester_id },
         { $pull: { friends: updatedRequest.user_id } }
@@ -321,5 +274,5 @@ module.exports = {
   getFriendRequests,
   sendFriendRequest,
   getUsersList,
-  getUserByGoogleId
+  getUserByGoogleId,
 };

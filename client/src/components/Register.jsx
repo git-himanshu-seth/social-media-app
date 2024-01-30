@@ -90,7 +90,7 @@ const RegisterPage = () => {
 
   useEffect(() => {
     if (registerData && registerData?._id) {
-      navigate("/home");
+      navigate("/");
     }
   }, [registerData]);
 
