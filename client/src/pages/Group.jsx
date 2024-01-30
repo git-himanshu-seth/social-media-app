@@ -18,28 +18,23 @@ import {
 } from "@mui/material";
 import Chat from "./Chat";
 import { useDispatch, useSelector } from "react-redux";
-import { groupActions, authActions } from "../_actions";
+import { groupActions, friendActions } from "../_actions";
 
 const Groups = () => {
   const dispatch = useDispatch();
-  let groupList=useSelector((state) => {
-    return state?.group?.groupList ;
-  })
-  const [groups, setGroups] = useState(
-    groupList
-  );
-  useEffect(()=>{if(groupList){setGroups(groupList)}},[groupList])
-  
-  const [userData, setUser] = useState(
-    useSelector((state) => {
-      return state?.auth?.user;
-    })
-  );
-  const [userList, setUserList] = useState(
-    useSelector((state) => {
-      return state?.auth?.userList;
-    })
-  );
+
+  const groupList = useSelector((state) => {
+    return state?.group?.groupList;
+  });
+
+  const userData = useSelector((state) => {
+    return state?.auth?.user;
+  });
+
+  const friendList = useSelector((state) => {
+    return state?.friend?.friends;
+  });
+
   const [isCreateGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
@@ -48,18 +43,18 @@ const Groups = () => {
   useEffect(() => {
     if (userData?._id) {
       dispatch(groupActions.getGroups({ id: userData._id }));
-      dispatch(authActions.getUsers());
+      dispatch(friendActions.getFriendsList({ id: userData._id }));
     }
   }, []);
 
   const handleCreateGroup = () => {
     const newGroup = {
-      id: groups.length + 1,
+      id: groupList.length + 1,
       name: newGroupName,
-      admin:userData?._id,
+      admin: userData?._id,
       members: 0, // You can set an initial member count
     };
-    setGroups([...groups, newGroup]);
+    // setGroups([...groups, newGroup]);
     // setCreateGroupDialogOpen(false);
     dispatch(groupActions.createGroup(newGroup));
     dispatch(groupActions.getGroups({ id: userData._id }));
@@ -78,7 +73,7 @@ const Groups = () => {
             Create New Group
           </Button>
         </Box>
-        {groups && groups.length > 0 && (
+        {groupList && groupList.length > 0 && (
           <Box display="flex" flexDirection={"row"}>
             <Box
               width={"30%"}
@@ -98,35 +93,37 @@ const Groups = () => {
                   height: "600px",
                 }}
               >
-                {groups && groups?.length >0 &&groups?.map((group) => (
-                  <React.Fragment key={group.id}>
-                    <ListItem
-                      alignItems="flex-start"
-                      onClick={() => {
-                        setChatSectionOpen(true);
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar>{group.members}</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={group.name}
-                        secondary={
-                          <React.Fragment>
-                            <Typography
-                              component="span"
-                              variant="body2"
-                              color="textPrimary"
-                            >
-                              {`${group.members} members`}
-                            </Typography>
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                  </React.Fragment>
-                ))}
+                {groupList &&
+                  groupList?.length > 0 &&
+                  groupList?.map((group) => (
+                    <React.Fragment key={group.id}>
+                      <ListItem
+                        alignItems="flex-start"
+                        onClick={() => {
+                          setChatSectionOpen(true);
+                        }}
+                      >
+                        <ListItemAvatar>
+                          <Avatar>{group.members}</Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={group.name}
+                          secondary={
+                            <React.Fragment>
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                color="textPrimary"
+                              >
+                                {`${group.members} members`}
+                              </Typography>
+                            </React.Fragment>
+                          }
+                        />
+                      </ListItem>
+                      <Divider variant="inset" component="li" />
+                    </React.Fragment>
+                  ))}
               </List>
             </Box>
             {chatSectionOpen && (
@@ -160,8 +157,25 @@ const Groups = () => {
             value={newGroupDescription}
             onChange={(e) => setNewGroupDescription(e.target.value)}
           />
-          {/* Add additional fields for friends list, etc. */}
           {/* userList maping here*/}
+          {friendList &&
+            friendList?.length > 0 &&
+            friendList?.map((user) => (
+              <React.Fragment key={user.id}>
+                <ListItem
+                  alignItems="flex-start"
+                  onClick={() => {
+                    setChatSectionOpen(true);
+                  }}
+                >
+                  {/* <ListItemAvatar>
+                    <Avatar>{user.members}</Avatar>
+                  </ListItemAvatar> */}
+                  <ListItemText primary={user.name} secondary={user.email} />
+                </ListItem>
+                {/* <Divider variant="inset" component="li" /> */}
+              </React.Fragment>
+            ))}
         </DialogContent>
         <DialogActions>
           <Button
