@@ -1,6 +1,6 @@
 const express = require("express");
-const passport = require("passport");
-// require("../middlewares/AuthMiddleware");
+const {getAllPosts, likePost, addComment , createPost} =require("../controllers/postControlers")
+
 const {
   signup,
   signin,
@@ -28,29 +28,25 @@ const {
 
 const appRoute = express.Router();
 
-// signup routes
+
 appRoute.route("/signup").post(signup);
 appRoute.route("/users").get(getUsersList);
 appRoute.route("/users/:googleId").get(getUserByGoogleId);
 
-// signin routes
+
 appRoute.route("/signin").post(signin);
-// friend requests routes
+
 appRoute.route("/send-friend-request").post(sendFriendRequest);
 
-// Route to get all friend requests for a user
 appRoute.route("/get-friend-requests/:userId").get(getFriendRequests);
 
-// Route to accept or reject a friend request
 appRoute.route("/handle-friend-request").put(handleFriendRequest);
 
-//GROUP ROUTES
 appRoute.route("/chat_group").post(createGroup).get(getAllGroups);
 appRoute.route("/send_group_join").post(sendJoinRequestByAdmin);
 appRoute.route("/accept_join_group").post(acceptJoinRequest);
 appRoute.route("/reject_join_group").post(rejectJoinRequest);
 
-//GROUP ROUTES
 appRoute
   .route("/chat_group/:id")
   // .get(getGroupById)
@@ -73,5 +69,12 @@ appRoute.route("/friends/:id").get(getFriendList);
 appRoute.route("/chat").post((req, res) => {
   res.status(200).json({ name: "himanshu seth" });
 });
+
+// POSTS ROUTES 
+appRoute.route("/post").post(createPost).get(getAllPosts)
+appRoute.route("/post/like/:id").put(likePost);
+appRoute.route("/post/comment/:id").put(addComment);
+
+
 
 module.exports = appRoute;

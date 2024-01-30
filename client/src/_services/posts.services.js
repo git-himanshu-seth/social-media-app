@@ -17,7 +17,7 @@ function getPosts(data) {
     null,
     true
   );
-  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
+  return fetch(`${config.apiUrl}posts/${data.id}`, requestOptions).then((response) =>
     response.json()
   );
 }

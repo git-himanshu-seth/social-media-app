@@ -1,89 +1,77 @@
 const { Post } = require("../models/postsSchema");
+const {Friendship} = require("../models/friendRequestSchema");
+const createPost = async (req, res) => {
+  try {
+    const { userId, content } = req.body;
 
-// Get all posts
+    const newPost = new Post({
+      user: userId,
+      userId: userId,
+      content,
+    });
+
+    const savedPost = await newPost.save();
+if (savedPost){
+     return res.status(200).json({message:"Post created successfully", status: 'success'})};
+     return  res.status(500).json({ error: 'Internal Server Error' });
+  } catch (error) {
+   return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
-    res.status(200).json({ posts, status: 200 });
+    const friends = Friendship.findOne({ user_id: req.params.id })
+    
+    const posts = await Post.find({ _id: { $in: friends } }).populate('user').populate('comments.user');
+    res.status(200).json(posts);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-// Get a specific post by ID
-const getPostById = async (req, res) => {
-  const postId = req.params.id;
-
+const likePost = async (req, res) => {
   try {
-    const post = await Post.findById(postId);
+    const postId = req.params.postId;
 
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
+    // const userId = req.user.id;
 
-    res.json(post);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Create a new post
-const createPost = async (req, res) => {
-  const { content } = req.body;
-
-  try {
-    const newPost = new Post({ content });
-    const savedPost = await newPost.save();
-
-    res.status(200).json({ savedPost, status: 200 });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Update a post by ID
-const updatePostById = async (req, res) => {
-  const postId = req.params.id;
-  const { content } = req.body;
-
-  try {
     const post = await Post.findByIdAndUpdate(
       postId,
-      { content },
+      { $inc: { likes: 1 } },
       { new: true }
     );
 
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
 
-    res.status(200).json({ post, status: 200 });
+    res.status(200).json({data:post, message: 'get posts list successfully', });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-// Delete a post by ID
-const deletePostById = async (req, res) => {
-  const postId = req.params.id;
-
+const addComment = async (req, res) => {
   try {
-    const deletedPost = await Post.findByIdAndDelete(postId);
+    const postId = req.params.postId;
+    const { content, userId } = req.body;
 
-    if (!deletedPost) {
-      return res.status(404).json({ error: "Post not found" });
-    }
 
-    res.status(200).json({ status: 200, message: "Post deleted successfully" });
+
+    const comment = new Comment({
+      user: userId,
+      content,
+    });
+
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { $push: { comments: comment } },
+      { new: true }
+    ).populate('comments.user');
+
+
+    res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-module.exports = {
-  getAllPosts,
-  getPostById,
-  createPost,
-  updatePostById,
-  deletePostById,
-};
+module.exports = { getAllPosts, likePost, addComment, createPost };

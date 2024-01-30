@@ -10,7 +10,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Post from "../components/Post";
 import { postActions } from "../_actions";
 
@@ -19,7 +19,13 @@ const PostSection = (props) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [newPosttitle, setNewPostTitle] = useState("");
   const [newPostDescription, setNewPostDescription] = useState("");
-
+  const userData = useSelector((state) => state?.auth?.user);
+  const posts =  useSelector((state) => state?.post?.posts);
+  const [user, setUser] = useState();
+  dispatch(postActions.getPosts({ id: user?._id }));
+  useEffect(() => {
+    setUser(userData);
+  }, [userData]);
   const handleDialogOpen = () => {
     setDialogOpen(true);
   };
@@ -40,9 +46,7 @@ const PostSection = (props) => {
     // handleDialogClose();
   };
 
-  useEffect(() => {
-    dispatch(postActions.getPosts());
-  }, []);
+  useEffect(() => {}, []);
 
   const postData = [
     {
@@ -100,9 +104,9 @@ const PostSection = (props) => {
         </Typography>
 
         <Box sx={{ marginTop: "10%" }}>
-          {postData &&
-            postData.length > 0 &&
-            postData.map((post) => <Post {...post} />)}
+          {posts &&
+            posts.length > 0 &&
+            posts.map((post) => <Post {...post} />)}
         </Box>
         <Dialog open={isDialogOpen} onClose={handleDialogClose}>
           <DialogTitle color="primary">Create a New Post</DialogTitle>
