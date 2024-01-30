@@ -63,9 +63,7 @@ function getReqList(data) {
     );
     friendServices.getReqList(data).then(
       (response) => {
-        console.log("response", response, data);
-
-        if (response.email && response?.uid) {
+        if (response.status === 200) {
           dispatch(
             dispatchFunction({
               type: friendConstant.GET_FRIENDS_REQ_LIST_SUCCESS,

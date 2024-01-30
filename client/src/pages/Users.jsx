@@ -21,12 +21,19 @@ const UserList = () => {
   );
   const [friendList, setFriend] = useState(
     useSelector((state) => {
-      return state?.auth?.friend;
+      console.log("userList: ", state?.friend);
+      return state?.friend?.data;
     })
   );
-  const [userList, setUserList] = useState(
+  const [friendRequestList, setFriendRequestList] = useState(
     useSelector((state) => {
-      return state?.auth?.userList;
+      console.log("friendRequestList: ", state?.friend?.friendsReq);
+      return state?.friend?.friendsReq?.data;
+    })
+  );
+  const [userListData, setUserListData] = useState(
+    useSelector((state) => {
+      return state?.auth?.userList?.users;
     })
   );
   const [response, setResponse] = useState(null);
@@ -38,10 +45,13 @@ const UserList = () => {
     if (userData?._id) {
       dispatch(friendActions.getFriendsList({ id: userData._id }));
       dispatch(authActions.getUsers());
+      dispatch(friendActions.getReqList({ id: userData._id }));
     }
   }, []);
 
-  const handleSendRequest = async () => {};
+  const handleSendRequest = async (id) => {
+    dispatch(friendActions.getFriendsList({ id: id }));
+  };
 
   const handleReceiveRequest = () => {
     // Simulate receiving a friend request
@@ -61,12 +71,6 @@ const UserList = () => {
       friendRequests.filter((request) => request.id !== requestId)
     );
   };
-
-  // const users = [
-  //   { id: 1, name: "John Doe" },
-  //   { id: 2, name: "Jane Doe" },
-  //   // Add more users as needed
-  // ];
 
   return (
     <Container>
@@ -104,46 +108,45 @@ const UserList = () => {
             Make New Friends
           </Button>
         </Box>
-        {/* {friendRequests && friendRequests.length > 0 && ( */}
         {activeTab === 1 && (
           <Box>
-            {/* Friend Requests */}
             <Typography variant="h4" gutterBottom>
               Friend Requests
             </Typography>
             <List>
-              {/* {friendRequests.map((request) => ( */}
-              <React.Fragment key={1}>
-                <ListItem>
-                  <ListItemText
-                    primary={"himanshu"}
-                    secondary="sent you a friend request"
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={() => handleAcceptRequest()}
-                    sx={{ marginRight: "20px" }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    onClick={() => handleAcceptRequest()}
-                  >
-                    Reject
-                  </Button>
-                </ListItem>
-                <Divider />
-              </React.Fragment>
-              {/* ))} */}
+              {friendRequestList &&
+                friendRequestList.length > 0 &&
+                friendRequestList.map((request) => (
+                  <React.Fragment key={1}>
+                    <ListItem>
+                      <ListItemText
+                        primary={"himanshu"}
+                        secondary="sent you a friend request"
+                      />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleAcceptRequest()}
+                        sx={{ marginRight: "20px" }}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        onClick={() => handleAcceptRequest()}
+                      >
+                        Reject
+                      </Button>
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))}
             </List>
           </Box>
         )}
-        {/* )} */}
         {activeTab === 2 && (
           <Box>
             {/* Friends List */}
@@ -151,49 +154,47 @@ const UserList = () => {
               Friends List
             </Typography>
             <List>
-              {friendList.map((friend) => (
-                <React.Fragment key={friend.id}>
-                  <ListItem>
-                    <ListItemText
-                      primary={friend.name}
-                      secondary="sent friend request"
-                    />
-                    <ListItemText primary={friend.name} />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSendRequest}
-                    >
-                      View
-                    </Button>
-                  </ListItem>
-                  <Divider />
-                </React.Fragment>
-              ))}
+              {friendList &&
+                friendList.length > 0 &&
+                friendList.map((friend) => (
+                  <React.Fragment key={friend.id}>
+                    <ListItem>
+                      <ListItemText
+                        primary={friend.name}
+                        secondary="sent friend request"
+                      />
+                      <ListItemText primary={friend.name} />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSendRequest}
+                      >
+                        View
+                      </Button>
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))}
             </List>
           </Box>
         )}
         {activeTab === 3 && (
           <Box>
-            {/* User List */}
             <Typography variant="h4" gutterBottom>
               User List
             </Typography>
             <List>
-              {userList &&
-                userList.length > 0 &&
-                userList.map((user) => (
+              {userListData &&
+                userListData?.length > 0 &&
+                userListData?.map((user) => (
                   <React.Fragment key={user.id}>
                     <ListItem>
-                      <ListItemText
-                        primary={user.name}
-                        secondary="sent friend request"
-                      />
                       <ListItemText primary={user.name} />
+                      <ListItemText primary={user.email} />
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleSendRequest}
+                        onClick={() => handleSendRequest(user.id)}
                       >
                         Send Request
                       </Button>
