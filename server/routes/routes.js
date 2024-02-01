@@ -11,6 +11,18 @@ const {
   getUsersList,
   getUserByGoogleId,
 } = require("../controllers/userControler");
+
+const {
+  createChat,
+  getChats,
+  sendMessage,
+  deleteChats,
+} = require("../controllers/chatControlers");
+const {
+  createPost,
+  getAllPosts,
+  commentsAndLikes,
+} = require("../controllers/postControlers");
 const {
   createGroup,
   getAllGroups,
@@ -20,28 +32,14 @@ const {
   rejectJoinRequest,
 } = require("../controllers/groupControler");
 
-const {
-  createMessage,
-  deleteMessage,
-  getMessages,
-} = require("../controllers/messageControler");
-
 const appRoute = express.Router();
 
 
 appRoute.route("/signup").post(signup);
-appRoute.route("/users").get(getUsersList);
 appRoute.route("/users/:googleId").get(getUserByGoogleId);
 
 
 appRoute.route("/signin").post(signin);
-
-appRoute.route("/send-friend-request").post(sendFriendRequest);
-
-appRoute.route("/get-friend-requests/:userId").get(getFriendRequests);
-
-appRoute.route("/handle-friend-request").put(handleFriendRequest);
-
 appRoute.route("/chat_group").post(createGroup).get(getAllGroups);
 appRoute.route("/send_group_join").post(sendJoinRequestByAdmin);
 appRoute.route("/accept_join_group").post(acceptJoinRequest);
@@ -53,28 +51,41 @@ appRoute
   // .delete(deleteGroup)
   .put(updateGroup);
 
-//  MESSAGE IN GROUP ROUTE
-appRoute
-  .route("/chat_group/message/:groupId")
-  .post(createMessage)
-  .get(getMessages)
-  .delete(deleteMessage);
+// FRIENDS ROUTES
+//********************************************************************************************************************************************/
+//GET USERS LISTS
+appRoute.route("/users/:id").get(getUsersList);
+
+// friend requests routes
+appRoute.route("/send-friend-request").post(sendFriendRequest);
+
 // GET FRIEND LIST ROUTE
 appRoute.route("/friends/:id").get(getFriendList);
 
+// Route to accept or reject a friend request
+appRoute.route("/handle-friend-request").put(handleFriendRequest);
 
+// Route to get all friend requests for a user
+appRoute.route("/get-friend-requests/:userId").get(getFriendRequests);
 
+//********************************************************************************************************************************************/
 
+// POST ROUTES
+//********************************************************************************************************************************************/
 
-appRoute.route("/chat").post((req, res) => {
-  res.status(200).json({ name: "himanshu seth" });
-});
+appRoute.route("/post").post(createPost);
+appRoute.route("/posts/:userId").get(getAllPosts);
+appRoute.route("/like_and_comments").post(commentsAndLikes);
 
-// POSTS ROUTES 
-appRoute.route("/post").post(createPost).get(getAllPosts)
-appRoute.route("/post/like/:id").put(likePost);
-appRoute.route("/post/comment/:id").put(addComment);
+// CHATS ROUTES
+//********************************************************************************************************************************************/
 
+appRoute.route("/chat").post(createChat);
+appRoute.route("/chat/message").post(sendMessage);
+appRoute.route("/chats/get_message/:user/:sender").get(getChats);
+appRoute.route("/chats/:chat_id").delete(deleteChats);
 
+// GROUP ROUTES
+//********************************************************************************************************************************************/
 
 module.exports = appRoute;

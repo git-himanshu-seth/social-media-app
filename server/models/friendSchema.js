@@ -5,7 +5,20 @@ const friendshipSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  friends: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        requierd: true,
+      },
+      status: {
+        type: String,
+        enum: ["pending", "accepted", "rejected"],
+        default: "pending",
+      },
+    },
+  ],
 });
 const Friendship = mongoose.model("Friendship", friendshipSchema);
 module.exports = Friendship;
