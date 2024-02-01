@@ -17,8 +17,8 @@ function getPosts(data) {
     null,
     true
   );
-  return fetch(`${config.apiUrl}posts/${data.id}`, requestOptions).then((response) =>
-    response.json()
+  return fetch(`${config.apiUrl}/posts/${data.id}`, requestOptions).then(
+    (response) => response.json()
   );
 }
 
@@ -27,12 +27,12 @@ function createPost(data) {
     "Content-Type": "application/json",
   };
   const requestOptions = commonFunctions.getRequestOptions(
-    "GET",
+    "POST",
     extraHeaders,
     JSON.stringify(data),
     true
   );
-  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
+  return fetch(`${config.apiUrl}/post`, requestOptions).then((response) =>
     response.json()
   );
 }
@@ -42,12 +42,12 @@ function updatePost(data) {
     "Content-Type": "application/json",
   };
   const requestOptions = commonFunctions.getRequestOptions(
-    "GET",
+    "POST",
     extraHeaders,
     null,
     true
   );
-  return fetch(`${config.apiUrl}/`, requestOptions).then((response) =>
-    response.json()
+  return fetch(`${config.apiUrl}/like_and_comments`, requestOptions).then(
+    (response) => response.json()
   );
 }

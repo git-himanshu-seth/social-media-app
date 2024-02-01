@@ -1,6 +1,5 @@
 const Friendship = require("../models/friendSchema");
 const { Post } = require("../models/postsSchema");
-const {Friendship} = require("../models/friendRequestSchema");
 
 // Create a new post
 const createPost = async (req, res) => {

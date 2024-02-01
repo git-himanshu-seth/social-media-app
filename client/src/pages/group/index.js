@@ -7,7 +7,6 @@ import {
   Avatar,
   Divider,
   Typography,
-  Container,
   Button,
   Dialog,
   DialogTitle,
@@ -16,9 +15,9 @@ import {
   DialogActions,
   Box,
 } from "@mui/material";
-import Chat from "./Chat";
+import GroupChat from "./GroupChat";
 import { useDispatch, useSelector } from "react-redux";
-import { groupActions, friendActions } from "../_actions";
+import { groupActions, friendActions } from "../../_actions";
 
 const Groups = () => {
   const dispatch = useDispatch();
@@ -128,7 +127,7 @@ const Groups = () => {
             </Box>
             {chatSectionOpen && (
               <Box width="70%">
-                <Chat />
+                <GroupChat />
               </Box>
             )}
           </Box>

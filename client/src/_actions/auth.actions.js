@@ -146,7 +146,7 @@ function registerWithGoogle(data) {
   };
 }
 
-function getUsers() {
+function getUsers(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
@@ -154,9 +154,8 @@ function getUsers() {
         data: null,
       })
     );
-    authServices.getUsers().then(
+    authServices.getUsers(data).then(
       (response) => {
-        console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -171,7 +170,7 @@ function getUsers() {
               data: response,
             })
           );
-          alert.error(response.message);
+          alert.error(response?.message);
         }
       },
       (error) => {

@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAllPosts, likePost, addComment , createPost} =require("../controllers/postControlers")
+// const {getAllPosts, likePost, addComment , createPost} =require("../controllers/postControlers")
 
 const {
   signup,

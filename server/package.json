@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production PORT=8080 nodemon server.js nodemon chatserver.js",
+    "start": "nodemon server.js nodemon chatserver.js",
     "dev": "nodemon socketio.js"
   },
   "author": "Himanshu Seth",
@@ -28,5 +28,8 @@
     "passport-google-token": "^0.1.2",
     "passport-http-bearer": "^1.0.1",
     "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
   }
 }
