@@ -7,11 +7,13 @@ const createPost = async (req, res) => {
     const { user, content, title } = req.body;
     const newPost = new Post({ user, content, title });
     const savedPost = await newPost.save();
-    res
-      .status(200)
-      .json({ data: savedPost, message: "post created successfully" });
+    res.status(200).json({
+      data: savedPost,
+      message: "post created successfully",
+      status: 200,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message, status: 500 });
   }
 };
 
@@ -45,7 +47,7 @@ const getAllPosts = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ message: error.message, status: 500 });
   }
 };
 
@@ -88,10 +90,13 @@ const commentsAndLikes = async (req, res) => {
     }
 
     const updatedPost = await post.save();
-    res.json(updatedPost);
+    res.status(200).json({
+      data: updatedPost,
+      message: "type succesfully updated",
+      status: 200,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message, status: 500 });
   }
 };
 
