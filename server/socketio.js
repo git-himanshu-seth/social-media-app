@@ -8,6 +8,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 // io.set("origins", "http://localhost:3002/");
 // Use cors middleware
+io.origins(["http://localhost:3001/"]);
 app.use(cors({ origin: "*" }));
 // app.use(cors(corsOptions));
 
@@ -26,4 +27,6 @@ io.on("connection", (socket) => {
 
 server.listen(3001, () => {
   console.log("Server is running on http://localhost:3001");
+  const address = server.address();
+  console.log(`Server running at http://${address.address}:${address.port}/`);
 });

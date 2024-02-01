@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 // Comment Schema
 const commentSchema = new mongoose.Schema(
   {
-    userName: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    commentText: {
+    comment: {
       type: String,
       required: true,
     },
@@ -18,10 +19,25 @@ const commentSchema = new mongoose.Schema(
 // Post Schema
 const postSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     content: {
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
+    idsArray: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     likes: {
       type: Number,
       default: 0,

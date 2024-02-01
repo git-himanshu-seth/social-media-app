@@ -17,7 +17,7 @@ export const authServices = {
   getUsers,
   createUserDB,
   logIn,
-  registerWithGoogle
+  registerWithGoogle,
 };
 
 function createUser(data) {
@@ -83,7 +83,7 @@ function createUserDB(data) {
     true
   );
 
-  return fetch(`${config.apiUrl}/signup`, requestOptions)
+  return fetch(`${config.apiUrl}signup`, requestOptions)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -103,7 +103,7 @@ function createUserDB(data) {
 
 async function logIn(data) {
   try {
-  const auth = getAuth();
+    const auth = getAuth();
     const userCredential = await signInWithEmailAndPassword(
       auth,
       data.email,
@@ -111,18 +111,24 @@ async function logIn(data) {
     );
 
     // Signed in
-    let user = { status: 200, data: JSON.parse(JSON.stringify(userCredential.user)) };
+    let user = {
+      status: 200,
+      data: JSON.parse(JSON.stringify(userCredential.user)),
+    };
 
     // Add API call with GET method
     const apiUrl = `http://localhost:3000/api/v1/mandala/users/${user?.data?.uid}`;
     const response = await fetch(apiUrl, {
-      method: 'GET',
+      method: "GET",
     });
-    if (response.status===200) {
+    if (response.status === 200) {
       const responseData = await response.json();
-      user.data={...user.data,...responseData.data};
+      user.data = { ...user.data, ...responseData.data };
     } else {
-      user.apiError = { errorCode: response.status, errorMessage: response.statusText };
+      user.apiError = {
+        errorCode: response.status,
+        errorMessage: response.statusText,
+      };
     }
 
     return user;
@@ -130,8 +136,6 @@ async function logIn(data) {
     const errorCode = error.code;
     const errorMessage = error.message;
     return { errorCode, errorMessage };
-
-    
   }
 }
 
@@ -146,14 +150,14 @@ async function registerWithGoogle(data) {
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-  return fetch(`${config.apiUrl}signup`, requestOptions).then(
-    (response) => response.json()
+  return fetch(`${config.apiUrl}signup`, requestOptions).then((response) =>
+    response.json()
   );
   // let userData ={}
   // console.log("REGDATA",data);
   // try {
   //   const apiUrl = `http://localhost:3000/api/v1/mandala/signup`;
-   
+
   //   const extraHeaders = {
   //     "Content-Type": "application/json",
   //   };
@@ -177,7 +181,6 @@ async function registerWithGoogle(data) {
   //   return { errorCode, errorMessage };
   // }
 }
-
 
 function logOut(data) {
   return new Promise((resolve, reject) => {
