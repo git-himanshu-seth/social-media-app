@@ -6,13 +6,21 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+console.log('dbhdbhkd0',toast)
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <App />
+        <ToastContainer
+          enableMultiContainer
+          containerId={"TOP_RIGHT"}
+          newestOnTop ={true}
+        />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

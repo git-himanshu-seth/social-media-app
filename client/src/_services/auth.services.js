@@ -66,10 +66,11 @@ function getUsers(data) {
     null,
     true
   );
-  return fetch(`${config.apiUrl}users`, requestOptions).then((response) =>
-    response.json()
+  return fetch(`${config.apiUrl}/users/${data.id}`, requestOptions).then(
+    (response) => response.json()
   );
 }
+
 function createUserDB(data) {
   const extraHeaders = {
     "Content-Type": "application/json",
@@ -83,7 +84,7 @@ function createUserDB(data) {
     true
   );
 
-  return fetch(`${config.apiUrl}signup`, requestOptions)
+  return fetch(`${config.apiUrl}/signup`, requestOptions)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

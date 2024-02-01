@@ -4,14 +4,16 @@ import { CircularProgress } from "@mui/material";
 const Loader = () => {
   return (
     <div
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
+      style={{
+        height: "auto",
+        marginTop: "20%",
       }}
     >
-      <CircularProgress color="primary" size={80} thickness={4} />
+      <CircularProgress
+        color="primary"
+        size={80}
+        thickness={4}
+      />
     </div>
   );
 };

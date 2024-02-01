@@ -45,7 +45,7 @@ const getAllPosts = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -56,9 +56,7 @@ const commentsAndLikes = async (req, res) => {
 
     const post = await Post.findById(postId);
 
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
+    // const userId = req.user.id;
 
     if (type === "comment") {
       const { comment } = req.body;

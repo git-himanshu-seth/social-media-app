@@ -19,7 +19,7 @@ function getFriendsList(data) {
     null,
     true
   );
-  return fetch(`${config.apiUrl}friends/${data.id}`, requestOptions).then(
+  return fetch(`${config.apiUrl}/friends/${data.id}`, requestOptions).then(
     (response) => response.json()
   );
 }
@@ -35,7 +35,7 @@ function getReqList(data) {
     true
   );
   return fetch(
-    `${config.apiUrl}get-friend-requests/${data.id}`,
+    `${config.apiUrl}/get-friend-requests/${data.id}`,
     requestOptions
   ).then((response) => response.json());
 }
@@ -51,7 +51,7 @@ function sendFrienReq(data) {
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-  return fetch(`${config.apiUrl}send-friend-request`, requestOptions).then(
+  return fetch(`${config.apiUrl}/send-friend-request`, requestOptions).then(
     (response) => response.json()
   );
 }
@@ -66,7 +66,7 @@ function acceptReq(data) {
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-  return fetch(`${config.apiUrl}handle-friend-request`, requestOptions).then(
+  return fetch(`${config.apiUrl}/handle-friend-request`, requestOptions).then(
     (response) => response.json()
   );
 }

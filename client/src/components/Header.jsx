@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
-import LoginIcon from '@mui/icons-material/Login';
+import LoginIcon from "@mui/icons-material/Login";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ChatIcon from "@mui/icons-material/Chat";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -30,17 +30,15 @@ import Divider from "@mui/material/Divider";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const userData =useSelector(state=>  state?.auth?.user)
+  const userData = useSelector((state) => state?.auth?.user);
   const navigate = useNavigate();
   const [user, setUser] = useState();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isMediumScreen = useMediaQuery("(min-width:1024px)");
 
   useEffect(() => {
-    setUser(userData)
+    setUser(userData);
   }, [userData]);
-
-
 
   const toggleDrawer = (open) => {
     setDrawerOpen(open);
@@ -68,8 +66,8 @@ const Header = () => {
         <GroupIcon sx={{ marginRight: "5px" }} />
         <ListItemText primary="Groups" />
       </ListItem>
-      <Divider orientation="horizontal" sx={{ color: "black" }} />
-      <ListItem
+      {/* <Divider orientation="horizontal" sx={{ color: "black" }} /> */}
+      {/* <ListItem
         onClick={() => {
           toggleDrawer(false);
           navigate("/posts");
@@ -77,7 +75,7 @@ const Header = () => {
       >
         <PostAddIcon sx={{ marginRight: "5px" }} />
         <ListItemText primary="Posts" />
-      </ListItem>
+      </ListItem> */}
       <Divider orientation="horizontal" sx={{ color: "black" }} />
       <ListItem
         onClick={() => {
@@ -89,7 +87,7 @@ const Header = () => {
         <ListItemText primary="Chats" />
       </ListItem>
       <Divider orientation="horizontal" sx={{ color: "black" }} />
-      {user?._id ?(
+      {user?._id ? (
         <>
           <ListItem
             onClick={async () => {
@@ -103,20 +101,26 @@ const Header = () => {
           </ListItem>
           <Divider orientation="horizontal" sx={{ color: "black" }} />
         </>
-        
-      ):<>
+      ) : (
+        <>
+          <ListItem
+            onClick={async () => {
+              toggleDrawer(false);
+              navigate("/login-register");
+            }}
+          >
+            <LoginIcon sx={{ marginRight: "5px" }} />
+            <ListItemText primary="Login" />
+          </ListItem>
+          <Divider orientation="horizontal" sx={{ color: "black" }} />
+        </>
+      )}
       <ListItem
-        onClick={async () => {
+        onClick={() => {
+          navigate("/friend");
           toggleDrawer(false);
-          navigate("/login-register")
         }}
       >
-        <LoginIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Login" />
-      </ListItem>
-      <Divider orientation="horizontal" sx={{ color: "black" }} />
-    </>}
-      <ListItem onClick={() => {navigate("/users")  ; toggleDrawer(false);}}>
         <LogoutIcon sx={{ marginRight: "5px" }} />
         <ListItemText primary="Friends" />
       </ListItem>
@@ -154,13 +158,13 @@ const Header = () => {
                   >
                     Groups
                   </Button>
-                  <Button
+                  {/* <Button
                     color="inherit"
                     startIcon={<PostAddIcon />}
                     onClick={() => navigate("/posts")}
                   >
                     Posts
-                  </Button>
+                  </Button> */}
                   <Button
                     color="inherit"
                     startIcon={<ChatIcon />}
@@ -179,16 +183,18 @@ const Header = () => {
                     >
                       Logout
                     </Button>
-                  ):(<Button
-                    color="inherit"
-                    startIcon={<LoginIcon />}
-                    onClick={async () => {
-                      navigate("/login-register")
-                    }}
-                  >
-                    Login
-                  </Button>)}
-                  <Button color="inherit" onClick={() => navigate("/users")}>
+                  ) : (
+                    <Button
+                      color="inherit"
+                      startIcon={<LoginIcon />}
+                      onClick={async () => {
+                        navigate("/login-register");
+                      }}
+                    >
+                      Login
+                    </Button>
+                  )}
+                  <Button color="inherit" onClick={() => navigate("/friend")}>
                     Friends
                   </Button>
                 </>

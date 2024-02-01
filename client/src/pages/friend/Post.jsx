@@ -9,16 +9,29 @@ import {
   TextField,
   Typography,
   Box,
+  Card,
+  CardContent,
+  CardActions,
+  Avatar,
+  IconButton,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
-import Post from "../components/Post";
-import { postActions } from "../_actions";
+import { useDispatch, useSelector } from "react-redux";
+import { postActions } from "../../_actions";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import ShareIcon from "@mui/icons-material/Share";
 
-const PostSection = (props) => {
+const Posts = (props) => {
   const dispatch = useDispatch();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [newPosttitle, setNewPostTitle] = useState("");
   const [newPostDescription, setNewPostDescription] = useState("");
+  const userData = useSelector((state) => state?.auth?.user);
+  const posts = useSelector((state) => state?.post?.posts);
+
+  useEffect(() => {
+    dispatch(postActions.getPosts({ id: userData?._id }));
+  }, []);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -40,52 +53,8 @@ const PostSection = (props) => {
     // handleDialogClose();
   };
 
-  useEffect(() => {
-    dispatch(postActions.getPosts());
-  }, []);
-
-  const postData = [
-    {
-      user: {
-        name: "John Doe",
-        profilePicture:
-          "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-      },
-      timestamp: 1643245200000,
-      content: "This is an example post using Material-UI in React!",
-    },
-    {
-      user: {
-        name: "John Doe",
-        profilePicture:
-          "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-      },
-      timestamp: 1643245200000,
-      content: "This is an example post using Material-UI in React!",
-    },
-    {
-      user: {
-        name: "John Doe",
-        profilePicture:
-          "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-      },
-      timestamp: 1643245200000,
-      content: "This is an example post using Material-UI in React!",
-    },
-    {
-      user: {
-        name: "John Doe",
-        profilePicture:
-          "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-      },
-      timestamp: 1643245200000,
-      content: "This is an example post using Material-UI in React!",
-    },
-  ];
-
   return (
     <>
-      <CssBaseline />
       <Button
         variant="contained"
         color="primary"
@@ -94,15 +63,53 @@ const PostSection = (props) => {
       >
         Create Post
       </Button>
-      <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
-        <Typography variant="h4" align="center" gutterBottom color="primary">
+      <Box>
+        <Typography variant="h4" gutterBottom>
           Post Section
         </Typography>
-
         <Box sx={{ marginTop: "10%" }}>
-          {postData &&
-            postData.length > 0 &&
-            postData.map((post) => <Post {...post} />)}
+          {posts &&
+            posts.length > 0 &&
+            posts.map((post) => {
+              <Card sx={{ marginBottom: "20px" }}>
+                <CardContent>
+                  {/* Post Header */}
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <Avatar
+                      src={
+                        "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                      }
+                      alt={post.title}
+                    />
+                    <div style={{ marginLeft: "1rem" }}>
+                      <Typography variant="subtitle1">
+                        {post.content}
+                      </Typography>
+                      <Typography variant="caption">
+                        {new Date(post.timestamps).toDateString()}
+                      </Typography>
+                    </div>
+                  </div>
+
+                  {/* Post Content */}
+                  <Typography variant="body1" style={{ marginTop: "1rem" }}>
+                    {post.content}
+                  </Typography>
+                </CardContent>
+
+                <CardActions>
+                  <IconButton>
+                    <ThumbUpIcon />
+                  </IconButton>
+                  <IconButton>
+                    <ChatBubbleOutlineIcon />
+                  </IconButton>
+                  <IconButton>
+                    <ShareIcon />
+                  </IconButton>
+                </CardActions>
+              </Card>;
+            })}
         </Box>
         <Dialog open={isDialogOpen} onClose={handleDialogClose}>
           <DialogTitle color="primary">Create a New Post</DialogTitle>
@@ -136,16 +143,16 @@ const PostSection = (props) => {
             <Button
               variant="contained"
               color="error"
-              onClick={handleCreatePost}
+              onClick={handleDialogClose}
               style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
               Cancel
             </Button>
           </DialogContent>
         </Dialog>
-      </Container>
+      </Box>
     </>
   );
 };
 
-export default PostSection;
+export default Posts;

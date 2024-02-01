@@ -1,6 +1,6 @@
 const express = require("express");
-const passport = require("passport");
-// require("../middlewares/AuthMiddleware");
+// const {getAllPosts, likePost, addComment , createPost} =require("../controllers/postControlers")
+
 const {
   signup,
   signin,
@@ -34,15 +34,22 @@ const {
 
 const appRoute = express.Router();
 
-// signup routes
 appRoute.route("/signup").post(signup);
 appRoute.route("/users/:googleId").get(getUserByGoogleId);
 
-// signin routes
 appRoute.route("/signin").post(signin);
+appRoute.route("/chat_group").post(createGroup).get(getAllGroups);
+appRoute.route("/send_group_join").post(sendJoinRequestByAdmin);
+appRoute.route("/accept_join_group").post(acceptJoinRequest);
+appRoute.route("/reject_join_group").post(rejectJoinRequest);
 
-//GROUP ROUTES
+appRoute
+  .route("/chat_group/:id")
+  // .get(getGroupById)
+  // .delete(deleteGroup)
+  .put(updateGroup);
 
+// FRIENDS ROUTES
 //********************************************************************************************************************************************/
 //GET USERS LISTS
 appRoute.route("/users/:id").get(getUsersList);

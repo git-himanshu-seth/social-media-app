@@ -2,6 +2,7 @@ import { friendServices } from "../_services";
 import { friendConstant } from "../_constants";
 import { alert, commonFunctions } from "../_utilities";
 
+
 export const friendActions = {
   getFriendsList,
   getReqList,
@@ -14,6 +15,7 @@ function getFriendsList(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
+
         type: friendConstant.GET_FRIENDS_REQUEST,
         data: null,
       })
@@ -31,7 +33,7 @@ function getFriendsList(data) {
           dispatch(
             dispatchFunction({
               type: friendConstant.GET_FRIENDS_FAILURE,
-              data: response,
+              data: null,
             })
           );
           alert.error(response.message);
