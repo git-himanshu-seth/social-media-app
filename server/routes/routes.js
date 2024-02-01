@@ -27,9 +27,9 @@ const {
   createGroup,
   getAllGroups,
   updateGroup,
-  sendJoinRequestByAdmin,
-  acceptJoinRequest,
-  rejectJoinRequest,
+  sendJoinRequest,
+  handleJoinRequest,
+  sendGroupMessage,
 } = require("../controllers/groupControler");
 
 const appRoute = express.Router();
@@ -42,19 +42,7 @@ appRoute.route("/users/:googleId").get(getUserByGoogleId);
 appRoute.route("/signin").post(signin);
 
 //GROUP ROUTES
-appRoute.route("/chat_group").post(createGroup).get(getAllGroups);
-appRoute.route("/send_group_join").post(sendJoinRequestByAdmin);
-appRoute.route("/accept_join_group").post(acceptJoinRequest);
-appRoute.route("/reject_join_group").post(rejectJoinRequest);
 
-//GROUP ROUTES
-appRoute
-  .route("/chat_group/:id")
-  // .get(getGroupById)
-  // .delete(deleteGroup)
-  .put(updateGroup);
-
-// FRIENDS ROUTES
 //********************************************************************************************************************************************/
 //GET USERS LISTS
 appRoute.route("/users/:id").get(getUsersList);
@@ -90,5 +78,11 @@ appRoute.route("/chats/:chat_id").delete(deleteChats);
 
 // GROUP ROUTES
 //********************************************************************************************************************************************/
+appRoute.route("/create_group").post(createGroup);
+appRoute.route("/get_groups/:userId").get(getAllGroups);
+appRoute.route("/delete_group/:groupId").delete();
+appRoute.route("/send_group_request").post();
+appRoute.route("/handle_group_request").post();
+appRoute.route("/group_message").post();
 
 module.exports = appRoute;

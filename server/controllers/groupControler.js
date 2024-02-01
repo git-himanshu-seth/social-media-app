@@ -1,208 +1,109 @@
 const Group = require("../models/groupSchema");
 
-const sendJoinRequestByAdmin = async (req, res) => {
-  try {
-    const { groupId, userId } = req.params; // Assuming you pass group and user IDs as parameters
-
-    // Check if the user making the request is the admin of the group
-    const group = await Group.findOne({ _id: groupId, admin: req.user._id });
-    if (!group) {
-      return res
-        .status(403)
-        .json({ message: "You are not the admin of this group." });
-    }
-
-    // Check if the user to be invited exists
-    const userToInvite = await User.findById(userId);
-    if (!userToInvite) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    // Check if the user is already a member or has a pending request
-    if (
-      group.members.includes(userToInvite._id) ||
-      group.joinRequests.includes(userToInvite._id)
-    ) {
-      return res.status(400).json({
-        message: "User is already a member or has a pending request.",
-      });
-    }
-
-    // Add the user to the joinRequests array
-    group.joinRequests.push(userToInvite._id);
-    await group.save();
-
-    return res
-      .status(200)
-      .json({ message: "Join request sent successfully.", status: 200 });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-const acceptJoinRequest = async (req, res) => {
-  try {
-    const { groupId, userId } = req.params;
-
-    // Check if the user making the request is the admin of the group
-    const group = await Group.findOne({ _id: groupId, admin: req.user._id });
-    if (!group) {
-      return res
-        .status(403)
-        .json({ message: "You are not the admin of this group." });
-    }
-
-    // Check if the user to be accepted exists
-    const userToAccept = await User.findById(userId);
-    if (!userToAccept) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    // Check if the user has a pending join request
-    if (!group.joinRequests.includes(userToAccept._id)) {
-      return res
-        .status(400)
-        .json({ message: "User does not have a pending request." });
-    }
-
-    // Remove the user from joinRequests and add to members
-    group.joinRequests = group.joinRequests.filter(
-      (id) => id.toString() !== userToAccept._id.toString()
-    );
-    group.members.push(userToAccept._id);
-    await group.save();
-
-    return res
-      .status(200)
-      .json({ message: "Join request accepted successfully.", status: 200 });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-const rejectJoinRequest = async (req, res) => {
-  try {
-    const { groupId, userId } = req.params;
-
-    // Check if the user making the request is the admin of the group
-    const group = await Group.findOne({ _id: groupId, admin: req.user._id });
-    if (!group) {
-      return res
-        .status(403)
-        .json({ message: "You are not the admin of this group." });
-    }
-
-    // Check if the user to be rejected exists
-    const userToReject = await User.findById(userId);
-    if (!userToReject) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    // Check if the user has a pending join request
-    if (!group.joinRequests.includes(userToReject._id)) {
-      return res
-        .status(400)
-        .json({ message: "User does not have a pending request." });
-    }
-
-    // Remove the user from joinRequests
-    group.joinRequests = group.joinRequests.filter(
-      (id) => id.toString() !== userToReject._id.toString()
-    );
-    await group.save();
-
-    return res
-      .status(200)
-      .json({ message: "Join request rejected successfully.", status: 200 });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-// Controller to create a new group
+// CREATE NEW GROUP
 const createGroup = (req, res) => {
-  const { name, description, admin, joinRequests } = req.body;
-
-  Group.create({ name, description, admin, joinRequests })
-    .then((group) => {
-      res.status(201).json({ group, status: 200 });
-    })
-    .catch((error) => {
-      if (error.name === "SequelizeUniqueConstraintError") {
-        // Handle duplicate group creation error
-        res
-          .status(400)
-          .json({ error: "Group with the same name already exists." });
+  const { name, userId, description, members } = req.body;
+  if (members && members.length > 0) {
+    let isUserExitInMembers = members.filter(
+      (member) => member.user === userId
+    );
+    if (isUserExitInMembers) {
+      return res
+        .status(200)
+        .json({ message: "UserId exist in memebers list", status: 400 });
+    }
+  }
+  try {
+    let newGroup = new Group({
+      name,
+      admin: userId,
+      description,
+      members: members,
+    });
+    newGroup.save().then((result) => {
+      if (result) {
+        return res.status(200).json({
+          status: 200,
+          message: `Group ${name} created successfully`,
+          data: result,
+        });
       } else {
-        // Handle other errors
-        res.status(500).json({ error: error.message });
+        return res
+          .status(400)
+          .json({ status: 400, message: "Internal Server Error" });
       }
     });
+  } catch (e) {
+    return res
+      .status(400)
+      .json({ status: 400, message: "Internal Server Error", error: e });
+  }
 };
 
-// Controller to get all groups
+//GET ALL GROUPS LIST
 const getAllGroups = async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return res
+      .status(404)
+      .json({ message: "UserId is required in params", status: 400 });
+  }
   try {
-    const userId = req.query.userId;
-
-    if (!userId) {
-      return res
-        .status(400)
-        .json({ error: "User ID is required in the query string" });
-    }
-
-    // Find groups where the user is an admin or a member
-    const groups = await Group.find({
-      $or: [
-        { admin: userId },
-        { members: { $in: [userId] } }, // Check if userId is in the members array
-      ],
-    }).populate("admin members messages.sender", "username");
-
-    res.status(200).json({ data:groups, status: 200 });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    await Group.find({
+      $or: [{ admin: userId }, { "members.user": userId }],
+    })
+      .populate("admin members.user messages.sender")
+      .then((result) => {
+        return res.status(200).json({
+          message: result.length
+            ? "Groups and messages retrived successfully"
+            : "No group found",
+          status: 200,
+          data: result,
+          length: result.length,
+        });
+      });
+  } catch (e) {
+    return res
+      .status(400)
+      .json({ status: 400, message: "Internal Server Error", error: e });
   }
 };
 
-
-
-// Controller to update a group by ID
-const updateGroup = async (req, res) => {
-  try {
-    const groupId = req.params.id;
-    const { name, description, admin, newMember } = req.body;
-
-    // Build the update object based on the fields that exist in req.body
-    const updateObject = {};
-    if (name) updateObject.name = name;
-    if (description) updateObject.description = description;
-    if (admin) updateObject.admin = admin;
-    if (newMember) updateObject.$push = { members: newMember };
-
-    const updatedGroup = await Group.findByIdAndUpdate(groupId, updateObject, {
-      new: true,
-    });
-
-    if (!updatedGroup) {
-      return res.status(404).json({ message: "Group not found" });
-    }
-
-    res.status(200).json({ group: updatedGroup, status: 200 });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+//UPDATE GROUP
+const updateGroup = (req, res) => {
+  const { name, description, groupId, userId } = req.body;
 };
 
+//SEND GROUP JOIN REQUEST
+const sendJoinRequest = (req, res) => {
+  const { userId, newMembers } = req.body;
+
+  try {
+  } catch (e) {}
+};
+
+//HANDLE REQUEST
+const handleJoinRequest = (req, res) => {
+  const { userId, status, groupId } = req.body;
+
+  try {
+  } catch (e) {}
+};
+
+//SEND MESSAGE
+const sendGroupMessage = (req, res) => {
+  const { message, userId, groupId } = req.body;
+
+  try {
+  } catch (e) {}
+};
 
 module.exports = {
   createGroup,
   getAllGroups,
   updateGroup,
-  sendJoinRequestByAdmin,
-  acceptJoinRequest,
-  rejectJoinRequest,
+  sendJoinRequest,
+  handleJoinRequest,
+  sendGroupMessage,
 };

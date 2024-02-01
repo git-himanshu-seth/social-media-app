@@ -9,25 +9,27 @@ const groupSchema = new mongoose.Schema({
   description: String,
   admin: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model
+    ref: "User",
     required: true,
   },
   members: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      status: {
+        type: String,
+        enum: ["pending", "accepted", "rejected"],
+        default: "pending",
+      },
     },
   ],
-  joinRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   messages: [
     {
       sender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
-      },
-      sender_name: {
-        type: String,
         required: true,
       },
       content: {
