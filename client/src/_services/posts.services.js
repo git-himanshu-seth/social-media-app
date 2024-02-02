@@ -44,7 +44,7 @@ function updatePost(data) {
   const requestOptions = commonFunctions.getRequestOptions(
     "POST",
     extraHeaders,
-    null,
+    JSON.stringify(data),
     true
   );
   return fetch(`${config.apiUrl}/like_and_comments`, requestOptions).then(

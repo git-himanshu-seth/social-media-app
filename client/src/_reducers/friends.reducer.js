@@ -61,19 +61,19 @@ export function friend(state = {}, action) {
       return {
         ...state,
         accept_req_status: status.IN_PROGRESS,
-        req: action.data,
+        acceptRejRes: action.data,
       };
     case friendConstant.ACCEPT_FRIRND_REQ_SUCCESS:
       return {
         ...state,
         accept_req_status: status.SUCCESS,
-        req: action.data,
+        acceptRejRes: action.data,
       };
     case friendConstant.ACCEPT_FRIRND_REQ_FAILURE:
       return {
         ...state,
         accept_req_status: status.FAILURE,
-        req: null,
+        acceptRejRes: null,
       };
 
     case friendConstant.REJECT_FRIRND_REQ_REQUEST:

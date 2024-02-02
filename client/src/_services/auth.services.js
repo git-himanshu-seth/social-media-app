@@ -103,41 +103,52 @@ function createUserDB(data) {
 }
 
 async function logIn(data) {
-  try {
-    const auth = getAuth();
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      data.email,
-      data.password
-    );
+  // try {
+  const auth = getAuth();
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    data.email,
+    data.password
+  );
+  let user = {
+    status: 200,
+    data: JSON.parse(JSON.stringify(userCredential.user)),
+  };
+  // Signed in
+  const extraHeaders = {
+    "Content-Type": "application/json",
+  };
+  const requestOptions = commonFunctions.getRequestOptions(
+    "GET",
+    extraHeaders,
+    null, // Include the request payload (data) as a JSON string
+    true
+  );
+  return fetch(`${config.apiUrl}/user/${user?.data?.uid}`, requestOptions).then(
+    (response) => response.json()
+  );
+  //   console.log("userddd", user);
+  //   // Add API call with GET method
+  //   const apiUrl = `http://localhost:3000/api/v1/mandala/user/${user?.data?.uid}`;
+  //   const response = await fetch(apiUrl, {
+  //     method: "GET",
+  //   });
+  //   if (response.status === 200) {
+  //     const responseData = await response.json();
+  //     user.data = { ...user.data, ...responseData.data };
+  //   } else {
+  //     user.apiError = {
+  //       errorCode: response.status,
+  //       errorMessage: response.statusText,
+  //     };
+  //   }
 
-    // Signed in
-    let user = {
-      status: 200,
-      data: JSON.parse(JSON.stringify(userCredential.user)),
-    };
-    console.log("userddd", user);
-    // Add API call with GET method
-    const apiUrl = `http://localhost:3000/api/v1/mandala/user/${user?.data?.uid}`;
-    const response = await fetch(apiUrl, {
-      method: "GET",
-    });
-    if (response.status === 200) {
-      const responseData = await response.json();
-      user.data = { ...user.data, ...responseData.data };
-    } else {
-      user.apiError = {
-        errorCode: response.status,
-        errorMessage: response.statusText,
-      };
-    }
-
-    return user;
-  } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    return { errorCode, errorMessage };
-  }
+  //   return user;
+  // } catch (error) {
+  //   const errorCode = error.code;
+  //   const errorMessage = error.message;
+  //   return { errorCode, errorMessage };
+  // }
 }
 
 async function registerWithGoogle(data) {
@@ -154,33 +165,6 @@ async function registerWithGoogle(data) {
   return fetch(`${config.apiUrl}/signup`, requestOptions).then((response) =>
     response.json()
   );
-  // let userData ={}
-  // console.log("REGDATA",data);
-  // try {
-  //   const apiUrl = `http://localhost:3000/api/v1/mandala/signup`;
-
-  //   const extraHeaders = {
-  //     "Content-Type": "application/json",
-  //   };
-  //   const requestOptions = commonFunctions.getRequestOptions(
-  //     "POST",
-  //     extraHeaders,
-  //     JSON.stringify(data), // Include the request payload (data) as a JSON string
-  //     true
-  //   );
-  //   let response = await fetch(apiUrl, requestOptions)
-  //   if (response.status===200) {
-  //     userData=response;
-  //   } else {
-  //     userData.apiError = { errorCode: response.status, errorMessage: response.statusText };
-  //   }
-
-  //   return userData;
-  // } catch (error) {
-  //   const errorCode = error.code;
-  //   const errorMessage = error.message;
-  //   return { errorCode, errorMessage };
-  // }
 }
 
 function logOut(data) {

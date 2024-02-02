@@ -7,7 +7,7 @@ export const friendActions = {
   getReqList,
   sendFrienReq,
   acceptReq,
-  rejectReq,
+  // rejectReq,
 };
 
 function getFriendsList(data) {
@@ -145,12 +145,23 @@ function acceptReq(data) {
     friendServices.acceptReq(data).then(
       (response) => {
         if (response) {
-          dispatch(
-            dispatchFunction({
-              type: friendConstant.ACCEPT_FRIRND_REQ_SUCCESS,
-              data: response,
-            })
-          );
+          if (response.status === 200) {
+            dispatch(
+              dispatchFunction({
+                type: friendConstant.ACCEPT_FRIRND_REQ_SUCCESS,
+                data: response,
+              })
+            );
+            alert.success(response.message);
+          } else {
+            dispatch(
+              dispatchFunction({
+                type: friendConstant.ACCEPT_FRIRND_REQ_FAILURE,
+                data: response,
+              })
+            );
+            alert.error(response.message);
+          }
         } else {
           dispatch(
             dispatchFunction({
@@ -174,45 +185,45 @@ function acceptReq(data) {
   };
 }
 
-function rejectReq(data) {
-  return (dispatch) => {
-    dispatch(
-      dispatchFunction({
-        type: friendConstant.REJECT_FRIRND_REQ_REQUEST,
-        data: null,
-      })
-    );
-    friendServices.rejectReq(data).then(
-      (response) => {
-        if (response) {
-          dispatch(
-            dispatchFunction({
-              type: friendConstant.REJECT_FRIRND_REQ_SUCCESS,
-              data: response,
-            })
-          );
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
-      }
-    );
-  };
-}
+// function rejectReq(data) {
+//   return (dispatch) => {
+//     dispatch(
+//       dispatchFunction({
+//         type: friendConstant.REJECT_FRIRND_REQ_REQUEST,
+//         data: null,
+//       })
+//     );
+//     friendServices.rejectReq(data).then(
+//       (response) => {
+//         if (response) {
+//           dispatch(
+//             dispatchFunction({
+//               type: friendConstant.REJECT_FRIRND_REQ_SUCCESS,
+//               data: response,
+//             })
+//           );
+//         } else {
+//           dispatch(
+//             dispatchFunction({
+//               type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
+//               data: response,
+//             })
+//           );
+//           alert.error(response.message);
+//         }
+//       },
+//       (error) => {
+//         dispatch(
+//           dispatchFunction({
+//             type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
+//             data: error.message,
+//           })
+//         );
+//         alert.error(error.message);
+//       }
+//     );
+//   };
+// }
 
 function dispatchFunction(data) {
   return {

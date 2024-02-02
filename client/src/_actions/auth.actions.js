@@ -70,7 +70,6 @@ function login(data) {
     );
     authServices.logIn(data).then(
       (response) => {
-        console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -78,7 +77,7 @@ function login(data) {
               data: response.data,
             })
           );
-          alert.error(response.message);
+          alert.success(response.message);
         } else {
           dispatch(
             dispatchFunction({
@@ -112,8 +111,6 @@ function registerWithGoogle(data) {
     );
     authServices.registerWithGoogle(data).then(
       (response) => {
-        console.log("response", response);
-
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -121,7 +118,7 @@ function registerWithGoogle(data) {
               data: response.data,
             })
           );
-          console.log("response", response);
+          alert.success(response?.message);
         } else {
           dispatch(
             dispatchFunction({
@@ -198,7 +195,6 @@ function logout() {
     );
     authServices.logOut().then(
       (response) => {
-        console.log("response", response);
         if (response) {
           dispatch(
             dispatchFunction({
@@ -206,6 +202,7 @@ function logout() {
               data: response,
             })
           );
+          alert.success("Logout successfully");
         } else {
           dispatch(
             dispatchFunction({
