@@ -7,7 +7,7 @@ export const authActions = {
   logout,
   getUsers,
   login,
-  registerWithGoogle
+  registerWithGoogle,
 };
 
 function createUser(data) {
@@ -70,8 +70,7 @@ function login(data) {
     );
     authServices.logIn(data).then(
       (response) => {
-        console.log("response", response, data);
-
+        console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -79,7 +78,7 @@ function login(data) {
               data: response.data,
             })
           );
-          console.log("response", response);
+          alert.error(response.message);
         } else {
           dispatch(
             dispatchFunction({
@@ -113,7 +112,7 @@ function registerWithGoogle(data) {
     );
     authServices.registerWithGoogle(data).then(
       (response) => {
-        console.log("response",  response);
+        console.log("response", response);
 
         if (response.status === 200) {
           dispatch(
@@ -163,6 +162,9 @@ function getUsers(data) {
               data: response,
             })
           );
+          if (response.data.length === 0) {
+            alert.error(response?.message);
+          }
         } else {
           dispatch(
             dispatchFunction({

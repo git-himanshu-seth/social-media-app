@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Typography,
   TextField,
@@ -12,17 +12,25 @@ import { loginWithEmailAndPassword } from "../utilis/services/firebase";
 import firebaseAuthManager from "../utilis/services/firebase";
 import { UseDispatch, useDispatch, useSelector } from "react-redux";
 import { authActions } from "../_actions/auth.actions";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const loginData = useSelector((state) => state.auth.user);
   const passwordRef = useRef(null);
+
+  useEffect(() => {
+    if (loginData && loginData?._id) {
+      navigate("/");
+    }
+  }, [loginData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,13 +40,9 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(authActions.login(formData));
-    // firebaseAuthManager.loginWithEmailAndPassword(
-    //   formData.email,
-    //   formData.password
-    // );
+    await dispatch(authActions.login(formData));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   List,
   ListItem,
@@ -24,23 +24,35 @@ const UserList = () => {
   });
 
   const userListData = useSelector((state) => {
-    return state?.auth?.userList?.users;
+    return state?.auth?.userList?.data;
   });
+
+  const sendRequestResponse = useSelector((state) => {
+    return state?.friend?.req;
+  });
+
+  useEffect(() => {
+    if (sendRequestResponse?.status === 200) {
+      getUserList(userData._id);
+    }
+  }, [sendRequestResponse]);
+
   const isLoading = useSelector((state) => state.loader.isLoading);
 
   useEffect(() => {
-    dispatch(authActions.getUsers({ id: userData._id }));
+    getUserList(userData._id);
   }, []);
+
+  const getUserList = (id) => {
+    dispatch(authActions.getUsers({ id: id }));
+  };
 
   const handleSendRequest = async (id) => {
     const sendData = {
       senderId: userData?._id,
       receiverId: id,
     };
-    const sendRequestResponse = dispatch(friendActions.sendFrienReq(sendData));
-    if (sendRequestResponse?.status === 200) {
-        dispatch(authActions.getUsers({ id: userData._id }));
-    }
+    await dispatch(friendActions.sendFrienReq(sendData));
   };
 
   return (

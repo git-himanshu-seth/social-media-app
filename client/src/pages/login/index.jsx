@@ -1,9 +1,9 @@
-import Register from "../components/Register";
-import Login from "../components/Login";
+import Register from "../../components/Register";
+import Login from "../../components/Login";
 import { useEffect, useState } from "react";
 import { Container, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import firebaseAuthManager from "../utilis/services/firebase";
+// import firebaseAuthManager from "../utilis/services/firebase";
 
 const LoginAndRegister = () => {
   const navigate = useNavigate();

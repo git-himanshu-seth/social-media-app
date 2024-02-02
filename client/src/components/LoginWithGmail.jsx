@@ -12,7 +12,7 @@ import { authActions } from "../_actions";
 const GoogleLoginComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
-  const dispatch= useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
@@ -36,10 +36,16 @@ const GoogleLoginComponent = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(firebaseAuthManager.auth, provider)
       .then((result) => {
-        const { displayName, email } = result.user;
-        console.log("uid",result)
-        setUserData({ displayName, email });
-        dispatch(authActions.registerWithGoogle(result.user))
+        const { displayName, email, uid } = result.user;
+        console.log("uid", result);
+        setUserData({ name: displayName, email });
+        dispatch(
+          authActions.registerWithGoogle({
+            ...result.user,
+            name: displayName,
+            googleId: uid,
+          })
+        );
         setIsLoggedIn(true);
       })
       .catch((error) => {});

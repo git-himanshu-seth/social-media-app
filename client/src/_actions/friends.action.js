@@ -2,7 +2,6 @@ import { friendServices } from "../_services";
 import { friendConstant } from "../_constants";
 import { alert, commonFunctions } from "../_utilities";
 
-
 export const friendActions = {
   getFriendsList,
   getReqList,
@@ -15,7 +14,6 @@ function getFriendsList(data) {
   return (dispatch) => {
     dispatch(
       dispatchFunction({
-
         type: friendConstant.GET_FRIENDS_REQUEST,
         data: null,
       })
@@ -29,6 +27,9 @@ function getFriendsList(data) {
               data: response.data,
             })
           );
+          if (response.data.length === 0) {
+            alert.error(response.message);
+          }
         } else {
           dispatch(
             dispatchFunction({
@@ -105,10 +106,11 @@ function sendFrienReq(data) {
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
-              type: friendConstant.REJECT_FRIRND_REQ_SUCCESS,
+              type: friendConstant.SEND_FRIEND_REQ_SUCCESS,
               data: response,
             })
           );
+          alert.success(response.message);
         } else {
           dispatch(
             dispatchFunction({

@@ -66,16 +66,6 @@ const Header = () => {
         <GroupIcon sx={{ marginRight: "5px" }} />
         <ListItemText primary="Groups" />
       </ListItem>
-      {/* <Divider orientation="horizontal" sx={{ color: "black" }} /> */}
-      {/* <ListItem
-        onClick={() => {
-          toggleDrawer(false);
-          navigate("/posts");
-        }}
-      >
-        <PostAddIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Posts" />
-      </ListItem> */}
       <Divider orientation="horizontal" sx={{ color: "black" }} />
       <ListItem
         onClick={() => {

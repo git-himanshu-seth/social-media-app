@@ -13,7 +13,7 @@ const signup = async (req, res) => {
     });
   } else {
     userModel
-      .create({ name: name, googleId: "hjsjgdgygdhhg", email })
+      .create({ name: name, googleId: googleId, email })
       .then((result) => {
         Friendship.create({ user_id: result._id, friends: [] });
         res.status(200).json({

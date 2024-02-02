@@ -25,6 +25,9 @@ function getPosts(data) {
               data: response.data,
             })
           );
+          if (response.data.length === 0) {
+            alert.error(response.message);
+          }
         } else {
           dispatch(
             dispatchFunction({
@@ -58,13 +61,14 @@ function createPost(data) {
     );
     postServices.createPost(data).then(
       (response) => {
-        if (response.email && response?.uid) {
+        if (response.status === 200) {
           dispatch(
             dispatchFunction({
               type: postConstants.CREATE_POST_SUCCESS,
               data: response,
             })
           );
+          alert.success(response.message);
         } else {
           dispatch(
             dispatchFunction({

@@ -116,9 +116,9 @@ async function logIn(data) {
       status: 200,
       data: JSON.parse(JSON.stringify(userCredential.user)),
     };
-
+    console.log("userddd", user);
     // Add API call with GET method
-    const apiUrl = `http://localhost:3000/api/v1/mandala/users/${user?.data?.uid}`;
+    const apiUrl = `http://localhost:3000/api/v1/mandala/user/${user?.data?.uid}`;
     const response = await fetch(apiUrl, {
       method: "GET",
     });
@@ -151,7 +151,7 @@ async function registerWithGoogle(data) {
     JSON.stringify(data), // Include the request payload (data) as a JSON string
     true
   );
-  return fetch(`${config.apiUrl}signup`, requestOptions).then((response) =>
+  return fetch(`${config.apiUrl}/signup`, requestOptions).then((response) =>
     response.json()
   );
   // let userData ={}

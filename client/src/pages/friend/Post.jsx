@@ -28,6 +28,7 @@ const Posts = (props) => {
   const [newPostDescription, setNewPostDescription] = useState("");
   const userData = useSelector((state) => state?.auth?.user);
   const posts = useSelector((state) => state?.post?.posts);
+  const createPostRes = useSelector((state) => state?.post?.create_post_res);
 
   useEffect(() => {
     dispatch(postActions.getPosts({ id: userData?._id }));
@@ -41,16 +42,18 @@ const Posts = (props) => {
     setDialogOpen(false);
   };
 
-  const handleCreatePost = () => {
+  const handleCreatePost = async () => {
     if (newPosttitle && newPostDescription) {
       const postData = {
-        newPosttitle,
-        newPostDescription,
+        title: newPosttitle,
+        content: newPostDescription,
+        user: userData?._id,
       };
-      const response = dispatch(postActions.createPost(postData));
-      console.log(response);
+      await dispatch(postActions.createPost(postData));
+      if (createPostRes?.status === 200) {
+        setDialogOpen(false);
+      }
     }
-    // handleDialogClose();
   };
 
   return (

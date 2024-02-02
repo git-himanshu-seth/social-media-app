@@ -1,23 +1,34 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./App.css";
-import DefaultRoutes from "./rotues/routes";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import routes from "./Layout/routes";
 import Header from "./components/Header";
-import { store,presitStore } from "./_store";
-import { Provider } from "react-redux";
-import { PersistGate } from 'redux-persist/integration/react';
 
 function App() {
   return (
-    <React.StrictMode>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={presitStore}>
-        <div className="App">
-          <Header />
-          <DefaultRoutes />
-        </div>
-        </PersistGate>
-      </Provider>
-    </React.StrictMode>
+    <div className="App">
+      <Header />
+      <Suspense fallback={false}>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              exact={route.exact}
+              name={route.name}
+              element={<route.component />}
+            />
+          ))}
+        </Routes>
+      </Suspense>
+      <ToastContainer
+        enableMultiContainer
+        containerId={"TOP_RIGHT"}
+        newestOnTop={true}
+      />
+    </div>
   );
 }
 
