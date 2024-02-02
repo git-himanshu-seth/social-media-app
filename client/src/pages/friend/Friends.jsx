@@ -18,29 +18,30 @@ const Friends = () => {
   const userData = useSelector((state) => {
     return state?.auth?.user;
   });
+
   const friendList = useSelector((state) => {
     return state?.friend?.friends;
   });
-
+  const requestStatus = useSelector((state) => state.friend?.acceptRejRes);
   const isLoading = useSelector((state) => state.loader.isLoading);
 
   useEffect(() => {
     dispatch(friendActions.getFriendsList({ id: userData._id }));
   }, []);
 
-  const handleAcceptRequest = (action) => {
-    const sendData = {
-      action: action,
-      requestId: userData?._id,
-    };
-    const actionFriendRequResponse = dispatch(
-      friendActions.acceptReq(sendData)
-    );
-    if (actionFriendRequResponse?.status === 200) {
+  useEffect(() => {
+    if (requestStatus && requestStatus?.status === 200) {
       dispatch(friendActions.getFriendsList({ id: userData._id }));
     }
-  };
+  }, [requestStatus]);
 
+  const handleAcceptRequest = (action, id) => {
+    const sendData = {
+      action: action,
+      requestId: id,
+    };
+    dispatch(friendActions.acceptReq(sendData));
+  };
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -62,7 +63,7 @@ const Friends = () => {
                       variant="contained"
                       color="primary"
                       size="small"
-                      onClick={() => handleAcceptRequest("accept")}
+                      onClick={() => handleAcceptRequest("accept", friend?._id)}
                       sx={{ marginRight: "20px" }}
                     >
                       Accept
@@ -71,7 +72,7 @@ const Friends = () => {
                       variant="contained"
                       color="error"
                       size="small"
-                      onClick={() => handleAcceptRequest("reject")}
+                      onClick={() => handleAcceptRequest("reject", friend?._id)}
                     >
                       Reject
                     </Button>

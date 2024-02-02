@@ -226,6 +226,7 @@ const getFriendRequests = async (req, res) => {
 
 const handleFriendRequest = async (req, res) => {
   const { action, requestId } = req.body;
+  console.log(action, requestId)
   try {
     let friendRequest = await Friendship.findOne({ "friends._id": requestId });
     if (!friendRequest) {
@@ -243,7 +244,7 @@ const handleFriendRequest = async (req, res) => {
         });
       });
     }
-    if (action === "rejected") {
+    if (action === "reject") {
       Friendship.updateMany(
         { "friends._id": requestId },
         { $pull: { friends: { _id: requestId } } }

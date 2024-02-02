@@ -29,10 +29,23 @@ const Posts = (props) => {
   const userData = useSelector((state) => state?.auth?.user);
   const posts = useSelector((state) => state?.post?.posts);
   const createPostRes = useSelector((state) => state?.post?.create_post_res);
+  const likePostRes = useSelector((state) => state?.post?.update_post_res);
 
   useEffect(() => {
     dispatch(postActions.getPosts({ id: userData?._id }));
   }, []);
+
+  useEffect(() => {
+    if (createPostRes && createPostRes?.status === 200) {
+      setDialogOpen(false);
+    }
+  }, [createPostRes]);
+
+  useEffect(() => {
+    if (likePostRes && likePostRes.status === 200) {
+      dispatch(postActions.getPosts({ id: userData?._id }));
+    }
+  }, [likePostRes]);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -49,11 +62,17 @@ const Posts = (props) => {
         content: newPostDescription,
         user: userData?._id,
       };
-      await dispatch(postActions.createPost(postData));
-      if (createPostRes?.status === 200) {
-        setDialogOpen(false);
-      }
+      dispatch(postActions.createPost(postData));
     }
+  };
+
+  const likePost = (id) => {
+    const sendData = {
+      user: userData?._id,
+      type: "like",
+      postId: id,
+    };
+    dispatch(postActions.updatePost(sendData));
   };
 
   return (
@@ -72,8 +91,8 @@ const Posts = (props) => {
         </Typography>
         <Box sx={{ marginTop: "10%" }}>
           {posts &&
-            posts.length > 0 &&
-            posts.map((post) => {
+            posts?.length > 0 &&
+            posts.map((post) => (
               <Card sx={{ marginBottom: "20px" }}>
                 <CardContent>
                   {/* Post Header */}
@@ -86,10 +105,13 @@ const Posts = (props) => {
                     />
                     <div style={{ marginLeft: "1rem" }}>
                       <Typography variant="subtitle1">
+                        {post.user.name}
+                      </Typography>
+                      <Typography variant="subtitle1">
                         {post.content}
                       </Typography>
                       <Typography variant="caption">
-                        {new Date(post.timestamps).toDateString()}
+                        {new Date(post.createdAt).toDateString()}
                       </Typography>
                     </div>
                   </div>
@@ -101,8 +123,14 @@ const Posts = (props) => {
                 </CardContent>
 
                 <CardActions>
-                  <IconButton>
-                    <ThumbUpIcon />
+                  <IconButton onClick={() => likePost(post._id)}>
+                    <ThumbUpIcon
+                      color={post?.idsArray?.length > 0 &&
+                        post?.idsArray?.includes(userData._id)
+                          ? "primary"
+                          : ""
+                      }
+                    />
                   </IconButton>
                   <IconButton>
                     <ChatBubbleOutlineIcon />
@@ -111,8 +139,8 @@ const Posts = (props) => {
                     <ShareIcon />
                   </IconButton>
                 </CardActions>
-              </Card>;
-            })}
+              </Card>
+            ))}
         </Box>
         <Dialog open={isDialogOpen} onClose={handleDialogClose}>
           <DialogTitle color="primary">Create a New Post</DialogTitle>
