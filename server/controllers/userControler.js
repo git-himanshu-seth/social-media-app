@@ -152,13 +152,28 @@ const sendFriendRequest = async (req, res) => {
           friendData?.friends?.length > 0
             ? [
                 ...friendData.friends,
-                { user: receiverId, status: "pending", _id: objectId },
+                {
+                  user: receiverId,
+                  requester: senderId,
+                  status: "pending",
+                  _id: objectId,
+                },
               ]
-            : [{ user: receiverId, status: "pending", _id: objectId }];
+            : [
+                {
+                  user: receiverId,
+                  requester: senderId,
+                  status: "pending",
+                  _id: objectId,
+                },
+              ];
         reciverData.friends =
           reciverData?.friends?.length > 0
-            ? [...reciverData.friends, { user: senderId, status: "pending" }]
-            : [{ user: senderId, status: "pending" }];
+            ? [
+                ...reciverData.friends,
+                { user: senderId, requester: senderId, status: "pending" },
+              ]
+            : [{ user: senderId, requester: senderId, status: "pending" }];
         await reciverData.save();
         friendData?.save().then((response) => {
           if (response) {
