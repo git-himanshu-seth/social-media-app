@@ -49,30 +49,34 @@ const Friends = () => {
       <List>
         {friendList &&
           friendList.length > 0 &&
-          friendList.map((request) => (
+          friendList.map((friend) => (
             <React.Fragment key={1}>
               <ListItem>
                 <ListItemText
-                  primary={request?.sender?.name}
-                  secondary={request?.sender?.email}
+                  primary={friend?.user?.name}
+                  secondary={friend?.user?.email}
                 />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => handleAcceptRequest("accept")}
-                  sx={{ marginRight: "20px" }}
-                >
-                  Accept
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="small"
-                  onClick={() => handleAcceptRequest("reject")}
-                >
-                  Reject
-                </Button>
+                {friend?.status === "pending" && (
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() => handleAcceptRequest("accept")}
+                      sx={{ marginRight: "20px" }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => handleAcceptRequest("reject")}
+                    >
+                      Reject
+                    </Button>
+                  </>
+                )}
               </ListItem>
               <Divider />
             </React.Fragment>
