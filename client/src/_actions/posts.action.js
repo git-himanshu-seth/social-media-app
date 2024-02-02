@@ -102,7 +102,6 @@ function updatePost(data) {
     );
     postServices.updatePost(data).then(
       (response) => {
-        console.log("response", response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -110,6 +109,7 @@ function updatePost(data) {
               data: response,
             })
           );
+          // alert.success("")
         } else {
           dispatch(
             dispatchFunction({

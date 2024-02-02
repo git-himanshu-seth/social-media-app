@@ -17,7 +17,6 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import LoginIcon from "@mui/icons-material/Login";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 import ChatIcon from "@mui/icons-material/Chat";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";

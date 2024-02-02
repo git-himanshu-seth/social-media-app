@@ -20,7 +20,7 @@ function getGroups(data) {
     true
   );
   return fetch(
-    `${config.apiUrl}/chat_group?userId=${data.id}`,
+    `${config.apiUrl}/get_groups/${data.id}`,
     requestOptions
   ).then((response) => response.json());
 }
@@ -35,10 +35,9 @@ function createGroup(data) {
     JSON.stringify(data),
     true
   );
-  return fetch(
-    `${config.apiUrl}/chat_group`,
-    requestOptions
-  ).then((response) => response.json());
+  return fetch(`${config.apiUrl}/chat_group`, requestOptions).then((response) =>
+    response.json()
+  );
 }
 
 function addGroupMembers(data) {

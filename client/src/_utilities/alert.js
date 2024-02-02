@@ -9,7 +9,7 @@ function success(message) {
   toast(message, {
     containerId: "TOP_RIGHT",
     autoClose: 5000,
-    type: toast.success,
+    type: "success",
   });
 }
 
@@ -17,7 +17,7 @@ function error(message) {
   toast(message, {
     containerId: "TOP_RIGHT",
     autoClose: 5000,
-    type: toast.error,
+    type: "error",
   });
 }
 

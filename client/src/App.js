@@ -5,8 +5,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import routes from "./Layout/routes";
 import Header from "./components/Header";
+import { useSelector } from "react-redux";
+import LoginAndRegister from "./pages/login";
 
 function App() {
+  const userData = useSelector((state) => state.auth?.user);
   return (
     <div className="App">
       <Header />
@@ -18,7 +21,13 @@ function App() {
               path={route.path}
               exact={route.exact}
               name={route.name}
-              element={<route.component />}
+              element={
+                userData?._id && route.path !== "/" ? (
+                  <route.component />
+                ) : (
+                  <LoginAndRegister />
+                )
+              }
             />
           ))}
         </Routes>
