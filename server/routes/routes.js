@@ -35,19 +35,10 @@ const {
 const appRoute = express.Router();
 
 appRoute.route("/signup").post(signup);
-appRoute.route("/users/:googleId").get(getUserByGoogleId);
+appRoute.route("/user/:googleId").get(getUserByGoogleId);
 
 appRoute.route("/signin").post(signin);
 appRoute.route("/chat_group").post(createGroup).get(getAllGroups);
-appRoute.route("/send_group_join").post(sendJoinRequestByAdmin);
-appRoute.route("/accept_join_group").post(acceptJoinRequest);
-appRoute.route("/reject_join_group").post(rejectJoinRequest);
-
-appRoute
-  .route("/chat_group/:id")
-  // .get(getGroupById)
-  // .delete(deleteGroup)
-  .put(updateGroup);
 
 // FRIENDS ROUTES
 //********************************************************************************************************************************************/
@@ -87,9 +78,9 @@ appRoute.route("/chats/:chat_id").delete(deleteChats);
 //********************************************************************************************************************************************/
 appRoute.route("/create_group").post(createGroup);
 appRoute.route("/get_groups/:userId").get(getAllGroups);
-appRoute.route("/delete_group/:groupId").delete();
-appRoute.route("/send_group_request").post();
-appRoute.route("/handle_group_request").post();
-appRoute.route("/group_message").post();
+appRoute.route("/update_group").put(updateGroup);
+appRoute.route("/send_group_request").post(sendJoinRequest);
+appRoute.route("/handle_group_request").post(handleJoinRequest);
+appRoute.route("/send_group_message").post(sendGroupMessage);
 
 module.exports = appRoute;

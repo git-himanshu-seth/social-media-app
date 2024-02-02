@@ -74,10 +74,12 @@ const getFriendList = (req, res) => {
   Friendship.findOne({ user_id: req.params.id })
     .populate("friends.user", "name email")
     .then((list) => {
-      console.log(list);
       if (list) {
         res.status(200).json({
-          message: "get friends list successfully",
+          message:
+            list.friends.length > 0
+              ? "Get friends list successfully"
+              : "No friends were found",
           success: true,
           data: list.friends,
           length: list.friends.length,

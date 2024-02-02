@@ -5,7 +5,6 @@ const createChat = async (req, res) => {
   try {
     const objectId = new mongoose.Types.ObjectId();
     const { user, sender, message } = req.body;
-    console.log(user, sender, message);
     const existingChat = await UserChat.findOne({ user, chat_id: objectId });
     if (existingChat) {
       existingChat.messages.push({
@@ -61,7 +60,6 @@ const createChat = async (req, res) => {
 const sendMessage = async (req, res) => {
   try {
     const { user, chat_id, message } = req.body;
-    console.log(user, chat_id, message);
 
     const existingChat = await UserChat.findOne({ chat_id });
     if (!existingChat) {
@@ -125,15 +123,26 @@ const deleteChats = async (req, res) => {
   try {
     const { chat_id } = req.params;
 
-    const deletedChat = await UserChat.findOneAndDelete({ chat_id });
+    const chat = await UserChat.findOne({ chat_id });
 
-    if (!deletedChat) {
-      return res
-        .status(404)
-        .json({ message: "Chat not found for this user and chat_id" });
+    if (!chat) {
+      return res.status(404).json({ staus: 404, message: "Chat not found" });
+    } else {
+      chat.messages = [];
+      chat
+        .save()
+        .then((result, err) => {
+          if (result) {
+            return res
+              .status(200)
+              .json({ status: 200, message: "Chat cleared successfully" });
+          }
+          return res.status(500).json({ staus: 500, message: err.message });
+        })
+        .catch((err) => {
+          return res.status(500).json({ staus: 500, message: err.message });
+        });
     }
-
-    res.status(200).json({ message: "Chat deleted successfully", status: 200 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: 500, message: "Internal Server Error" });
