@@ -14,6 +14,8 @@ import {
   TextField,
   DialogActions,
   Box,
+  Input,
+  Checkbox,
 } from "@mui/material";
 import GroupChat from "./GroupChat";
 import { useDispatch, useSelector } from "react-redux";
@@ -135,6 +137,8 @@ const Groups = () => {
       </Box>
       <Dialog
         open={isCreateGroupDialogOpen}
+        // sx={{}}
+        height={"200px"}
         onClose={() => setCreateGroupDialogOpen(false)}
       >
         <DialogTitle color="primary">Create New Group</DialogTitle>
@@ -153,28 +157,45 @@ const Groups = () => {
             label="Group Description"
             type="text"
             fullWidth
+            // height={"200px"}
             value={newGroupDescription}
             onChange={(e) => setNewGroupDescription(e.target.value)}
           />
           {/* userList maping here*/}
-          {friendList &&
-            friendList?.length > 0 &&
-            friendList?.map((user) => (
-              <React.Fragment key={user.id}>
-                <ListItem
-                  alignItems="flex-start"
-                  onClick={() => {
-                    setChatSectionOpen(true);
-                  }}
-                >
-                  {/* <ListItemAvatar>
+          <Box
+            sx={{ height: "100px", overflow: "scroll", overflowX: "hidden" }}
+          >
+            {friendList &&
+              friendList?.length > 0 &&
+              friendList?.map((user) => {
+                console.log(user);
+                return (
+                  <React.Fragment key={user.id}>
+                    <ListItem
+                      alignItems="flex-start"
+                      onClick={() => {
+                        setChatSectionOpen(true);
+                      }}
+                    >
+                      {/* <ListItemAvatar>
                     <Avatar>{user.members}</Avatar>
                   </ListItemAvatar> */}
-                  <ListItemText primary={user.name} secondary={user.email} />
-                </ListItem>
-                {/* <Divider variant="inset" component="li" /> */}
-              </React.Fragment>
-            ))}
+                      <Checkbox checked={true} />
+                      <ListItemText
+                        primary={user.user.name}
+                        sx={{ alignSelf: "center" }}
+                      />
+                      <ListItemText
+                        primary={user.user.email}
+                        sx={{ alignSelf: "center" }}
+                      />
+                      <ListItemText />
+                    </ListItem>
+                    <Divider component="div" variant="middle" />
+                  </React.Fragment>
+                );
+              })}
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button
