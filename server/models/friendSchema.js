@@ -12,6 +12,10 @@ const friendshipSchema = new mongoose.Schema({
         ref: "User",
         requierd: true,
       },
+      requester: {
+        type: mongoose.Schema.Types.ObjectId,
+        requierd: true,
+      },
       status: {
         type: String,
         enum: ["pending", "accepted", "rejected"],
