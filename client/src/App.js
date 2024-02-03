@@ -22,11 +22,7 @@ function App() {
               exact={route.exact}
               name={route.name}
               element={
-                userData?._id && route.path !== "/" ? (
-                  <route.component />
-                ) : (
-                  <LoginAndRegister />
-                )
+                userData?._id ? <route.component /> : <LoginAndRegister />
               }
             />
           ))}

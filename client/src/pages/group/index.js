@@ -36,10 +36,15 @@ const Groups = () => {
     return state?.friend?.friends;
   });
 
+  const creatGroupRes = useSelector((state) => {
+    return state?.group?.createGroup;
+  });
+
   const [isCreateGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [chatSectionOpen, setChatSectionOpen] = useState(false);
+  const [members, setMembers] = useState([]);
 
   useEffect(() => {
     if (userData?._id) {
@@ -48,19 +53,50 @@ const Groups = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (creatGroupRes && creatGroupRes.status === 200) {
+      setCreateGroupDialogOpen(false);
+      dispatch(groupActions.getGroups({ id: userData._id }));
+      setNewGroupName("");
+      setNewGroupDescription("");
+      setMembers([]);
+    }
+  }, [creatGroupRes]);
+
   const handleCreateGroup = () => {
-    const newGroup = {
-      id: groupList.length + 1,
-      name: newGroupName,
-      admin: userData?._id,
-      members: 0, // You can set an initial member count
-    };
-    // setGroups([...groups, newGroup]);
-    // setCreateGroupDialogOpen(false);
-    dispatch(groupActions.createGroup(newGroup));
-    dispatch(groupActions.getGroups({ id: userData._id }));
+    const groupMember = [];
+    if (members.length > 0) {
+      for (const member of members) {
+        groupMember.push({ user: member });
+      }
+    }
+    if (groupMember.length > 0 && newGroupName && newGroupDescription) {
+      const newGroup = {
+        name: newGroupName,
+        userId: userData?._id,
+        description: newGroupDescription,
+        members: groupMember, // You can set an initial member count
+      };
+      dispatch(groupActions.createGroup(newGroup));
+    }
   };
 
+  const addUsers = (checked, id) => {
+    if (checked) {
+      if (members?.length > 0 && members.includes(id) === -1 && checked) {
+        members.push(id);
+      } else {
+        members.push(id);
+      }
+    } else {
+      if (members.includes(id)) {
+        members.splice(id, 1);
+      }
+    }
+    setMembers(members);
+  };
+
+  console.log("group", groupList);
   return (
     <Box>
       <Box display="flex" flexDirection="column">
@@ -97,7 +133,7 @@ const Groups = () => {
                 {groupList &&
                   groupList?.length > 0 &&
                   groupList?.map((group) => (
-                    <React.Fragment key={group.id}>
+                    <React.Fragment key={group._id}>
                       <ListItem
                         alignItems="flex-start"
                         onClick={() => {
@@ -105,7 +141,12 @@ const Groups = () => {
                         }}
                       >
                         <ListItemAvatar>
-                          <Avatar>{group.members}</Avatar>
+                          <Avatar
+                            src={
+                              "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                            }
+                            alt={group.name}
+                          />
                         </ListItemAvatar>
                         <ListItemText
                           primary={group.name}
@@ -116,7 +157,7 @@ const Groups = () => {
                                 variant="body2"
                                 color="textPrimary"
                               >
-                                {`${group.members} members`}
+                                {group.description}
                               </Typography>
                             </React.Fragment>
                           }
@@ -168,7 +209,6 @@ const Groups = () => {
             {friendList &&
               friendList?.length > 0 &&
               friendList?.map((user) => {
-                console.log(user);
                 return (
                   <React.Fragment key={user.id}>
                     <ListItem
@@ -177,10 +217,12 @@ const Groups = () => {
                         setChatSectionOpen(true);
                       }}
                     >
-                      {/* <ListItemAvatar>
-                    <Avatar>{user.members}</Avatar>
-                  </ListItemAvatar> */}
-                      <Checkbox checked={true} />
+                      <Checkbox
+                        // checked={members.includes(user.user._id)}
+                        onChange={(val) =>
+                          addUsers(val.target.checked, user.user._id)
+                        }
+                      />
                       <ListItemText
                         primary={user.user.name}
                         sx={{ alignSelf: "center" }}
@@ -201,7 +243,12 @@ const Groups = () => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => setCreateGroupDialogOpen(false)}
+            onClick={() => {
+              setCreateGroupDialogOpen(false);
+              // setNewGroupName("");
+              // setNewGroupDescription("");
+              // setMembers([]);
+            }}
           >
             Cancel
           </Button>

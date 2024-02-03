@@ -77,7 +77,7 @@ function login(data) {
               data: response.data,
             })
           );
-          alert.success(response.message);
+          alert.success("Login sucessfully");
         } else {
           dispatch(
             dispatchFunction({
