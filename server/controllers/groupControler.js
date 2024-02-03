@@ -9,7 +9,7 @@ const createGroup = (req, res) => {
     let isUserExitInMembers = members.filter(
       (member) => member.user === userId
     );
-    if (isUserExitInMembers) {
+    if (isUserExitInMembers.length > 0) {
       return res
         .status(200)
         .json({ message: "UserId exist in memebers list", status: 400 });

@@ -27,6 +27,9 @@ function getGroups(data) {
               data: response.data,
             })
           );
+          if (response?.data?.length === 0) {
+            alert.error(response.message);
+          }
         } else {
           dispatch(
             dispatchFunction({
@@ -64,9 +67,10 @@ function createGroup(data) {
           dispatch(
             dispatchFunction({
               type: groupConstants.CREATE_GROUP_SUCCESS,
-              data: response.data,
+              data: response,
             })
           );
+          alert.success(response.message);
         } else {
           dispatch(
             dispatchFunction({

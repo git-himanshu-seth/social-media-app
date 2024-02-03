@@ -19,10 +19,9 @@ function getGroups(data) {
     null,
     true
   );
-  return fetch(
-    `${config.apiUrl}/get_groups/${data.id}`,
-    requestOptions
-  ).then((response) => response.json());
+  return fetch(`${config.apiUrl}/get_groups/${data.id}`, requestOptions).then(
+    (response) => response.json()
+  );
 }
 
 function createGroup(data) {
@@ -35,8 +34,8 @@ function createGroup(data) {
     JSON.stringify(data),
     true
   );
-  return fetch(`${config.apiUrl}/chat_group`, requestOptions).then((response) =>
-    response.json()
+  return fetch(`${config.apiUrl}/create_group`, requestOptions).then(
+    (response) => response.json()
   );
 }
 
