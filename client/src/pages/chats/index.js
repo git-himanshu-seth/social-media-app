@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   List,
   ListItem,
@@ -19,6 +20,7 @@ import {
 // import Chat from "./Chat";
 
 const Chats = () => {
+  const navigate = useNavigate();
   const [groups, setGroups] = useState([
     { id: 1, name: "Group 1", members: 10 },
     { id: 2, name: "Group 2", members: 8 },
@@ -28,7 +30,7 @@ const Chats = () => {
   const [isCreateGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
-  const [chatSectionOpen, setChatSectionOpen] = useState(false)
+  const [chatSectionOpen, setChatSectionOpen] = useState(false);
   // Add more state variables as needed for friends list, etc.
 
   const handleCreateGroup = () => {
@@ -47,22 +49,38 @@ const Chats = () => {
     <Box>
       <Box display="flex" flexDirection="column">
         <Box width="100%">
-        
           <Button
-            sx={{ float: "right", marginTop:'20px' }}
+            sx={{ float: "right", marginTop: "20px" }}
             variant="contained"
             color="primary"
-            onClick={() => setCreateGroupDialogOpen(true)}
+            onClick={() => navigate("/friend")}
           >
-            ADD NEW FRIEND
+            Make new friend
           </Button>
         </Box>
-        <Box display="flex" flexDirection={"row"} >
-          <Box width={"30%"} marginLeft={"10px"}marginTop={"20px"} sx={{border:'2px solid rgb(25 118 210)', borderRadius:"20px", padding:"10px"}}>
-            <List marginTop={"20px"} sx={{overflow:"scroll",overflowX: "hidden", height:'600px', }} >
+        <Box display="flex" flexDirection={"row"}>
+          <Box
+            width={"30%"}
+            marginLeft={"10px"}
+            marginTop={"20px"}
+            sx={{
+              border: "2px solid rgb(25 118 210)",
+              borderRadius: "20px",
+              padding: "10px",
+            }}
+          >
+            <List
+              marginTop={"20px"}
+              sx={{ overflow: "scroll", overflowX: "hidden", height: "600px" }}
+            >
               {groups.map((group) => (
                 <React.Fragment key={group.id}>
-                  <ListItem alignItems="flex-start" onClick={()=>{setChatSectionOpen(true)}}>
+                  <ListItem
+                    alignItems="flex-start"
+                    onClick={() => {
+                      setChatSectionOpen(true);
+                    }}
+                  >
                     <ListItemAvatar>
                       <Avatar>{group.members}</Avatar>
                     </ListItemAvatar>
@@ -117,10 +135,18 @@ const Chats = () => {
           {/* Add additional fields for friends list, etc. */}
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" color="error" onClick={() => setCreateGroupDialogOpen(false)}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setCreateGroupDialogOpen(false)}
+          >
             Cancel
           </Button>
-          <Button onClick={handleCreateGroup} variant="contained" color="primary">
+          <Button
+            onClick={handleCreateGroup}
+            variant="contained"
+            color="primary"
+          >
             Create
           </Button>
         </DialogActions>

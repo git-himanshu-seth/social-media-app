@@ -44,32 +44,32 @@ const createGroup = (req, res) => {
 
 //GET ALL GROUPS LIST
 const getAllGroups = async (req, res) => {
-  const { userId } = req.params;
-  if (!userId) {
-    return res
-      .status(404)
-      .json({ message: "UserId is required in params", status: 400 });
-  }
-  try {
-    await Group.find({
-      $or: [{ admin: userId }, { "members.user": userId }],
-    })
-      .populate("admin members.user messages.sender")
-      .then((result) => {
-        return res.status(200).json({
-          message: result.length
-            ? "Groups and messages retrived successfully"
-            : "No group found",
-          status: 200,
-          data: result,
-          length: result.length,
-        });
+  const userId = req.params.userId;
+  // if (!userId) {
+  //   return res
+  //     .status(404)
+  //     .json({ message: "UserId is required in params", status: 400 });
+  // }
+  Group.find({
+    $or: [{ admin: userId }, { "members.user": userId }],
+  })
+    .populate("admin members.user messages.sender")
+    .then((result, error) => {
+      console.log(error);
+      return res.status(200).json({
+        message: result.length
+          ? "Groups and messages retrived successfully"
+          : "No group found",
+        status: 200,
+        data: result,
+        length: result.length,
       });
-  } catch (e) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "Internal Server Error", error: e });
-  }
+    })
+    .catch((e) => {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Internal Server Error", success });
+    });
 };
 
 //UPDATE GROUP

@@ -152,6 +152,7 @@ function getUsers(data) {
     );
     authServices.getUsers(data).then(
       (response) => {
+        console.log(response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({

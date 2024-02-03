@@ -31,6 +31,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state?.auth?.user);
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("home");
   const [user, setUser] = useState();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isMediumScreen = useMediaQuery("(min-width:1024px)");
@@ -44,38 +45,72 @@ const Header = () => {
   };
 
   const drawerList = (
-    <List sx={{ marginTop: "60px" }}>
-      <Divider orientation="horizontal" sx={{ color: "black" }} />
-      <ListItem
-        onClick={() => {
-          navigate("/");
-          toggleDrawer(false);
-        }}
-      >
-        <HomeIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Home" />
-      </ListItem>
-      <Divider orientation="horizontal" sx={{ color: "black" }} />
-      <ListItem
-        onClick={() => {
-          navigate("/groups");
-          toggleDrawer(false);
-        }}
-      >
-        <GroupIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Groups" />
-      </ListItem>
-      <Divider orientation="horizontal" sx={{ color: "black" }} />
-      <ListItem
-        onClick={() => {
-          toggleDrawer(false);
-          navigate("/chats");
-        }}
-      >
-        <ChatIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Chats" />
-      </ListItem>
-      <Divider orientation="horizontal" sx={{ color: "black" }} />
+    <List sx={{ marginTop: "62px" }} key={"header_1"}>
+      <>
+        <Divider orientation="horizontal" />
+        <ListItem
+          onClick={() => {
+            navigate("/");
+            toggleDrawer(false);
+            setActiveTab("home");
+          }}
+          sx={{
+            background: activeTab === "home" ? "#1976d2" : "#FFF",
+            color: activeTab === "home" ? "#FFF" : "#1976d2",
+          }}
+        >
+          <HomeIcon
+            sx={{
+              marginRight: "5px",
+            }}
+          />
+          <ListItemText primary="Home" />
+        </ListItem>
+        <Divider orientation="horizontal" sx={{ color: "black" }} />
+      </>
+      <>
+        <ListItem
+          onClick={() => {
+            navigate("/groups");
+            toggleDrawer(false);
+            setActiveTab("groups");
+          }}
+          sx={{
+            background: activeTab === "groups" ? "#1976d2" : "#FFF",
+            color: activeTab === "groups" ? "#FFF" : "#1976d2",
+          }}
+        >
+          <GroupIcon
+            sx={{
+              marginRight: "5px",
+            }}
+          />
+          <ListItemText
+            primary="Groups"
+            sx={{
+              marginRight: "5px",
+            }}
+          />
+        </ListItem>
+        <Divider orientation="horizontal" sx={{ color: "black" }} />
+      </>
+      <>
+        <ListItem
+          onClick={() => {
+            toggleDrawer(false);
+            navigate("/chats");
+            setActiveTab("chats");
+          }}
+          sx={{
+            background: activeTab === "chats" ? "#1976d2" : "#FFF",
+            color: activeTab === "chats" ? "#FFF" : "#1976d2",
+          }}
+        >
+          <ChatIcon sx={{ marginRight: "5px" }} />
+          <ListItemText primary="Chats" />
+        </ListItem>
+        <Divider orientation="horizontal" sx={{ color: "black" }} />
+      </>
       {user?._id ? (
         <>
           <ListItem
@@ -83,6 +118,11 @@ const Header = () => {
               dispatch(authActions.logout());
               toggleDrawer(false);
               navigate("/");
+              setActiveTab("home");
+            }}
+            sx={{
+              background: "#fff",
+              color: "#1976d2",
             }}
           >
             <LogoutIcon sx={{ marginRight: "5px" }} />
@@ -96,6 +136,11 @@ const Header = () => {
             onClick={async () => {
               toggleDrawer(false);
               navigate("/login-register");
+              setActiveTab("login-register");
+            }}
+            sx={{
+              background: activeTab === "login-register" ? "#1976d2" : "#FFF",
+              color: activeTab === "login-register" ? "#FFF" : "#1976d2",
             }}
           >
             <LoginIcon sx={{ marginRight: "5px" }} />
@@ -104,15 +149,22 @@ const Header = () => {
           <Divider orientation="horizontal" sx={{ color: "black" }} />
         </>
       )}
-      <ListItem
-        onClick={() => {
-          navigate("/friend");
-          toggleDrawer(false);
-        }}
-      >
-        <LogoutIcon sx={{ marginRight: "5px" }} />
-        <ListItemText primary="Friends" />
-      </ListItem>
+      <>
+        <ListItem
+          onClick={() => {
+            navigate("/friend");
+            toggleDrawer(false);
+            setActiveTab("friend");
+          }}
+          sx={{
+            background: activeTab === "friend" ? "#1976d2" : "#FFF",
+            color: activeTab === "friend" ? "#FFF" : "#1976d2",
+          }}
+        >
+          <LogoutIcon sx={{ marginRight: "5px" }} />
+          <ListItemText primary="Friends" />
+        </ListItem>
+      </>
       <Divider orientation="horizontal" sx={{ color: "black" }} />
     </List>
   );
@@ -126,9 +178,7 @@ const Header = () => {
             alt="Logo"
             style={{ height: "70px", marginRight: "20px" }}
           />
-          <Typography variant="h6" component="div">
-            MANDALA
-          </Typography>
+          <Typography variant="h6">MANDALA</Typography>
           <Box ml={2} width={"80%"}>
             <Box sx={{ float: "right" }}>
               {isMediumScreen ? (
@@ -214,8 +264,7 @@ const Header = () => {
           toggleDrawer(false);
         }}
       >
-        <diV style={{ background: "black" }}></diV>
-        {drawerList}
+        <Box style={{ height: "100%" }}>{drawerList}</Box>
       </Drawer>
     </>
   );
