@@ -3,10 +3,8 @@ import { commonFunctions } from "../_utilities";
 
 export const friendServices = {
   getFriendsList,
-  getReqList,
   sendFrienReq,
   acceptReq,
-  rejectReq,
 };
 
 function getFriendsList(data) {
@@ -22,22 +20,6 @@ function getFriendsList(data) {
   return fetch(`${config.apiUrl}/friends/${data.id}`, requestOptions).then(
     (response) => response.json()
   );
-}
-
-function getReqList(data) {
-  const extraHeaders = {
-    "Content-Type": "application/json",
-  };
-  const requestOptions = commonFunctions.getRequestOptions(
-    "GET",
-    extraHeaders,
-    null,
-    true
-  );
-  return fetch(
-    `${config.apiUrl}/get-friend-requests/${data.id}`,
-    requestOptions
-  ).then((response) => response.json());
 }
 
 function sendFrienReq(data) {
@@ -67,21 +49,6 @@ function acceptReq(data) {
     true
   );
   return fetch(`${config.apiUrl}/handle-friend-request`, requestOptions).then(
-    (response) => response.json()
-  );
-}
-
-function rejectReq(data) {
-  const extraHeaders = {
-    "Content-Type": "application/json",
-  };
-  const requestOptions = commonFunctions.getRequestOptions(
-    "POST",
-    extraHeaders,
-    JSON.stringify(data), // Include the request payload (data) as a JSON string
-    true
-  );
-  return fetch(`${config.apiUrl}/reject-friend-request`, requestOptions).then(
     (response) => response.json()
   );
 }

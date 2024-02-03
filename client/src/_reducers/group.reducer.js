@@ -20,6 +20,7 @@ export function group(state = {}, action) {
         get_group_status: status.FAILURE,
         groupList: null,
       };
+    
     case groupConstants.CREATE_GROUP_REQUEST:
       return {
         ...state,
@@ -38,24 +39,7 @@ export function group(state = {}, action) {
         create_group_status: status.FAILURE,
         createGroup: null,
       };
-    case groupConstants.ADD_GROUP_MEMBER_REQUEST:
-      return {
-        ...state,
-        add_member_status: status.IN_PROGRESS,
-        addMember: action.data,
-      };
-    case groupConstants.ADD_GROUP_MEMBER_SUCCESS:
-      return {
-        ...state,
-        add_member_status: status.SUCCESS,
-        addMember: action.data,
-      };
-    case groupConstants.ADD_GROUP_MEMBER_FAILURE:
-      return {
-        ...state,
-        add_member_status: status.FAILURE,
-        addMember: null,
-      };
+  
     case groupConstants.ACCEPT_GROUP_REQUEST:
       return {
         ...state,
@@ -73,24 +57,6 @@ export function group(state = {}, action) {
         ...state,
         accept_Group_status: status.FAILURE,
         acceptGroup: null,
-      };
-    case groupConstants.REJECT_GROUP_REQUEST:
-      return {
-        ...state,
-        reject_group_status: status.IN_PROGRESS,
-        rejectRes: action.data,
-      };
-    case groupConstants.REJECT_GROUP_SUCCESS:
-      return {
-        ...state,
-        reject_group_status: status.SUCCESS,
-        rejectRes: action.data,
-      };
-    case groupConstants.REJECT_GROUP_FAILURE:
-      return {
-        ...state,
-        reject_group_status: status.FAILURE,
-        rejectRes: action.data,
       };
     default:
       return state;

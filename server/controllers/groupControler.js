@@ -152,7 +152,7 @@ const sendJoinRequest = async (req, res) => {
 const handleJoinRequest = async (req, res) => {
   const { userId, status, groupId } = req.body;
   try {
-    if (status === "accepted") {
+    if (status === "accept") {
       Group.findOneAndUpdate(
         {
           _id: groupId,
@@ -173,7 +173,7 @@ const handleJoinRequest = async (req, res) => {
           res.status(500).json({ message: err.message, status: 500 })
         );
     }
-    if (status === "rejected") {
+    if (status === "reject") {
       Group.findOneAndUpdate(
         {
           _id: groupId,
