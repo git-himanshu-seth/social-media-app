@@ -5,7 +5,6 @@ import { alert } from "../_utilities";
 export const groupActions = {
   getGroups,
   createGroup,
-  addGroupMembers,
   acceptGroupRequest,
   rejectGroupRequest,
 };
@@ -94,46 +93,6 @@ function createGroup(data) {
   };
 }
 
-function addGroupMembers(data) {
-  return (dispatch) => {
-    dispatch(
-      dispatchFunction({
-        type: groupConstants.ADD_GROUP_MEMBER_REQUEST,
-        data: null,
-      })
-    );
-    groupServices.addGroupMembers(data).then(
-      (response) => {
-        if (response.status === 200) {
-          dispatch(
-            dispatchFunction({
-              type: groupConstants.ADD_GROUP_MEMBER_SUCCESS,
-              data: response.data,
-            })
-          );
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: groupConstants.ADD_GROUP_MEMBER_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: groupConstants.ADD_GROUP_MEMBER_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
-      }
-    );
-  };
-}
-
 function acceptGroupRequest(data) {
   return (dispatch) => {
     dispatch(
@@ -148,9 +107,10 @@ function acceptGroupRequest(data) {
           dispatch(
             dispatchFunction({
               type: groupConstants.ACCEPT_GROUP_SUCCESS,
-              data: response.data,
+              data: response,
             })
           );
+          alert.success(response.message);
         } else {
           dispatch(
             dispatchFunction({

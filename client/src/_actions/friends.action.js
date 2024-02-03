@@ -4,10 +4,8 @@ import { alert, commonFunctions } from "../_utilities";
 
 export const friendActions = {
   getFriendsList,
-  getReqList,
   sendFrienReq,
   acceptReq,
-  // rejectReq,
 };
 
 function getFriendsList(data) {
@@ -44,46 +42,6 @@ function getFriendsList(data) {
         dispatch(
           dispatchFunction({
             type: friendConstant.GET_FRIENDS_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
-      }
-    );
-  };
-}
-
-function getReqList(data) {
-  return (dispatch) => {
-    dispatch(
-      dispatchFunction({
-        type: friendConstant.GET_FRIENDS_REQ_LIST_REQUEST,
-        data: null,
-      })
-    );
-    friendServices.getReqList(data).then(
-      (response) => {
-        if (response.status === 200) {
-          dispatch(
-            dispatchFunction({
-              type: friendConstant.GET_FRIENDS_REQ_LIST_SUCCESS,
-              data: response.data,
-            })
-          );
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: friendConstant.GET_FRIENDS_REQ_LIST_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: friendConstant.GET_FRIENDS_REQ_LIST_FAILURE,
             data: error.message,
           })
         );
@@ -184,46 +142,6 @@ function acceptReq(data) {
     );
   };
 }
-
-// function rejectReq(data) {
-//   return (dispatch) => {
-//     dispatch(
-//       dispatchFunction({
-//         type: friendConstant.REJECT_FRIRND_REQ_REQUEST,
-//         data: null,
-//       })
-//     );
-//     friendServices.rejectReq(data).then(
-//       (response) => {
-//         if (response) {
-//           dispatch(
-//             dispatchFunction({
-//               type: friendConstant.REJECT_FRIRND_REQ_SUCCESS,
-//               data: response,
-//             })
-//           );
-//         } else {
-//           dispatch(
-//             dispatchFunction({
-//               type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
-//               data: response,
-//             })
-//           );
-//           alert.error(response.message);
-//         }
-//       },
-//       (error) => {
-//         dispatch(
-//           dispatchFunction({
-//             type: friendConstant.REJECT_FRIRND_REQ_FAILURE,
-//             data: error.message,
-//           })
-//         );
-//         alert.error(error.message);
-//       }
-//     );
-//   };
-// }
 
 function dispatchFunction(data) {
   return {

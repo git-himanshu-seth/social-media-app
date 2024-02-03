@@ -40,6 +40,10 @@ const Groups = () => {
     return state?.group?.createGroup;
   });
 
+  const acceptRejectReq = useSelector((state) => {
+    return state?.group?.acceptGroup;
+  });
+
   const [isCreateGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
@@ -62,6 +66,12 @@ const Groups = () => {
       setMembers([]);
     }
   }, [creatGroupRes]);
+
+  useEffect(() => {
+    if (acceptRejectReq && acceptRejectReq?.status === 200) {
+      dispatch(groupActions.getGroups({ id: userData._id }));
+    }
+  }, [acceptRejectReq]);
 
   const handleCreateGroup = () => {
     const groupMember = [];
@@ -96,7 +106,32 @@ const Groups = () => {
     setMembers(members);
   };
 
-  console.log("group", groupList);
+  const handleAcceptRequest = (action, groupId) => {
+    const sendData = {
+      status: action,
+      userId: userData?._id,
+      groupId: groupId,
+    };
+    dispatch(groupActions.acceptGroupRequest(sendData));
+  };
+
+  const findGroupUser = (data) => {
+    if (data?.admin?._id === userData?._id) {
+      return false;
+    } else if (data.members) {
+      for (const member of data.members) {
+        if (
+          member?.status === "pending" &&
+          member?.user?._id === userData?._id
+        ) {
+          return true;
+        }
+      }
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Box>
       <Box display="flex" flexDirection="column">
@@ -162,6 +197,31 @@ const Groups = () => {
                             </React.Fragment>
                           }
                         />
+                        {findGroupUser(group) && (
+                          <>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              onClick={() =>
+                                handleAcceptRequest("accept", group?._id)
+                              }
+                              sx={{ marginRight: "20px" }}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              size="small"
+                              onClick={() =>
+                                handleAcceptRequest("reject", group?._id)
+                              }
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        )}
                       </ListItem>
                       <Divider variant="inset" component="li" />
                     </React.Fragment>
@@ -218,7 +278,6 @@ const Groups = () => {
                       }}
                     >
                       <Checkbox
-                        // checked={members.includes(user.user._id)}
                         onChange={(val) =>
                           addUsers(val.target.checked, user.user._id)
                         }
@@ -245,9 +304,9 @@ const Groups = () => {
             color="error"
             onClick={() => {
               setCreateGroupDialogOpen(false);
-              // setNewGroupName("");
-              // setNewGroupDescription("");
-              // setMembers([]);
+              setNewGroupName("");
+              setNewGroupDescription("");
+              setMembers([]);
             }}
           >
             Cancel
