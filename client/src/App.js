@@ -18,26 +18,12 @@ function App() {
       <Header />
       <Suspense fallback={false}>
         <Routes>
-<<<<<<< HEAD
           <Route path="/" element={<Home />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/chats" element={<Chats />} />
           <Route path="/friend" element={<FriendScreen />} />
           <Route path="/login-register" element={<LoginAndRegister />} />
           <Route path="*" element={<NotFound />} />
-=======
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              exact={route.exact}
-              name={route.name}
-              element={
-                userData?._id ? <route.component /> : <LoginAndRegister />
-              }
-            />
-          ))}
->>>>>>> 980cc2bc8637bd99810fce3d0cfaa5ab478f10c5
         </Routes>
       </Suspense>
       <ToastContainer
