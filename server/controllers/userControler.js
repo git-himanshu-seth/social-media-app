@@ -127,7 +127,6 @@ const sendFriendRequest = async (req, res) => {
   const { senderId, receiverId } = req.body;
   let isFriendExist = null;
   const objectId = new mongoose.Types.ObjectId();
-
   if (senderId === receiverId) {
     return res.status(200).json({
       status: 300,
@@ -156,7 +155,6 @@ const sendFriendRequest = async (req, res) => {
                 {
                   user: receiverId,
                   requester: senderId,
-                  status: "pending",
                   _id: objectId,
                 },
               ]
@@ -164,7 +162,6 @@ const sendFriendRequest = async (req, res) => {
                 {
                   user: receiverId,
                   requester: senderId,
-                  status: "pending",
                   _id: objectId,
                 },
               ];
@@ -172,9 +169,9 @@ const sendFriendRequest = async (req, res) => {
           reciverData?.friends?.length > 0
             ? [
                 ...reciverData.friends,
-                { user: senderId, requester: senderId, status: "pending" },
+                { user: senderId, requester: senderId, _id: objectId },
               ]
-            : [{ user: senderId, requester: senderId, status: "pending" }];
+            : [{ user: senderId, requester: senderId, _id: objectId }];
         await reciverData.save();
         friendData?.save().then((response) => {
           if (response) {
@@ -191,16 +188,16 @@ const sendFriendRequest = async (req, res) => {
         });
       } catch (err) {
         console.log(err);
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: err.message });
       }
     }
   } else {
     try {
       friendData.friends = [
-        { user: receiverId, status: "pending", _id: objectId },
+        { user: receiverId, requester: senderId, _id: objectId },
       ];
       reciverData.friends = [
-        { user: senderId, status: "pending", _id: objectId },
+        { user: senderId, requester: senderId, _id: objectId },
       ];
       await reciverData.save();
       friendData?.save().then((response) => {
@@ -218,7 +215,7 @@ const sendFriendRequest = async (req, res) => {
       });
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ message: "!opps request failed" });
+      return res.status(500).json({ message: err.message });
     }
   }
 };
@@ -244,7 +241,6 @@ const getFriendRequests = async (req, res) => {
 
 const handleFriendRequest = async (req, res) => {
   const { action, requestId } = req.body;
-  console.log(action, requestId);
   try {
     let friendRequest = await Friendship.findOne({ "friends._id": requestId });
     if (!friendRequest) {

@@ -47,17 +47,17 @@ const UserList = () => {
     dispatch(authActions.getUsers({ id: id }));
   };
 
-  const handleSendRequest = async (id) => {
+  const handleSendRequest = (id) => {
     const sendData = {
       senderId: userData?._id,
       receiverId: id,
     };
-    await dispatch(friendActions.sendFrienReq(sendData));
+    dispatch(friendActions.sendFrienReq(sendData));
   };
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom color={"#1976d2"}>
         User List
       </Typography>
       <List>

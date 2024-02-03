@@ -31,7 +31,7 @@ const getAllPosts = async (req, res) => {
         }
       });
       const posts = await Post.find({ user: { $in: [...friendsIdArray] } })
-        .populate("user") // Populate the user field in the post
+        .populate("user")
         .populate("comments.user");
       res.status(200).json({
         data: posts,

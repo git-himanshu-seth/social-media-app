@@ -81,12 +81,12 @@ const Posts = (props) => {
         variant="contained"
         color="primary"
         onClick={handleDialogOpen}
-        style={{ float: "right", marginRight: "10%" }}
+        style={{ position: "absolute", right: "2%" }}
       >
         Create Post
       </Button>
       <Box>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom color={"#1976d2"}>
           Post Section
         </Typography>
         <Box sx={{ marginTop: "10%" }}>
@@ -125,7 +125,8 @@ const Posts = (props) => {
                 <CardActions>
                   <IconButton onClick={() => likePost(post._id)}>
                     <ThumbUpIcon
-                      color={post?.idsArray?.length > 0 &&
+                      color={
+                        post?.idsArray?.length > 0 &&
                         post?.idsArray?.includes(userData._id)
                           ? "primary"
                           : ""
