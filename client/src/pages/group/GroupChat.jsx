@@ -1,13 +1,19 @@
-
 import React, { useEffect, useState } from "react";
 import { TextField, Button, Paper, Typography, Box } from "@mui/material";
+import { io } from "socket.io-client";
 
 const GroupChat = () => {
-//   useEffect(() => {
-//     document.title = "home";
-//   }, []);
+  //   useEffect(() => {
+  //     document.title = "home";
+  //   }, []);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const socket = io("ws://localhost:8080", {
+    reconnectionDelayMax: 10000,
+    auth: {
+      token: "123",
+    },
+  });
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -16,12 +22,32 @@ const GroupChat = () => {
     return `${hours}:${minutes}`;
   };
 
+  useEffect(() => {
+    console.log(
+      "SOCKET",
+
+      socket.on
+    );
+    // socket.emit("sendMessage", {
+
+    // });
+    socket.on("getMessage", (data) => {
+      console.log("DATAT", data);
+    });
+    socket.on("connect", (res) => {
+      console.log("Connect", res);
+    });
+  }, [socket]);
+
   const handleInputChange = (e) => {
     setNewMessage(e.target.value);
   };
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
+      socket.emit("sendMessage", {
+        messages: newMessage.trim(),
+      });
       const currentTime = getCurrentTime();
       setMessages([
         ...messages,
@@ -43,7 +69,7 @@ const GroupChat = () => {
         flexDirection: "column",
         border: "2px solid rgb(25 118 210)",
         borderRadius: "20px",
-        // padding: "10px",
+        padding: "20px 8px 12px 0px",
       }}
     >
       <div

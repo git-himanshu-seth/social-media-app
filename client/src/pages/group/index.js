@@ -14,7 +14,6 @@ import {
   TextField,
   DialogActions,
   Box,
-  Input,
   Checkbox,
 } from "@mui/material";
 import GroupChat from "./GroupChat";
@@ -85,7 +84,7 @@ const Groups = () => {
         name: newGroupName,
         userId: userData?._id,
         description: newGroupDescription,
-        members: groupMember, // You can set an initial member count
+        members: groupMember,
       };
       dispatch(groupActions.createGroup(newGroup));
     }
@@ -133,7 +132,7 @@ const Groups = () => {
   };
 
   return (
-    <Box>
+    <Box mb={5}>
       <Box display="flex" flexDirection="column">
         <Box width="100%">
           <Button
@@ -154,7 +153,7 @@ const Groups = () => {
               sx={{
                 border: "2px solid rgb(25 118 210)",
                 borderRadius: "20px",
-                padding: "10px",
+                padding: "20px 8px 12px 0px",
               }}
             >
               <List
@@ -163,6 +162,7 @@ const Groups = () => {
                   overflow: "scroll",
                   overflowX: "hidden",
                   height: "600px",
+                  width: "100%",
                 }}
               >
                 {groupList &&
@@ -223,7 +223,7 @@ const Groups = () => {
                           </>
                         )}
                       </ListItem>
-                      <Divider variant="inset" component="li" />
+                      <Divider variant="fullWidth" />
                     </React.Fragment>
                   ))}
               </List>
