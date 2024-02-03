@@ -1,6 +1,7 @@
 import { authConstants } from "../_constants";
 import { authServices } from "../_services";
 import { alert, commonFunctions } from "../_utilities";
+import { showLoader, hideLoader } from "./loader.action";
 
 export const authActions = {
   createUser,
@@ -150,9 +151,9 @@ function getUsers(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     authServices.getUsers(data).then(
       (response) => {
-        console.log(response);
         if (response.status === 200) {
           dispatch(
             dispatchFunction({
@@ -163,6 +164,7 @@ function getUsers(data) {
           if (response.data.length === 0) {
             alert.error(response?.message);
           }
+          dispatch(hideLoader(true));
         } else {
           dispatch(
             dispatchFunction({
@@ -171,6 +173,7 @@ function getUsers(data) {
             })
           );
           alert.error(response?.message);
+          dispatch(hideLoader(true));
         }
       },
       (error) => {
@@ -181,6 +184,7 @@ function getUsers(data) {
           })
         );
         alert.error(error.message);
+        dispatch(hideLoader(true));
       }
     );
   };

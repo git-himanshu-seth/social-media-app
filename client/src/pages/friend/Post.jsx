@@ -20,6 +20,7 @@ import { postActions } from "../../_actions";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
+import Loader from "../../components/customLoader";
 
 const Posts = (props) => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Posts = (props) => {
   const posts = useSelector((state) => state?.post?.posts);
   const createPostRes = useSelector((state) => state?.post?.create_post_res);
   const likePostRes = useSelector((state) => state?.post?.update_post_res);
+  const isLoading = useSelector((state) => state.loader.isLoading);
 
   useEffect(() => {
     dispatch(postActions.getPosts({ id: userData?._id }));
@@ -85,104 +87,107 @@ const Posts = (props) => {
       >
         Create Post
       </Button>
-      <Box>
-        <Typography variant="h4" gutterBottom color={"#1976d2"}>
-          Post Section
-        </Typography>
-        <Box sx={{ marginTop: "10%" }}>
-          {posts &&
-            posts?.length > 0 &&
-            posts.map((post) => (
-              <Card sx={{ marginBottom: "20px" }}>
-                <CardContent>
-                  {/* Post Header */}
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <Avatar
-                      src={
-                        "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-                      }
-                      alt={post.title}
-                    />
-                    <div style={{ marginLeft: "1rem" }}>
-                      <Typography variant="subtitle1">
-                        {post.user.name}
-                      </Typography>
-                      <Typography variant="subtitle1">
-                        {post.content}
-                      </Typography>
-                      <Typography variant="caption">
-                        {new Date(post.createdAt).toDateString()}
-                      </Typography>
+      {!isLoading && (
+        <Box>
+          <Typography variant="h4" gutterBottom color={"#1976d2"}>
+            Post Section
+          </Typography>
+          <Box sx={{ marginTop: "10%" }}>
+            {posts &&
+              posts?.length > 0 &&
+              posts.map((post) => (
+                <Card sx={{ marginBottom: "20px" }}>
+                  <CardContent>
+                    {/* Post Header */}
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <Avatar
+                        src={
+                          "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                        }
+                        alt={post.title}
+                      />
+                      <div style={{ marginLeft: "1rem" }}>
+                        <Typography variant="subtitle1">
+                          {post.user.name}
+                        </Typography>
+                        <Typography variant="subtitle1">
+                          {post.content}
+                        </Typography>
+                        <Typography variant="caption">
+                          {new Date(post.createdAt).toDateString()}
+                        </Typography>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Post Content */}
-                  <Typography variant="body1" style={{ marginTop: "1rem" }}>
-                    {post.content}
-                  </Typography>
-                </CardContent>
+                    {/* Post Content */}
+                    <Typography variant="body1" style={{ marginTop: "1rem" }}>
+                      {post.content}
+                    </Typography>
+                  </CardContent>
 
-                <CardActions>
-                  <IconButton onClick={() => likePost(post._id)}>
-                    <ThumbUpIcon
-                      color={
-                        post?.idsArray?.length > 0 &&
-                        post?.idsArray?.includes(userData._id)
-                          ? "primary"
-                          : ""
-                      }
-                    />
-                  </IconButton>
-                  <IconButton>
-                    <ChatBubbleOutlineIcon />
-                  </IconButton>
-                  <IconButton>
-                    <ShareIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            ))}
+                  <CardActions>
+                    <IconButton onClick={() => likePost(post._id)}>
+                      <ThumbUpIcon
+                        color={
+                          post?.idsArray?.length > 0 &&
+                          post?.idsArray?.includes(userData._id)
+                            ? "primary"
+                            : ""
+                        }
+                      />
+                    </IconButton>
+                    <IconButton>
+                      <ChatBubbleOutlineIcon />
+                    </IconButton>
+                    <IconButton>
+                      <ShareIcon />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              ))}
+          </Box>
+          <Dialog open={isDialogOpen} onClose={handleDialogClose}>
+            <DialogTitle color="primary">Create a New Post</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="Post Title"
+                fullWidth
+                variant="outlined"
+                value={newPosttitle}
+                onChange={(e) => setNewPostTitle(e.target.value)}
+                sx={{ marginTop: "15px" }}
+              />
+              <TextField
+                sx={{ marginTop: "15px" }}
+                label="Post Discreption"
+                multiline
+                rows={4}
+                fullWidth
+                variant="outlined"
+                value={newPostDescription}
+                onChange={(e) => setNewPostDescription(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCreatePost}
+                style={{ marginTop: "1rem" }}
+              >
+                Post
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDialogClose}
+                style={{ marginTop: "1rem", marginLeft: "1rem" }}
+              >
+                Cancel
+              </Button>
+            </DialogContent>
+          </Dialog>
         </Box>
-        <Dialog open={isDialogOpen} onClose={handleDialogClose}>
-          <DialogTitle color="primary">Create a New Post</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="Post Title"
-              fullWidth
-              variant="outlined"
-              value={newPosttitle}
-              onChange={(e) => setNewPostTitle(e.target.value)}
-              sx={{ marginTop: "15px" }}
-            />
-            <TextField
-              sx={{ marginTop: "15px" }}
-              label="Post Discreption"
-              multiline
-              rows={4}
-              fullWidth
-              variant="outlined"
-              value={newPostDescription}
-              onChange={(e) => setNewPostDescription(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCreatePost}
-              style={{ marginTop: "1rem" }}
-            >
-              Post
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleDialogClose}
-              style={{ marginTop: "1rem", marginLeft: "1rem" }}
-            >
-              Cancel
-            </Button>
-          </DialogContent>
-        </Dialog>
-      </Box>
+      )}
+      {isLoading && <Loader />}
     </>
   );
 };

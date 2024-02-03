@@ -14,12 +14,12 @@ import {
   TextField,
   DialogActions,
   Box,
-  Input,
   Checkbox,
 } from "@mui/material";
 import GroupChat from "./GroupChat";
 import { useDispatch, useSelector } from "react-redux";
 import { groupActions, friendActions } from "../../_actions";
+import Loader from "../../components/customLoader";
 
 const Groups = () => {
   const dispatch = useDispatch();
@@ -49,6 +49,7 @@ const Groups = () => {
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [chatSectionOpen, setChatSectionOpen] = useState(false);
   const [members, setMembers] = useState([]);
+  const isLoading = useSelector((state) => state.loader.isLoading);
 
   useEffect(() => {
     if (userData?._id) {
@@ -134,108 +135,110 @@ const Groups = () => {
 
   return (
     <Box>
-      <Box display="flex" flexDirection="column">
-        <Box width="100%">
-          <Button
-            sx={{ float: "right", marginTop: "20px" }}
-            variant="contained"
-            color="primary"
-            onClick={() => setCreateGroupDialogOpen(true)}
-          >
-            Create New Group
-          </Button>
-        </Box>
-        {groupList && groupList.length > 0 && (
-          <Box display="flex" flexDirection={"row"}>
-            <Box
-              width={"30%"}
-              marginLeft={"10px"}
-              marginTop={"20px"}
-              sx={{
-                border: "2px solid rgb(25 118 210)",
-                borderRadius: "20px",
-                padding: "10px",
-              }}
+      {!isLoading && (
+        <Box display="flex" flexDirection="column">
+          <Box width="100%">
+            <Button
+              sx={{ float: "right", marginTop: "20px" }}
+              variant="contained"
+              color="primary"
+              onClick={() => setCreateGroupDialogOpen(true)}
             >
-              <List
+              Create New Group
+            </Button>
+          </Box>
+          {groupList && groupList.length > 0 && (
+            <Box display="flex" flexDirection={"row"}>
+              <Box
+                width={"30%"}
+                marginLeft={"10px"}
                 marginTop={"20px"}
                 sx={{
-                  overflow: "scroll",
-                  overflowX: "hidden",
-                  height: "600px",
+                  border: "2px solid rgb(25 118 210)",
+                  borderRadius: "20px",
+                  padding: "10px",
                 }}
               >
-                {groupList &&
-                  groupList?.length > 0 &&
-                  groupList?.map((group) => (
-                    <React.Fragment key={group._id}>
-                      <ListItem
-                        alignItems="flex-start"
-                        onClick={() => {
-                          setChatSectionOpen(true);
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <Avatar
-                            src={
-                              "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                <List
+                  marginTop={"20px"}
+                  sx={{
+                    overflow: "scroll",
+                    overflowX: "hidden",
+                    height: "600px",
+                  }}
+                >
+                  {groupList &&
+                    groupList?.length > 0 &&
+                    groupList?.map((group) => (
+                      <React.Fragment key={group._id}>
+                        <ListItem
+                          alignItems="flex-start"
+                          onClick={() => {
+                            setChatSectionOpen(true);
+                          }}
+                        >
+                          <ListItemAvatar>
+                            <Avatar
+                              src={
+                                "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                              }
+                              alt={group.name}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={group.name}
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  component="span"
+                                  variant="body2"
+                                  color="textPrimary"
+                                >
+                                  {group.description}
+                                </Typography>
+                              </React.Fragment>
                             }
-                            alt={group.name}
                           />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={group.name}
-                          secondary={
-                            <React.Fragment>
-                              <Typography
-                                component="span"
-                                variant="body2"
-                                color="textPrimary"
+                          {findGroupUser(group) && (
+                            <>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                onClick={() =>
+                                  handleAcceptRequest("accept", group?._id)
+                                }
+                                sx={{ marginRight: "20px" }}
                               >
-                                {group.description}
-                              </Typography>
-                            </React.Fragment>
-                          }
-                        />
-                        {findGroupUser(group) && (
-                          <>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              onClick={() =>
-                                handleAcceptRequest("accept", group?._id)
-                              }
-                              sx={{ marginRight: "20px" }}
-                            >
-                              Accept
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              size="small"
-                              onClick={() =>
-                                handleAcceptRequest("reject", group?._id)
-                              }
-                            >
-                              Reject
-                            </Button>
-                          </>
-                        )}
-                      </ListItem>
-                      <Divider variant="inset" component="li" />
-                    </React.Fragment>
-                  ))}
-              </List>
-            </Box>
-            {chatSectionOpen && (
-              <Box width="70%">
-                <GroupChat />
+                                Accept
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                size="small"
+                                onClick={() =>
+                                  handleAcceptRequest("reject", group?._id)
+                                }
+                              >
+                                Reject
+                              </Button>
+                            </>
+                          )}
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                      </React.Fragment>
+                    ))}
+                </List>
               </Box>
-            )}
-          </Box>
-        )}
-      </Box>
+              {chatSectionOpen && (
+                <Box width="70%">
+                  <GroupChat />
+                </Box>
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
       <Dialog
         open={isCreateGroupDialogOpen}
         // sx={{}}
@@ -320,6 +323,7 @@ const Groups = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {isLoading && <Loader />}
     </Box>
   );
 };

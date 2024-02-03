@@ -42,66 +42,68 @@ const Friends = () => {
     };
     dispatch(friendActions.acceptReq(sendData));
   };
-  console.log(userData);
+  
   return (
     <Box>
       <Typography variant="h4" gutterBottom color={"#1976d2"}>
-        Friend Requests
+        Friends List
       </Typography>
-      <List>
-        {friendList &&
-          userData?._id &&
-          friendList.length > 0 &&
-          friendList.map((friend) => {
-            console.log(friend?.requester, `${userData?._id}`);
-            return (
-              <React.Fragment key={1}>
-                <ListItem>
-                  <ListItemText
-                    primary={friend?.user?.name}
-                    secondary={friend?.user?.email}
-                    sx={{ width: "33%" }}
-                  />
-                  <>
+      {!isLoading && (
+        <List>
+          {friendList &&
+            userData?._id &&
+            friendList.length > 0 &&
+            friendList.map((friend) => {
+              return (
+                <React.Fragment key={1}>
+                  <ListItem>
                     <ListItemText
-                      primary={"Status"}
-                      secondary={friend?.status}
+                      primary={friend?.user?.name}
+                      secondary={friend?.user?.email}
                       sx={{ width: "33%" }}
                     />
-                  </>
-                  {userData &&
-                    friend?.status === "pending" &&
-                    friend?.requester !== `${userData?._id}` && (
-                      <>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          onClick={() =>
-                            handleAcceptRequest("accept", friend?._id)
-                          }
-                          sx={{ marginRight: "20px" }}
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          size="small"
-                          onClick={() =>
-                            handleAcceptRequest("reject", friend?._id)
-                          }
-                        >
-                          Reject
-                        </Button>
-                      </>
-                    )}
-                </ListItem>
-                <Divider />
-              </React.Fragment>
-            );
-          })}
-      </List>
+                    <>
+                      <ListItemText
+                        primary={"Status"}
+                        secondary={friend?.status}
+                        sx={{ width: "33%" }}
+                      />
+                    </>
+                    {userData &&
+                      friend?.status === "pending" &&
+                      friend?.requester !== `${userData?._id}` && (
+                        <>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={() =>
+                              handleAcceptRequest("accept", friend?._id)
+                            }
+                            sx={{ marginRight: "20px" }}
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            onClick={() =>
+                              handleAcceptRequest("reject", friend?._id)
+                            }
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      )}
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              );
+            })}
+        </List>
+      )}
+      {isLoading && <Loader />}
     </Box>
   );
 };

@@ -1,12 +1,12 @@
 import { groupConstants } from "../_constants";
 import { groupServices } from "../_services";
 import { alert } from "../_utilities";
+import { showLoader, hideLoader } from "./loader.action";
 
 export const groupActions = {
   getGroups,
   createGroup,
   acceptGroupRequest,
-  rejectGroupRequest,
 };
 
 function getGroups(data) {
@@ -17,6 +17,7 @@ function getGroups(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     groupServices.getGroups(data).then(
       (response) => {
         if (response.status === 200) {
@@ -29,6 +30,7 @@ function getGroups(data) {
           if (response?.data?.length === 0) {
             alert.error(response.message);
           }
+          dispatch(hideLoader(true));
         } else {
           dispatch(
             dispatchFunction({
@@ -37,6 +39,7 @@ function getGroups(data) {
             })
           );
           alert.error(response.message);
+          dispatch(hideLoader(true));
         }
       },
       (error) => {
@@ -47,6 +50,7 @@ function getGroups(data) {
           })
         );
         alert.error(error.message);
+        dispatch(hideLoader(true));
       }
     );
   };
@@ -60,6 +64,7 @@ function createGroup(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     groupServices.createGroup(data).then(
       (response) => {
         if (response.status === 200) {
@@ -69,6 +74,7 @@ function createGroup(data) {
               data: response,
             })
           );
+          dispatch(hideLoader(true));
           alert.success(response.message);
         } else {
           dispatch(
@@ -77,6 +83,7 @@ function createGroup(data) {
               data: response,
             })
           );
+          dispatch(hideLoader(true));
           alert.error(response.message);
         }
       },
@@ -87,6 +94,7 @@ function createGroup(data) {
             data: error.message,
           })
         );
+        dispatch(hideLoader(true));
         alert.error(error.message);
       }
     );
@@ -101,6 +109,7 @@ function acceptGroupRequest(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     groupServices.acceptGroupRequest(data).then(
       (response) => {
         if (response.status === 200) {
@@ -111,6 +120,7 @@ function acceptGroupRequest(data) {
             })
           );
           alert.success(response.message);
+          dispatch(hideLoader(true));
         } else {
           dispatch(
             dispatchFunction({
@@ -119,6 +129,7 @@ function acceptGroupRequest(data) {
             })
           );
           alert.error(response.message);
+          dispatch(hideLoader(true));
         }
       },
       (error) => {
@@ -129,46 +140,7 @@ function acceptGroupRequest(data) {
           })
         );
         alert.error(error.message);
-      }
-    );
-  };
-}
-
-function rejectGroupRequest(data) {
-  return (dispatch) => {
-    dispatch(
-      dispatchFunction({
-        type: groupConstants.REJECT_GROUP_REQUEST_REQUEST,
-        data: null,
-      })
-    );
-    groupServices.rejectGroupRequest(data).then(
-      (response) => {
-        if (response.status === 200) {
-          dispatch(
-            dispatchFunction({
-              type: groupConstants.REJECT_GROUP_REQUEST_SUCCESS,
-              data: response.data,
-            })
-          );
-        } else {
-          dispatch(
-            dispatchFunction({
-              type: groupConstants.REJECT_GROUP_REQUEST_FAILURE,
-              data: response,
-            })
-          );
-          alert.error(response.message);
-        }
-      },
-      (error) => {
-        dispatch(
-          dispatchFunction({
-            type: groupConstants.REJECT_GROUP_REQUEST_FAILURE,
-            data: error.message,
-          })
-        );
-        alert.error(error.message);
+        dispatch(hideLoader(true));
       }
     );
   };

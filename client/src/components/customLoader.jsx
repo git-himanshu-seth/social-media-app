@@ -7,6 +7,11 @@ const Loader = () => {
       style={{
         height: "auto",
         marginTop: "20%",
+        alignContent: "center",
+        position: "absolute",
+        left: "50%",
+        right: "50%",
+        top: "17%"
       }}
     >
       <CircularProgress

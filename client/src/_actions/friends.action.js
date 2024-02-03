@@ -1,6 +1,7 @@
 import { friendServices } from "../_services";
 import { friendConstant } from "../_constants";
 import { alert, commonFunctions } from "../_utilities";
+import { showLoader, hideLoader } from "./loader.action";
 
 export const friendActions = {
   getFriendsList,
@@ -16,6 +17,7 @@ function getFriendsList(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     friendServices.getFriendsList(data).then(
       (response) => {
         if (response.status === 200) {
@@ -28,6 +30,7 @@ function getFriendsList(data) {
           if (response.data.length === 0) {
             alert.error(response.message);
           }
+          dispatch(hideLoader(true));
         } else {
           dispatch(
             dispatchFunction({
@@ -35,6 +38,7 @@ function getFriendsList(data) {
               data: null,
             })
           );
+          dispatch(hideLoader(true));
           alert.error(response.message);
         }
       },
@@ -45,6 +49,7 @@ function getFriendsList(data) {
             data: error.message,
           })
         );
+        dispatch(hideLoader(true));
         alert.error(error.message);
       }
     );
@@ -59,6 +64,7 @@ function sendFrienReq(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     friendServices.sendFrienReq(data).then(
       (response) => {
         if (response.status === 200) {
@@ -69,6 +75,7 @@ function sendFrienReq(data) {
             })
           );
           alert.success(response.message);
+          dispatch(hideLoader(true));
         } else {
           dispatch(
             dispatchFunction({
@@ -77,6 +84,7 @@ function sendFrienReq(data) {
             })
           );
           alert.error(response.message);
+          dispatch(hideLoader(true));
         }
       },
       (error) => {
@@ -87,6 +95,7 @@ function sendFrienReq(data) {
           })
         );
         alert.error(error.message);
+        dispatch(hideLoader(true));
       }
     );
   };
@@ -100,6 +109,7 @@ function acceptReq(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     friendServices.acceptReq(data).then(
       (response) => {
         if (response) {
@@ -111,6 +121,7 @@ function acceptReq(data) {
               })
             );
             alert.success(response.message);
+            dispatch(hideLoader(true));
           } else {
             dispatch(
               dispatchFunction({
@@ -119,6 +130,7 @@ function acceptReq(data) {
               })
             );
             alert.error(response.message);
+            dispatch(hideLoader(true));
           }
         } else {
           dispatch(
@@ -128,6 +140,7 @@ function acceptReq(data) {
             })
           );
           alert.error(response.message);
+          dispatch(hideLoader(true));
         }
       },
       (error) => {
@@ -138,6 +151,7 @@ function acceptReq(data) {
           })
         );
         alert.error(error.message);
+        dispatch(hideLoader(true));
       }
     );
   };

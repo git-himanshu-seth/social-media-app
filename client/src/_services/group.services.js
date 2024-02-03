@@ -5,7 +5,6 @@ export const groupServices = {
   getGroups,
   createGroup,
   acceptGroupRequest,
-  rejectGroupRequest,
 };
 
 function getGroups(data) {
@@ -51,20 +50,4 @@ function acceptGroupRequest(data) {
   return fetch(`${config.apiUrl}/handle_group_request`, requestOptions).then(
     (response) => response.json()
   );
-}
-
-function rejectGroupRequest(data) {
-  const extraHeaders = {
-    "Content-Type": "application/json",
-  };
-  const requestOptions = commonFunctions.getRequestOptions(
-    "POST",
-    extraHeaders,
-    JSON.stringify(data),
-    true
-  );
-  return fetch(
-    `${config.apiUrl}/friend_request/${data.id}`,
-    requestOptions
-  ).then((response) => response.json());
 }
