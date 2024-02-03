@@ -71,7 +71,8 @@ const signin = (req, res) => {
 // normal login remaining
 
 const getFriendList = (req, res) => {
-  Friendship.findOne({ user_id: req.params.id })
+  const userId = req?.params?.id;
+  Friendship.findOne({ user_id: userId })
     .populate("friends.user", "name email")
     .then((list) => {
       if (list) {
@@ -95,7 +96,7 @@ const getFriendList = (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Internal server error",
+        message: err.message,
         success: false,
         status: 500,
       });
@@ -225,7 +226,9 @@ const sendFriendRequest = async (req, res) => {
 const getFriendRequests = async (req, res) => {
   try {
     const { userId } = req.params;
-
+    if (!userId) {
+      return res.status(500).json({ message: "Invalid credentials" });
+    }
     const friendRequests = await FriendRequest.find({
       $or: [{ receiver: userId }],
     })
@@ -235,13 +238,13 @@ const getFriendRequests = async (req, res) => {
     res.status(200).json({ data: friendRequests, status: 200 });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 };
 
 const handleFriendRequest = async (req, res) => {
   const { action, requestId } = req.body;
-  console.log(action, requestId)
+  console.log(action, requestId);
   try {
     let friendRequest = await Friendship.findOne({ "friends._id": requestId });
     if (!friendRequest) {
@@ -278,8 +281,9 @@ const handleFriendRequest = async (req, res) => {
 };
 
 const getUsersList = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
     const friend = await Friendship.findOne({ user_id: id });
     if (friend?.friends.length > 0) {
       let friendsIdList = friend?.friends.map((friend) => friend.user);
@@ -304,7 +308,9 @@ const getUsersList = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ status: 500, success: false, message: error.message });
   }
 };
 

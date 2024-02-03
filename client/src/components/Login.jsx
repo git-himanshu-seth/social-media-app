@@ -47,15 +47,19 @@ const Login = () => {
 
   return (
     <>
-      <Typography variant="h5" align="center">
+      <Typography variant="h5" align="center" color="primary">
         Log in
       </Typography>
       <form onSubmit={handleSubmit}>
-        <InputLabel htmlFor="email" style={{ marginTop: "20px" }}>
+        <InputLabel
+          htmlFor="email"
+          style={{ marginTop: "20px", color: "#1976d2" }}
+        >
           Email Address<span style={{ color: "red" }}>*</span>
         </InputLabel>
         <TextField
           variant="outlined"
+          sx={{ input: { color: "#1976d2" } }}
           required
           fullWidth
           type="email"
@@ -64,13 +68,18 @@ const Login = () => {
           value={formData.email}
           onChange={handleChange}
           autoComplete="off"
+          te
         />
-        <InputLabel htmlFor="password" style={{ marginTop: "10px" }}>
+        <InputLabel
+          htmlFor="password"
+          style={{ marginTop: "10px", color: "#1976d2" }}
+        >
           Password<span style={{ color: "red" }}>*</span>
         </InputLabel>
         <TextField
           variant="outlined"
           required
+          sx={{ input: { color: "#1976d2" } }}
           fullWidth
           type={showPassword ? "text" : "password"}
           name="password"
@@ -84,6 +93,7 @@ const Login = () => {
                   onClick={() => handleTogglePasswordVisibility()}
                   onMouseDown={(e) => e.preventDefault()}
                   edge="end"
+                  sx={{ color: "#1976d2" }}
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
