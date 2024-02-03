@@ -19,6 +19,7 @@ import {
 import GroupChat from "./GroupChat";
 import { useDispatch, useSelector } from "react-redux";
 import { groupActions, friendActions } from "../../_actions";
+import Loader from "../../components/customLoader";
 
 const Groups = () => {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const Groups = () => {
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [chatSectionOpen, setChatSectionOpen] = useState(false);
   const [members, setMembers] = useState([]);
+  const isLoading = useSelector((state) => state.loader.isLoading);
 
   useEffect(() => {
     if (userData?._id) {
@@ -133,193 +135,202 @@ const Groups = () => {
 
   return (
     <Box mb={5}>
-      <Box display="flex" flexDirection="column">
-        <Box width="100%">
-          <Button
-            sx={{ float: "right", marginTop: "20px" }}
-            variant="contained"
-            color="primary"
-            onClick={() => setCreateGroupDialogOpen(true)}
-          >
-            Create New Group
-          </Button>
-        </Box>
-        {groupList && groupList.length > 0 && (
-          <Box display="flex" flexDirection={"row"}>
-            <Box
-              width={"30%"}
-              marginLeft={"10px"}
-              marginTop={"20px"}
-              sx={{
-                border: "2px solid rgb(25 118 210)",
-                borderRadius: "20px",
-                padding: "20px 8px 12px 0px",
-              }}
-            >
-              <List
-                marginTop={"20px"}
-                sx={{
-                  overflow: "scroll",
-                  overflowX: "hidden",
-                  height: "600px",
-                  width: "100%",
-                }}
+      {!isLoading && (
+        <>
+          <Box display="flex" flexDirection="column">
+            <Box width="100%">
+              <Button
+                sx={{ float: "right", marginTop: "20px" }}
+                variant="contained"
+                color="primary"
+                onClick={() => setCreateGroupDialogOpen(true)}
               >
-                {groupList &&
-                  groupList?.length > 0 &&
-                  groupList?.map((group) => (
-                    <React.Fragment key={group._id}>
-                      <ListItem
-                        alignItems="flex-start"
-                        onClick={() => {
-                          setChatSectionOpen(true);
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <Avatar
-                            src={
-                              "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-                            }
-                            alt={group.name}
-                          />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={group.name}
-                          secondary={
-                            <React.Fragment>
-                              <Typography
-                                component="span"
-                                variant="body2"
-                                color="textPrimary"
-                              >
-                                {group.description}
-                              </Typography>
-                            </React.Fragment>
-                          }
-                        />
-                        {findGroupUser(group) && (
-                          <>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              onClick={() =>
-                                handleAcceptRequest("accept", group?._id)
-                              }
-                              sx={{ marginRight: "20px" }}
-                            >
-                              Accept
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              size="small"
-                              onClick={() =>
-                                handleAcceptRequest("reject", group?._id)
-                              }
-                            >
-                              Reject
-                            </Button>
-                          </>
-                        )}
-                      </ListItem>
-                      <Divider variant="fullWidth" />
-                    </React.Fragment>
-                  ))}
-              </List>
+                Create New Group
+              </Button>
             </Box>
-            {chatSectionOpen && (
-              <Box width="70%">
-                <GroupChat />
+            {groupList && groupList.length > 0 && (
+              <Box display="flex" flexDirection={"row"}>
+                <Box
+                  width={"30%"}
+                  marginLeft={"10px"}
+                  marginTop={"20px"}
+                  sx={{
+                    border: "2px solid rgb(25 118 210)",
+                    borderRadius: "20px",
+                    padding: "20px 8px 12px 0px",
+                  }}
+                >
+                  <List
+                    marginTop={"20px"}
+                    sx={{
+                      overflow: "scroll",
+                      overflowX: "hidden",
+                      height: "600px",
+                      width: "100%",
+                    }}
+                  >
+                    {groupList &&
+                      groupList?.length > 0 &&
+                      groupList?.map((group) => (
+                        <React.Fragment key={group._id}>
+                          <ListItem
+                            alignItems="flex-start"
+                            onClick={() => {
+                              setChatSectionOpen(true);
+                            }}
+                          >
+                            <ListItemAvatar>
+                              <Avatar
+                                src={
+                                  "https://images.pexels.com/photos/19692814/pexels-photo-19692814/free-photo-of-little-monk-eye-contact.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                                }
+                                alt={group.name}
+                              />
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={group.name}
+                              secondary={
+                                <React.Fragment>
+                                  <Typography
+                                    component="span"
+                                    variant="body2"
+                                    color="textPrimary"
+                                  >
+                                    {group.description}
+                                  </Typography>
+                                </React.Fragment>
+                              }
+                            />
+                            {findGroupUser(group) && (
+                              <>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  size="small"
+                                  onClick={() =>
+                                    handleAcceptRequest("accept", group?._id)
+                                  }
+                                  sx={{ marginRight: "20px" }}
+                                >
+                                  Accept
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="error"
+                                  size="small"
+                                  onClick={() =>
+                                    handleAcceptRequest("reject", group?._id)
+                                  }
+                                >
+                                  Reject
+                                </Button>
+                              </>
+                            )}
+                          </ListItem>
+                          <Divider variant="fullWidth" />
+                        </React.Fragment>
+                      ))}
+                  </List>
+                </Box>
+                {chatSectionOpen && (
+                  <Box width="70%">
+                    <GroupChat />
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
-        )}
-      </Box>
-      <Dialog
-        open={isCreateGroupDialogOpen}
-        // sx={{}}
-        height={"200px"}
-        onClose={() => setCreateGroupDialogOpen(false)}
-      >
-        <DialogTitle color="primary">Create New Group</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Group Name"
-            type="text"
-            fullWidth
-            value={newGroupName}
-            onChange={(e) => setNewGroupName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Group Description"
-            type="text"
-            fullWidth
-            // height={"200px"}
-            value={newGroupDescription}
-            onChange={(e) => setNewGroupDescription(e.target.value)}
-          />
-          {/* userList maping here*/}
-          <Box
-            sx={{ height: "100px", overflow: "scroll", overflowX: "hidden" }}
+          <Dialog
+            open={isCreateGroupDialogOpen}
+            // sx={{}}
+            height={"200px"}
+            onClose={() => setCreateGroupDialogOpen(false)}
           >
-            {friendList &&
-              friendList?.length > 0 &&
-              friendList?.map((user) => {
-                return (
-                  <React.Fragment key={user.id}>
-                    <ListItem
-                      alignItems="flex-start"
-                      onClick={() => {
-                        setChatSectionOpen(true);
-                      }}
-                    >
-                      <Checkbox
-                        onChange={(val) =>
-                          addUsers(val.target.checked, user.user._id)
-                        }
-                      />
-                      <ListItemText
-                        primary={user.user.name}
-                        sx={{ alignSelf: "center" }}
-                      />
-                      <ListItemText
-                        primary={user.user.email}
-                        sx={{ alignSelf: "center" }}
-                      />
-                      <ListItemText />
-                    </ListItem>
-                    <Divider component="div" variant="middle" />
-                  </React.Fragment>
-                );
-              })}
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              setCreateGroupDialogOpen(false);
-              setNewGroupName("");
-              setNewGroupDescription("");
-              setMembers([]);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleCreateGroup}
-            variant="contained"
-            color="primary"
-          >
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <DialogTitle color="primary">Create New Group</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Group Name"
+                type="text"
+                fullWidth
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+              />
+              <TextField
+                margin="dense"
+                label="Group Description"
+                type="text"
+                fullWidth
+                // height={"200px"}
+                value={newGroupDescription}
+                onChange={(e) => setNewGroupDescription(e.target.value)}
+              />
+              {/* userList maping here*/}
+              <Box
+                sx={{
+                  height: "100px",
+                  overflow: "scroll",
+                  overflowX: "hidden",
+                }}
+              >
+                {friendList &&
+                  friendList?.length > 0 &&
+                  friendList?.map((user) => {
+                    return (
+                      <React.Fragment key={user.id}>
+                        <ListItem
+                          alignItems="flex-start"
+                          onClick={() => {
+                            setChatSectionOpen(true);
+                          }}
+                        >
+                          <Checkbox
+                            onChange={(val) =>
+                              addUsers(val.target.checked, user.user._id)
+                            }
+                          />
+                          <ListItemText
+                            primary={user.user.name}
+                            sx={{ alignSelf: "center" }}
+                          />
+                          <ListItemText
+                            primary={user.user.email}
+                            sx={{ alignSelf: "center" }}
+                          />
+                          <ListItemText />
+                        </ListItem>
+                        <Divider component="div" variant="middle" />
+                      </React.Fragment>
+                    );
+                  })}
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  setCreateGroupDialogOpen(false);
+                  setNewGroupName("");
+                  setNewGroupDescription("");
+                  setMembers([]);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleCreateGroup}
+                variant="contained"
+                color="primary"
+              >
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
+      {isLoading && <Loader />}
     </Box>
   );
 };

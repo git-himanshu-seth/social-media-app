@@ -60,26 +60,29 @@ const UserList = () => {
       <Typography variant="h4" gutterBottom color={"#1976d2"}>
         User List
       </Typography>
-      <List>
-        {userListData &&
-          userListData?.length > 0 &&
-          userListData?.map((user) => (
-            <React.Fragment key={user.id}>
-              <ListItem>
-                <ListItemText primary={user.name} />
-                <ListItemText primary={user.email} />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleSendRequest(user._id)}
-                >
-                  Send Request
-                </Button>
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-      </List>
+      {!isLoading && (
+        <List>
+          {userListData &&
+            userListData?.length > 0 &&
+            userListData?.map((user) => (
+              <React.Fragment key={user.id}>
+                <ListItem>
+                  <ListItemText primary={user.name} />
+                  <ListItemText primary={user.email} />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleSendRequest(user._id)}
+                  >
+                    Send Request
+                  </Button>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
+        </List>
+      )}
+      {isLoading && <Loader />}
     </Box>
   );
 };

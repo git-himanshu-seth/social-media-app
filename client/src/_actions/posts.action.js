@@ -1,6 +1,7 @@
 import { postConstants } from "../_constants";
 import { postServices } from "../_services";
 import { alert } from "../_utilities";
+import { showLoader, hideLoader } from "./loader.action";
 
 export const postActions = {
   getPosts,
@@ -16,6 +17,7 @@ function getPosts(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     postServices.getPosts(data).then(
       (response) => {
         if (response.status === 200) {
@@ -28,6 +30,7 @@ function getPosts(data) {
           if (response.data.length === 0) {
             alert.error(response.message);
           }
+          dispatch(hideLoader(true));
         } else {
           dispatch(
             dispatchFunction({
@@ -35,6 +38,7 @@ function getPosts(data) {
               data: response,
             })
           );
+          dispatch(hideLoader(true));
           alert.error(response.message);
         }
       },
@@ -45,6 +49,7 @@ function getPosts(data) {
             data: error.message,
           })
         );
+        dispatch(hideLoader(true));
         alert.error(error.message);
       }
     );
@@ -59,6 +64,7 @@ function createPost(data) {
         data: null,
       })
     );
+    dispatch(showLoader(true));
     postServices.createPost(data).then(
       (response) => {
         if (response.status === 200) {
@@ -68,6 +74,7 @@ function createPost(data) {
               data: response,
             })
           );
+          dispatch(hideLoader(true));
           alert.success(response.message);
         } else {
           dispatch(
@@ -76,6 +83,7 @@ function createPost(data) {
               data: response,
             })
           );
+          dispatch(hideLoader(true));
           alert.error(response.message);
         }
       },
@@ -86,6 +94,7 @@ function createPost(data) {
             data: error.message,
           })
         );
+        dispatch(hideLoader(true));
         alert.error(error.message);
       }
     );
