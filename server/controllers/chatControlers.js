@@ -60,7 +60,6 @@ const mongoose = require("mongoose");
 const sendMessage = async (req, res) => {
   try {
     const { user, chatId, message, recive } = req.body;
-    console.log(req.body);
     if (chatId) {
       const existingChat = await UserChat.findOne({ chat_id: chatId });
 
@@ -69,7 +68,6 @@ const sendMessage = async (req, res) => {
         timestamp: Date.now(),
         sender: user,
       };
-      console.log("existingChat", existingChat);
       if (
         existingChat &&
         existingChat?.messages &&
@@ -147,11 +145,6 @@ const getChats = async (req, res) => {
         status: 200,
         data: chat,
       });
-      // res.status(300).json({
-      //   message: "!Opps no chat found start messaging now",
-      //   data: [],
-      //   status: 300,
-      // });
     }
   } catch (error) {
     console.error(error);
