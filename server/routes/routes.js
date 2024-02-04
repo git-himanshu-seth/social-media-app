@@ -13,7 +13,6 @@ const {
 } = require("../controllers/userControler");
 
 const {
-  createChat,
   getChats,
   sendMessage,
   deleteChats,
@@ -69,7 +68,7 @@ appRoute.route("/like_and_comments").post(commentsAndLikes);
 // CHATS ROUTES
 //********************************************************************************************************************************************/
 
-appRoute.route("/chat").post(createChat);
+// appRoute.route("/chat").post(createChat);
 appRoute.route("/chat/message").post(sendMessage);
 appRoute.route("/chats/get_message/:user/:sender").get(getChats);
 appRoute.route("/chats/:chat_id").delete(deleteChats);

@@ -7,6 +7,8 @@ export const friendActions = {
   getFriendsList,
   sendFrienReq,
   acceptReq,
+  getMessages,
+  sendMessage,
 };
 
 function getFriendsList(data) {
@@ -152,6 +154,118 @@ function acceptReq(data) {
         );
         alert.error(error.message);
         dispatch(hideLoader(true));
+      }
+    );
+  };
+}
+
+function getMessages(data) {
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: friendConstant.GET_MESSAGE_REQUEST,
+        data: null,
+      })
+    );
+    dispatch(showLoader(true));
+    friendServices.getMessages(data).then(
+      (response) => {
+        if (response) {
+          if (response.status === 200) {
+            dispatch(
+              dispatchFunction({
+                type: friendConstant.GET_MESSAGE_SUCCESS,
+                data: response.data,
+              })
+            );
+            alert.success(response.message);
+            dispatch(hideLoader(true));
+          } else {
+            dispatch(
+              dispatchFunction({
+                type: friendConstant.GET_MESSAGE_FAILURE,
+                data: response,
+              })
+            );
+            alert.error(response.message);
+            dispatch(hideLoader(true));
+          }
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: friendConstant.GET_MESSAGE_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+          dispatch(hideLoader(true));
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: friendConstant.GET_MESSAGE_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+        dispatch(hideLoader(true));
+      }
+    );
+  };
+}
+
+function sendMessage(data) {
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: friendConstant.SEND_MESSAGE_REQUEST,
+        data: null,
+      })
+    );
+    // dispatch(showLoader(true));
+    friendServices.sendMessage(data).then(
+      (response) => {
+        if (response) {
+          if (response.status === 200) {
+            dispatch(
+              dispatchFunction({
+                type: friendConstant.SEND_MESSAGE_SUCCESS,
+                data: response,
+              })
+            );
+            alert.success(response.message);
+            // dispatch(hideLoader(true));
+          } else {
+            dispatch(
+              dispatchFunction({
+                type: friendConstant.SEND_MESSAGE_FAILURE,
+                data: response,
+              })
+            );
+            alert.error(response.message);
+            // dispatch(hideLoader(true));
+          }
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: friendConstant.SEND_MESSAGE_FAILURE,
+              data: response,
+            })
+          );
+          alert.error(response.message);
+          // dispatch(hideLoader(true));
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: friendConstant.SEND_MESSAGE_FAILURE,
+            data: error.message,
+          })
+        );
+        alert.error(error.message);
+        // dispatch(hideLoader(true));
       }
     );
   };

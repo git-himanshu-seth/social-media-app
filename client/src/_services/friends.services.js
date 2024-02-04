@@ -5,6 +5,8 @@ export const friendServices = {
   getFriendsList,
   sendFrienReq,
   acceptReq,
+  getMessages,
+  sendMessage,
 };
 
 function getFriendsList(data) {
@@ -51,4 +53,35 @@ function acceptReq(data) {
   return fetch(`${config.apiUrl}/handle-friend-request`, requestOptions).then(
     (response) => response.json()
   );
+}
+
+function sendMessage(data) {
+  const extraHeaders = {
+    "Content-Type": "application/json",
+  };
+  const requestOptions = commonFunctions.getRequestOptions(
+    "POST",
+    extraHeaders,
+    JSON.stringify(data), // Include the request payload (data) as a JSON string
+    true
+  );
+  return fetch(`${config.apiUrl}/chat/message`, requestOptions).then(
+    (response) => response.json()
+  );
+}
+
+function getMessages(data) {
+  const extraHeaders = {
+    "Content-Type": "application/json",
+  };
+  const requestOptions = commonFunctions.getRequestOptions(
+    "GET",
+    extraHeaders,
+    null,
+    true
+  );
+  return fetch(
+    `${config.apiUrl}/chats/get_message/${data.userId}/${data.receiverId}`,
+    requestOptions
+  ).then((response) => response.json());
 }

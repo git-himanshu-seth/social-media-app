@@ -5,6 +5,7 @@ export const groupServices = {
   getGroups,
   createGroup,
   acceptGroupRequest,
+  sendMessage,
 };
 
 function getGroups(data) {
@@ -48,6 +49,21 @@ function acceptGroupRequest(data) {
     true
   );
   return fetch(`${config.apiUrl}/handle_group_request`, requestOptions).then(
+    (response) => response.json()
+  );
+}
+
+function sendMessage(data) {
+  const extraHeaders = {
+    "Content-Type": "application/json",
+  };
+  const requestOptions = commonFunctions.getRequestOptions(
+    "POST",
+    extraHeaders,
+    JSON.stringify(data),
+    true
+  );
+  return fetch(`${config.apiUrl}/send_group_message`, requestOptions).then(
     (response) => response.json()
   );
 }

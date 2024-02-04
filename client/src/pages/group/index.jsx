@@ -27,7 +27,6 @@ const Groups = () => {
   const groupList = useSelector((state) => {
     return state?.group?.groupList;
   });
-
   const userData = useSelector((state) => {
     return state?.auth?.user;
   });
@@ -50,6 +49,8 @@ const Groups = () => {
   const [chatSectionOpen, setChatSectionOpen] = useState(false);
   const [members, setMembers] = useState([]);
   const isLoading = useSelector((state) => state.loader.isLoading);
+  const [groupId, setGroupId] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (userData?._id) {
@@ -132,6 +133,7 @@ const Groups = () => {
       return false;
     }
   };
+  console.log(messages);
 
   return (
     <Box mb={5}>
@@ -177,6 +179,9 @@ const Groups = () => {
                             alignItems="flex-start"
                             onClick={() => {
                               setChatSectionOpen(true);
+                              setGroupId(`${group._id}`);
+                              console.log(group._id);
+                              setMessages(group.messages);
                             }}
                           >
                             <ListItemAvatar>
@@ -234,7 +239,7 @@ const Groups = () => {
                 </Box>
                 {chatSectionOpen && (
                   <Box width="70%">
-                    <GroupChat />
+                    <GroupChat groupId={groupId} oldMessages={messages} />
                   </Box>
                 )}
               </Box>

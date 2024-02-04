@@ -78,7 +78,7 @@ export function auth(state = {}, action) {
         userList: null,
       };
 
-      case authConstants.REGISTER_WITH_GOOGLE_REQUEST:
+    case authConstants.REGISTER_WITH_GOOGLE_REQUEST:
       return {
         ...state,
         register_with_google_status: status.IN_PROGRESS,

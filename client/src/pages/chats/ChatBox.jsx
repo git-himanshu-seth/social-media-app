@@ -1,34 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Paper, Typography, Box } from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import user from "../../_assets/images/user.png";
-import { groupActions } from "../../_actions";
+import { friendActions } from "../../_actions";
 
-const GroupChat = ({ groupId, oldMessages }) => {
+const ChatBox = ({ chatId, oldMessages }) => {
   const socket = io("ws://localhost:8080", {
     reconnectionDelayMax: 10000,
     auth: {
       token: "123",
     },
   });
+
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
   const userData = useSelector((state) => {
     return state?.auth?.user;
   });
   useEffect(() => {
     setMessages(oldMessages);
-  }, [oldMessages.length]);
-
+  }, []);
   useEffect(() => {
-    socket.emit("joinRoom", `${groupId}`);
+    socket.emit("joinRoom", `${chatId}`);
     socket.on("connect", (res) => {});
     socket.on("disconnect", (res) => {});
   });
-  socket.on("reciveMessage", (data) => {
-    setMessages([...messages, data]);
+  socket.on("reciveOneToOneMessage", (data) => {
+    setMessages([...messages, { message: data }]);
   });
 
   const handleInputChange = (e) => {
@@ -39,19 +40,19 @@ const GroupChat = ({ groupId, oldMessages }) => {
     if (newMessage.trim() !== "") {
       const data = {
         content: newMessage.trim(),
-        sender: { name: userData.name },
+        sender: { name: userData?.name },
         timestamp: new Date(),
-        groupId: `${groupId}`,
+        chatId: `${chatId}`,
       };
-      socket.emit("sendMessage", data);
+      socket.emit("sendOneToOneMessage", data);
       dispatch(
-        groupActions.sendMessage({
+        friendActions.sendMessage({
           message: newMessage.trim(),
-          userId: userData._id,
-          groupId: groupId,
+          user: userData?._id,
+          chatId: "65bf073103a9e2377affb2a1",
         })
       );
-      setMessages([...messages, data]);
+      setMessages([...messages, { message: data }]);
       setNewMessage("");
     }
   };
@@ -79,25 +80,27 @@ const GroupChat = ({ groupId, oldMessages }) => {
         }}
       >
         {messages.map((message, index) => {
-          const userImage = userData?.imageUrl ? userData.imageUrl : user;
-          const senderImage = message.imageUrl ? message.imageUrl : user;
-          const date = new Date(message.timestamp);
+          const userImage = userData?.imageUrl ? userData?.imageUrl : user;
+          const senderImage = message?.message?.imageUrl
+            ? message?.message?.imageUrl
+            : user;
+          const date = new Date(message?.message?.timestamp);
           const time = `${date.getHours()}:${date.getMinutes()}`;
-
           return (
             <div
               key={index}
               style={{
                 display: "flex",
                 flexDirection:
-                  message.sender.name === userData.name ? "row-reverse" : "row",
+                  message?.message?.sender?.name === userData.name
+                    ? "row-reverse"
+                    : "row",
                 alignItems: "flex-end",
               }}
             >
-              {/* {message.sender !== userData.name && ( */}
               <img
                 src={
-                  message.sender.name !== userData.name
+                  message?.message?.sender?.name !== userData.name
                     ? senderImage
                     : userImage
                 }
@@ -110,9 +113,8 @@ const GroupChat = ({ groupId, oldMessages }) => {
                   marginLeft: "8px",
                 }}
               />
-              {/* )} */}
               <div style={{ maxWidth: "70%" }}>
-                <div>{message.content}</div>
+                <div>{message?.message?.content}</div>
                 <div style={{ fontSize: "10px", color: "#888" }}>{time}</div>
               </div>
             </div>
@@ -149,4 +151,4 @@ const GroupChat = ({ groupId, oldMessages }) => {
   );
 };
 
-export default GroupChat;
+export default ChatBox;

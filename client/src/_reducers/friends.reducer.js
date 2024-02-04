@@ -59,6 +59,44 @@ export function friend(state = {}, action) {
         acceptRejRes: null,
       };
 
+    case friendConstant.SEND_MESSAGE_REQUEST:
+      return {
+        ...state,
+        message_send_status: status.IN_PROGRESS,
+        message: action.data,
+      };
+    case friendConstant.SEND_MESSAGE_SUCCESS:
+      return {
+        ...state,
+        message_send_status: status.SUCCESS,
+        message: action.data,
+      };
+    case friendConstant.SEND_MESSAGE_FAILURE:
+      return {
+        ...state,
+        message_send_status: status.FAILURE,
+        message: null,
+      };
+
+    case friendConstant.GET_MESSAGE_REQUEST:
+      return {
+        ...state,
+        get_messages_status: status.IN_PROGRESS,
+        messages: action.data,
+      };
+    case friendConstant.GET_MESSAGE_SUCCESS:
+      return {
+        ...state,
+        get_messages_status: status.SUCCESS,
+        messages: action.data,
+      };
+    case friendConstant.GET_MESSAGE_FAILURE:
+      return {
+        ...state,
+        get_messages_status: status.FAILURE,
+        messages: null,
+      };
+
     default:
       return state;
   }

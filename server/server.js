@@ -61,29 +61,24 @@ const io = new socketIO.Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  // send message with senderId, receiverId, chatId:_id
-
-  socket.on("sendMessage", ({ senderId, receiverId, socketId }) => {
-    console.log(senderId, receiverId, socketId);
-    io.to(socketId).emit("getMessage", {
-      senderId,
-      text: "hello",
-    });
-  });
-  // socket.current.on("getMessage", (data) => {});
-  // get message from socket receiverId, chatId:_id
-  socket.on("sendMessage", (req) => {
-    console.log("sendMessage", req, io.id);
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
   });
 
-  // disconnected socket
-  socket.on("disconnect", (reason) => {
-    console.log(reason); // "ping timeout"
+  socket.on("sendMessage", ({ content, sender, timestamp, groupId }) => {
+    socket
+      .to(groupId)
+      .emit("reciveMessage", { content, sender, timestamp, groupId });
   });
+  socket.on("sendOneToOneMessage", ({ content, sender, timestamp, chatId }) => {
+    socket
+      .to(chatId)
+      .emit("reciveOneToOneMessage", { content, sender, timestamp, chatId });
+  });
+
+  socket.on("disconnect", (reason) => {});
   // connection started
-  socket.on("connect", (reason) => {
-    console.log(reason); // "ping timeout"
-  });
+  socket.on("connect", (reason) => {});
 });
 
 io.listen(8080);

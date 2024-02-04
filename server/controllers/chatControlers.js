@@ -1,87 +1,114 @@
 const UserChat = require("../models/chatSchema");
 const mongoose = require("mongoose");
 
-const createChat = async (req, res) => {
-  try {
-    const objectId = new mongoose.Types.ObjectId();
-    const { user, sender, message } = req.body;
-    const existingChat = await UserChat.findOne({ user, chat_id: objectId });
-    if (existingChat) {
-      existingChat.messages.push({
-        message: {
-          content: message,
-          sender: user,
-          timestamp: Date.now(),
-        },
-      });
-      return res.status(200).json({
-        message: "success",
-        status: 200,
-        data: message,
-      });
-    } else {
-      let newChat;
-      if (message) {
-        newChat = new UserChat({
-          user,
-          sender,
-          chat_id: objectId,
-          messages: [
-            {
-              message: {
-                content: message,
-                sender: user,
-                timestamp: Date.now(),
-              },
-            },
-          ],
-        });
-      } else {
-        newChat = new UserChat({
-          user,
-          sender,
-          chat_id: objectId,
-        });
-      }
+// const createChat = async (req, res) => {
+//   try {
+//     const objectId = new mongoose.Types.ObjectId();
+//     const { user, sender, message } = req.body;
+//     const existingChat = await UserChat.findOne({ user, chat_id: objectId });
+//     if (existingChat) {
+//       existingChat.messages.push({
+//         message: {
+//           content: message,
+//           sender: user,
+//           timestamp: Date.now(),
+//         },
+//       });
+//       return res.status(200).json({
+//         message: "success",
+//         status: 200,
+//         data: message,
+//       });
+//     } else {
+//       let newChat;
+//       if (message) {
+//         newChat = new UserChat({
+//           user,
+//           sender,
+//           chat_id: objectId,
+//           messages: [
+//             {
+//               message: {
+//                 content: message,
+//                 sender: user,
+//                 timestamp: Date.now(),
+//               },
+//             },
+//           ],
+//         });
+//       } else {
+//         newChat = new UserChat({
+//           user,
+//           sender,
+//           chat_id: objectId,
+//         });
+//       }
 
-      await newChat.save();
-      return res.status(200).json({
-        message: "Chat created Successfully",
-        status: 200,
-        data: newChat,
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
+//       await newChat.save();
+//       return res.status(200).json({
+//         message: "Chat created Successfully",
+//         status: 200,
+//         data: newChat,
+//       });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
 
 const sendMessage = async (req, res) => {
   try {
-    const { user, chat_id, message } = req.body;
+    const { user, chatId, message, recive } = req.body;
+    console.log(req.body);
+    if (chatId) {
+      const existingChat = await UserChat.findOne({ chat_id: chatId });
 
-    const existingChat = await UserChat.findOne({ chat_id });
-    if (!existingChat) {
-      return res
-        .status(404)
-        .json({ message: "Chat not found for this user and chat_id" });
+      const newMessage = {
+        content: message,
+        timestamp: Date.now(),
+        sender: user,
+      };
+      console.log("existingChat", existingChat);
+      if (
+        existingChat &&
+        existingChat?.messages &&
+        existingChat?.messages?.length > 0
+      ) {
+        existingChat.messages.push({ message: newMessage });
+      } else {
+        existingChat.messages = [{ message: newMessage }];
+      }
+      await existingChat.save();
+
+      res.status(200).json({
+        message: "Message sent successfully",
+        status: 200,
+        data: newMessage,
+      });
     }
-
-    const newMessage = {
-      content: message,
-      timestamp: Date.now(),
-      sender: user,
-    };
-
-    existingChat.messages.push({ message: newMessage });
-    await existingChat.save();
-
-    res.status(200).json({
-      message: "Message sent successfully",
-      status: 200,
-      data: newMessage,
-    });
+    // else {
+    //   newChat = new UserChat({
+    //     user,
+    //     sender: recive,
+    //     chat_id: objectId,
+    //     messages: [
+    //       {
+    //         message: {
+    //           content: message,
+    //           sender: user,
+    //           timestamp: Date.now(),
+    //         },
+    //       },
+    //     ],
+    //   });
+    //   await newChat.save();
+    //   return res.status(200).json({
+    //     message: "Message sent successfully",
+    //     status: 200,
+    //     data: { new_chat_id: newChat._id },
+    //   });
+    // }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -91,27 +118,40 @@ const sendMessage = async (req, res) => {
 const getChats = async (req, res) => {
   try {
     const { sender, user } = req.params;
-
-    const chats = await UserChat.find({
+    const objectId = new mongoose.Types.ObjectId();
+    const chat = await UserChat.findOne({
       $or: [
         { sender: sender, user: user },
         { sender: user, user: sender },
       ],
     })
       .populate("user")
-      .populate("sender");
-    if (chats) {
+      .populate("sender")
+      .populate("messages.message.sender");
+    if (chat) {
       return res.status(200).json({
-        message: "Chat retrive successfully",
-        data: chats,
+        message: `Chat retrive successfully with ${chat.messages.length} messages`,
+        data: chat,
         status: 200,
       });
     } else {
-      res.status(200).json({
-        message: "!Opps no chat found start messaging now",
-        data: [],
-        status: 200,
+      newChat = new UserChat({
+        user,
+        sender,
+        chat_id: objectId,
+        messages: [],
       });
+      let chat = await newChat.save();
+      return res.status(200).json({
+        message: `Chat retrive successfully with ${chat.messages.length} messages`,
+        status: 200,
+        data: chat,
+      });
+      // res.status(300).json({
+      //   message: "!Opps no chat found start messaging now",
+      //   data: [],
+      //   status: 300,
+      // });
     }
   } catch (error) {
     console.error(error);
@@ -149,4 +189,4 @@ const deleteChats = async (req, res) => {
   }
 };
 
-module.exports = { createChat, getChats, sendMessage, deleteChats };
+module.exports = { getChats, sendMessage, deleteChats };

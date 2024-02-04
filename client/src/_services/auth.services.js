@@ -92,13 +92,11 @@ function createUserDB(data) {
       return response.json();
     })
     .then((data) => {
-      // Handle the successful response data
       return data;
     })
     .catch((error) => {
-      // Handle errors
       console.error("Error creating user:", error);
-      throw error; // Rethrow the error to be handled at the higher level
+      throw error;
     });
 }
 

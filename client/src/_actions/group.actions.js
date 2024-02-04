@@ -7,6 +7,7 @@ export const groupActions = {
   getGroups,
   createGroup,
   acceptGroupRequest,
+  sendMessage,
 };
 
 function getGroups(data) {
@@ -141,6 +142,51 @@ function acceptGroupRequest(data) {
         );
         alert.error(error.message);
         dispatch(hideLoader(true));
+      }
+    );
+  };
+}
+
+function sendMessage(data) {
+  return (dispatch) => {
+    dispatch(
+      dispatchFunction({
+        type: groupConstants.SEND_MESSAGE_REQUEST,
+        data: null,
+      })
+    );
+    // dispatch(showLoader(true));
+    groupServices.sendMessage(data).then(
+      (response) => {
+        if (response.status === 200) {
+          dispatch(
+            dispatchFunction({
+              type: groupConstants.SEND_MESSAGE_SUCCESS,
+              data: response,
+            })
+          );
+          // alert.success(response.message);
+          // dispatch(hideLoader(true));
+        } else {
+          dispatch(
+            dispatchFunction({
+              type: groupConstants.SEND_MESSAGE_FAILURE,
+              data: response,
+            })
+          );
+          // alert.error(response.message);
+          // dispatch(hideLoader(true));
+        }
+      },
+      (error) => {
+        dispatch(
+          dispatchFunction({
+            type: groupConstants.SEND_MESSAGE_FAILURE,
+            data: error.message,
+          })
+        );
+        // alert.error(error.message);
+        // dispatch(hideLoader(true));
       }
     );
   };
